@@ -46,7 +46,7 @@
 % Read more: https://en.wikibooks.org/wiki/LaTeX/Customizing_Page_Headers_and_Footers
 \pagestyle{fancy}
 \fancyhf{}
-\lhead{Đồ án môn học - \csCompileTime}
+\lhead{Đề cương luận văn - \csCompileTime}
 \rhead{GVHD: TS. Trương Quang Vinh}
 \cfoot{\thepage}
 
@@ -55,12 +55,12 @@
 \newcommand{\csCouncil}{Khoa Điện Điện tử}
 \newcommand{\csSupervise}{TS. Trương Quang Vinh}
 \newcommand{\csReviewer}{TS. Nguyễn Văn A}
-\newcommand{\crname}{BÁO CÁO ĐỒ ÁN MÔN HỌC} % Thesis, report, whatever
+\newcommand{\crname}{BÁO CÁO ĐỀ CƯƠNG LUẬN VĂN} % Thesis, report, whatever
 \newcommand{\csCompileTime}{12/2019}
 
 %----- SUB-SETTINGS FOR STUDENT NAMES -----%
-\newcommand{\csSVone}{Rudo}
-\newcommand{\csidSVone}{123456}
+\newcommand{\csSVone}{Vũ Đăng Khoa}
+\newcommand{\csidSVone}{1611645}
 %\newcommand{\csSVtwo}{Rudo2204}
 %\newcommand{\csidSVtwo}{123456}
 
@@ -95,7 +95,7 @@ TRƯỜNG ĐẠI HỌC BÁCH KHOA\\
 {\fontsize{15}{1}\selectfont \crname }\\[0.8cm]
 
 %----- TYPESETTINGS INFORMATION OF TITLE -----%
-{\fontsize{24}{1}\selectfont \textbf{ỨNG DỤNG RFID MỞ KHÓA CỬA\\SỬ DỤNG EVALUATION KIT EK-TM4C123G}}\\[2.3cm]
+{\fontsize{24}{1}\selectfont \textbf{PHÂN TÍCH VÀ ỨNG DỤNG\\NGÔN NGỮ LẬP TRÌNH RUST\\CHO HỆ THỐNG NHÚNG}}\\[2.3cm]
 \end{center}
 
 %----- TYPESETTINGS INFORMATION OF COUNCIL -----%
@@ -164,38 +164,19 @@ TRƯỜNG ĐẠI HỌC BÁCH KHOA\\
 %----- BEGIN MAIN MATTER -----%
 \mainmatter
 \include{content/ch1-introduction}
-\include{content/ch2-cslt}
-\include{content/ch3-ketqua}
+%\include{content/ch2-cslt}
+%\include{content/ch3-ketqua}
 
 \backmatter
 \phantomsection
 \addcontentsline{toc}{chapter}{Tài liệu tham khảo}
-\nocite{*} % Basically don't cite anything but print all of the stuff in bibliography file out
-\emergencystretch=1em
-\printbibliography[title=Tài liệu tham khảo]
+%\nocite{*} % Basically don't cite anything but print all of the stuff in bibliography file out
+%\emergencystretch=1em
+%\printbibliography[title=Tài liệu tham khảo]
 % This is the default way to handle bibliography
 %\bibliographystyle{ieeetr}
 %\bibliography{uni}
 
 %----- APPENDIX (PHU LUC) -----
 % Detailed schematic, extra information, source code and other shit are put in here
-\appendix
-\chapter*{Phụ lục}
-\addcontentsline{toc}{chapter}{Phụ lục}
-% IMPORTANT: These have to be here, cannot put above else it would mess up the content in mainmatter
-\renewcommand{\thesection}{\Alph{section}}
-%\setminted[c]{linenos, breaklines, breakanywhere, fontsize=\footnotesize]
-\section{Source code của hệ thống}
-\subsection{Thư viện MFRC522}
-\subsubsection{File header}
-\inputminted[linenos=true, breaklines, breakanywhere, fontsize=\footnotesize]{cpp}{code/Mfrc522.h}
-\subsubsection{File thư viện}
-\inputminted[linenos=true, breaklines, breakanywhere, fontsize=\footnotesize, encoding=utf8]{cpp}{code/Mfrc522.cpp}
-\subsection{Thư viện LCD}
-\subsubsection{File header}
-\inputminted[linenos=true, breaklines, breakanywhere, fontsize=\footnotesize]{c}{code/lcd.h}
-\subsubsection{File thư viện}
-\inputminted[linenos=true, breaklines, breakanywhere, fontsize=\footnotesize]{c}{code/lcd.c}
-\subsection{File main}
-\inputminted[linenos=true, breaklines, breakanywhere, fontsize=\footnotesize]{c}{code/main.c}
 \end{document}
