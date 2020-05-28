@@ -1,37 +1,36 @@
 \chapter{Tổng quan}
-\section{Đặt vấn đề}
-Cùng với sự nghiệp Công nghiệp hóa -- Hiện đại hóa đất nước, cũng như xu thế phát triển kết nối toàn cầu của thế giới,
-con người ngày càng có thể điều khiển, sử dụng và ứng dụng nhiều hệ thống điện tử một cách tự động và mang lại hiệu quả kinh tế cao,
-đồng thời mang lại sự tiện lợi về nhiều mặt như tiết kiệm chi phí, thời gian, nâng cao bảo mật và nhiều lợi ích khác cho con người.
-Cũng chính vì xu thế này, nhận diện theo các phương pháp cũ như thẻ vật lý hoặc chìa khóa cửa vật lý ngày càng trở nên lạc hậu và bất tiện so với nhiều giải pháp nhận diện mới, vừa giải quyết được những vấn đề của phương pháp nhận diện cũ, vừa mang tính chất tự động hóa cao cũng như dễ dàng thay đổi và nâng cấp.
+\section{Giới thiệu đề tài}
+Trong khoảng hơn mười năm trở lại đây, với sự bùng nổ của kỉ nguyên công nghệ thông tin, sự nghiệp Công nghiệp hóa -- Hiện đại hóa của đất nước, cũng như xu thế phát triển kết nối toàn cầu của thế giới, ngày càng có nhiều hệ thống thiết bị điện tử nói chung và hệ thống điều khiển sử dụng vi điều khiển nhúng nói riêng được lập trình điều khiển và sử dụng một cách tự động, mang lại hiệu quả và tính tiện lợi cao. Các thiết bị nhúng cũng vì lý do này mà ngày càng được sử dụng rộng rãi trong mọi lĩnh vực của đời sống, từ những thiết bị sử dụng trong công nghiệp như các bộ vi điều khiển điều khiển máy CNC, robot chế tạo, v.v.. đến các thiết dân dụng có thể thấy ở mọi nơi như thiết bị phát sóng wifi, điện thoại thông minh, v.v.. Có thể nói rằng, thiết bị nhúng chính là chìa khóa trong kỉ nguyên kết nối toàn cầu này.
 
-Một trong những giải pháp nhận diện mới này là ứng dụng công nghệ RFID (Radio Frequency Identification),
-công nghệ RFID trong những năm gần đây càng ngày càng được phát triển mạnh, từ mục tiêu chủ yếu sử dụng cho quân sự, công nghiệp, nông nghiệp nói chung thì giờ đây công nghệ này đã, đang được ứng dụng mạnh mẽ trong thị trường người dùng phổ thông.
-Chính vì lẽ đó, đề tài báo cáo này dựa trên xu thế này sẽ tập trung vào nghiên cứu công nghệ RFID với mong muốn mang công nghệ đang phát triển mạnh này gần hơn với người dùng.
+Tuy nhiên, các phần mềm viết cho các thiết bị nhúng rẻ tiền này phải nhỏ gọn, hiệu quả và tiết kiệm điện. Các phần mềm này tương tác với phần cứng (đặc biệt là các vi điều khiển của hệ thống) ở mức độ rất thấp. Vì sự giới hạn về phần cứng cũng như phần mềm này mà chỉ có rất ít ngôn ngữ được sử dụng trong lĩnh vực lập trình nhúng, trong đó có thể dễ dàng nhận thấy rằng ngôn ngữ C có thể được coi là ngôn ngữ chuẩn chủ đạo, thống trị lĩnh vực lập trình nhúng này.
 
-\section{Các phương pháp đã được sử dụng trước đây}
-Trước đây, có nhiều phương pháp nhận diện vật lý đã được áp dụng rộng rãi trong thị trường công nghiệp cũng như phổ thông nói chung,
-trong đó đáng kể nhất là phương pháp nhận diện qua thẻ nhận dạng (Identification Card).
-Phương pháp này có nhiều ưu điểm: gọn gàng, dễ dàng sử dụng, dễ thay thế, v.v..
-Tuy nhiên phương pháp này, dù đã được áp dụng rộng rãi trên thị trường thương mại, có nhiều vấn đề ngày càng bộc lộ rõ hơn trong giai đoạn công nghệ phát triển mạnh ngày nay.
-Thứ nhất, phương pháp sử dụng thẻ cá nhân cần ít nhất một người quản lý để kiểm tra hiệu lực cũng như quản lý các tài khoản thẻ.
-Công việc này tốn khá nhiều thời gian, hiệu quả thấp, cũng như không mang lại sự tiện lợi cho người dùng.
-Thứ hai, những thẻ nhận dạng cá nhân này có thể bị thất lạc hoặc trộm cắp mất,
-gây ảnh hưởng đến tính bảo mật đến cả hệ thống nói chung.
-Ngoài ra, nếu xảy ra tình trạng thất lại hoặc mất cắp trên, công việc cấp lại thẻ mới cần trải qua nhiều công đoạn xác nhận lại gây ảnh hưởng đến hiệu quả của hệ thống.
-Phương pháp sử dụng chìa khóa vật lý kiểu cũ cũng có nhiều bất cập tương tự như trên.
+Để hiểu lý do tại sao ngôn ngữ C lại được sử dụng rộng rãi trong lĩnh vực lập trình nhúng này, ta cần nhìn lại lịch sử: chính vì ngôn ngữ C được thiết kế trong thời gian mà bộ biên dịch (compiler) phải thực sự đơn giản, ngôn ngữ C sau khi biên dịch được hướng đến kết quả ngôn ngữ máy để chạy trên phần cứng. Có thể thấy rằng, ngôn ngữ C được thiết kế với mục đích lập trình hệ thống với các tiêu chí: truy cập trực tiếp đến bộ nhớ, mã máy sau khi biên dịch chạy hiệu quả, thư viện nhỏ và có thể dễ dàng điều chỉnh để có thể sử dụng trên các hệ thống khác (portability). Vì vậy, ngôn ngữ C thực sự rất phù hợp nhu cầu lập trình nhúng, chúng ta chỉ cần bộ biên dịch C cho hệ thống vi điều khiển đang sử dụng thì ta có thể biên dịch được ngôn ngữ máy chạy trên hệ thống đó, tiết kiệm thời gian lập trình và nguồn lực để lập trình điều khiển các thiết bị nhúng này.
 
-Trong giai đoạn gần đây, cũng có một vài công nghệ mới ứng dụng công nghệ quét thẻ vật lý sử dụng mã vạch hoặc QR code đã mang lại nhiều sự tiện lợi về thời gian cho người dùng,
-cắt giảm bớt đi công việc xác nhận thủ công trước đây cũng như có giá thành rẻ, dễ dàng áp dụng cho thị trường phổ thông một cách rộng rãi.
-Tuy nhiên, công nghệ mã vạch có một nhược điểm lớn là thông tin nhận dạng của thẻ hoàn toàn không được bảo mật, có thể bị hư hỏng bởi tác động vật lý dẫn đến không thể sử dụng được, và vẫn không thực sự mang lại tính tiện lợi tự nhiên (người dùng phải sử dụng camera quay theo đúng hướng và góc độ mới đọc được thẻ)
+Tuy nhiên cũng vì lý do này mà ngôn ngữ C, lúc được thiết kế, không đi kèm với tiêu chí an toàn, đặc biệt là về truy cập bộ nhớ hệ thống, dẫn đến nhiều rủi ro về lỗi hệ thống, cũng như về vấn đề bảo mật. Một nghiên cứu gần đây cho thấy, đến khoảng 70\% các lỗ hổng bảo mật trong các sản phẩm của Microsoft liên quan đến các vấn đề về bộ nhớ, mà một trong những lý do chính là do các hệ thống này được lập trình sử dụng ngôn ngữ C, C++.
+%Chúng ta có thể viết các phần mềm sử dụng C ngắn và bí hiểm nhưng lại có thể tương tác với hệ thống một cách gần như không thể đoán trước được, điều độc đáo về C này còn trở thành một cuộc thi thường niên trên thế giới!
+Các chức năng mới tăng tính an toàn cho ngôn ngữ C như quản lý bộ nhớ an toàn hơn, chống phân mảnh bộ nhớ, thực hiện tác vụ đồng thời (concurrency), v.v.. thực sự khó, hay thậm chí là bất khả thi để có thể được thêm vào ngôn ngữ C hiện tại mà vẫn giữ được tính tương thích ngược với các phần mềm đã được viết trước đó.
 
-\section{Nhiệm vụ của đồ án}
-Để giải quyết những vấn đề nảy sinh ra trong quá trình sử dụng các phương pháp nhận diện cũ thì báo cáo này sẽ trình bày phương pháp áp dụng công nghệ RFID mô phỏng hệ thống mở khóa cửa sử dụng Evaluation Kit EK-TM4C123G,
-chú trọng vào nhận diện cá nhân sử dụng thẻ từ cá nhân một cách tự động, nâng cao bảo mật của hệ thống cũng như tiết kiệm được thời gian cho người dùng.
+Đây cũng có thể là lý do mà trong thời gian gần đây, ngày càng có nhiều ngôn ngữ mới được nghiên cứu và sử dụng, có thể kế đến đó là ngôn ngữ Go của Google, ngôn ngữ Swift của Apple, và ngôn ngữ Rust được tài trợ bởi tập đoàn Mozzila được nghiên cứu và phát triển để giải quyết các vấn đề gặp phải trong quá trình phát triển hệ thống sử dụng ngôn ngữ C. Trong các ngôn ngữ này, ngôn ngữ lập trình Rust ra mắt vào tháng 5 năm 2015, được thiết kế với tiêu chí ``to design and implement a safe, concurrent, practical, static systems language'' (tạm dịch: thiết kệ và thực hiện một ngôn ngữ hệ thống tĩnh, an toàn, đồng thời và tiện lợi). Bộ biên dịch Rust phân tích mã nguồn tĩnh (static) và đảm bảo tính thống nhất về kiểu (type), đảm bảo về vấn đề truy cập bộ nhớ. Với nhưng tiêu chí thiết kế này, Rust tập trung trở thành một ngôn ngữ đảm bảo an toàn bộ nhớ nhưng vẫn giữ được hiệu suất mạnh mẽ. Rust dường như là một lựa chọn logic để lập trình các hệ thống nhúng để có thể vừa đảm bảo an toàn bộ nhớ, hiệu suất của hệ thống, thay thế dần ngôn ngữ C trong lĩnh vực này.
 
-\section{Giới hạn thực hiện}
-Đề tài giới thiệu qua về công nghệ nhận dạng RFID nhưng không đi sâu lý thuyết cấu tạo của các thành phần của một hệ thống RFID,
-mà tập trung vào việc ứng dụng công nghệ RFID sử dụng module đọc/ghi thẻ có sẵn trên thị trường là MFRC522
-trên Evaluation Kit EK-TM4C123G. Kit TIVA C đọc dữ liệu thẻ từ qua module RFID,
-xử lý thông tin đọc được và sau đó hiển thị thông tin cho người dùng theo hai hướng là LCD1602,
-đồng thời xuất qua cổng UART để tiện lợi cho việc xử lý thông tin tự động hoặc ứng dụng thêm các module điện tử khác, nâng cao hiệu quả của hệ thống nhận diện.
+\section{Mục tiêu và giới hạn đề tài}
+Những ích lợi của một ngôn ngữ lập trình mới như Rust, cũng như những khẳng định mà Rust đưa ra về thiết kệ một ngôn ngữ hệ thống an toàn, đáng tin cậy, năng suất và hiệu quả cao đã tạo động lực cho tôi tiến hành nghiên cứu về ngôn ngữ này. Cụ thể mục tiêu của tôi là giới thiệu và đánh giá ngôn ngữ Rust, dựa trên các tiêu chí đưa ra ở phần TODO, với hy vọng sẽ góp phần nâng cao nhận thức về ngôn ngữ lập trình tương đối mới mẻ này, cũng như tập trung nghiên cứu, phân tích Rust với mong muốn tìm hiểu liệu ngôn ngữ này có thực sự phù hợp cho lĩnh vực lập trình nhúng hay không bằng cách thiết kế và thực thi một hệ thống nhúng thực tế sử dụng Rust.
+
+Vì giới hạn thời gian, cũng như các vấn đề kĩ thuật trong việc nghiên cứu phân tích một ngôn ngữ lập trình mà TODO ???
+
+\section{Cầu trúc luận văn}
+Toàn bộ nội dung luận văn được tôi trình bày thành TODO chương. Các chương này nêu ra những kiến thức cần thiết, chi tiết để tìm hiểu phân tích một ngôn ngữ lập trình và chi tiết cách thức để thiết kế và thực hiện một hệ thống sử dụng ngôn ngữ lập trình Rust. Và ở chương cuối cùng, tôi đưa những nhận xét, đánh giá về những kết quả đạt được, cũng như nêu ra những hạn chế gặp phải khi thực hiện hệ thống và hướng phát triển cũng như các cách đóng góp cho Rust trong tương lai. Sau đây là nội dung chính của mỗi chương:
+
+Chương 1: Tổng quan
+Chương đầu tiên tôi đưa ra vấn đề về hệ thống nhúng hiện đại, và nêu lên mục tiêu, động cơ và phạm vi thực hiện của luận án. Toàn bộ chương này giúp người đọc có được cái nhìn toàn cảnh về lí do tôi tiến hành thực hiện nghiên cứu đề tài, vai trò và vị trí của đề trong quá trình phát triển một hệ thống nhúng hiệu quả, an toàn và tin cậy sử dụng một ngôn ngữ lập trình tương đối mới mẻ này.
+
+Chương 2: Cơ sở lý thuyết
+Chương này cung cấp các cơ sở lý thuyết về một ngôn ngữ lập trình, các tiêu chí để đánh giá một ngôn ngữ lập trình, từ đó đi vào phân tích và đánh giá sâu hơn về những tiêu chí này, từ cú pháp của ngôn ngữ Rust, các công cụ đi kèm với ngôn ngữ Rust đến sử dụng ngôn ngữ Rust chung với một hệ thống C có sẵn, v.v..
+
+Chương 3: Thiết kế và thực hiện hệ thống
+Trong chương này, tôi thực hiện trình bày chi tiết thiết kế và thực hiện một hệ thống sử dụng Rust, bao gồm các cơ sở lý thuyết để thực hiện hệ thống, đến quá trình lập trình điều khiển cho hệ thống này, từ đó có cái nhìn sâu hơn về cách thực hiện một hệ thống nhúng thực tế sử dụng Rust.
+
+Chương 4: Thảo luận về kết quả hệ thống
+Các kết quả, đánh giá, so sánh thực nghiệm của hệ thống được thực hiện trong chương 3 được tôi trình bày trong chương này, với mục tiêu đưa ra cái nhìn khách quan cũng như chủ quan về Rust nói chung cũng như một hệ thống được thực hiện sử dụng Rust nói riêng.
+
+Chương 5: Kết luận và hướng phát triển
+Trong chương cuối cùng này, tôi đưa ra những kết luận dựa vào kết quả thu được từ toàn bộ kết quả đã thu được trong quá trình thực hiện nghiên cứu luận án, cũng như đề xuất những hướng phát triển, và cách đóng góp cho ngôn ngữ Rust trong tương lai.
