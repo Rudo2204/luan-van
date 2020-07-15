@@ -21,6 +21,7 @@
 \usepackage{longtable} % longtable, able to span multiples pages
 \usepackage{multirow} % Multirow for tables
 \usepackage{minted} % Code highlighting
+\usepackage{caption}
 
 % Bibliography management: by default LaTeX uses Biblatex which werks (with an e)
 % but if you cite documents with non-ascii stuff in it (or want to customize bibiography)
@@ -31,8 +32,12 @@
 %----- CUSTOM COMMANDS -----
 \setcounter{secnumdepth}{4} % This will number the subsubsection
 %\setcounter{tocdepth}{4} % This will add subsubsection line to TOC
-\renewcommand{\thesubsubsection}{\alph{subsubsection})} % Use a) b) c) in subsubsection
+%\renewcommand{\thesubsubsection}{\alph{subsubsection})} % Use a) b) c) in subsubsection
+\renewcommand{\thesubsubsection}{} % Don't label subsubsection
 %\renewcommand{\arraystretch}{1.2} % More space between table lines
+\newminted[rustcode]{rust}{frame=lines, linenos, breaklines, breakanywhere, fontsize=\footnotesize} % format rust code
+\renewcommand\listingscaption{Ví dụ}
+\renewcommand\listoflistingscaption{Danh sách ví dụ}
 
 %----- SUB-SETTINGS PACKAGES AND GENERAL PAGES -----%
 \usetikzlibrary{calc} % For calculating space to draw stuff
