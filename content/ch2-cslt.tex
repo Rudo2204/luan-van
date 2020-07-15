@@ -143,7 +143,7 @@ Vì vậy, vấn đề về cộng đồng sử dụng ngôn ngữ Rust nói chu
 
 \section{Các khía cạnh đánh giá}
 Để đánh giá các khía cạnh của một ngôn ngữ lập trình đã nêu trên thì ở phần này tôi đưa ra một số câu hỏi thường hay được đặt ra để thảo luận về các vấn đề này. Những câu hỏi có thể được liên quan đến các vấn đề khác, nhưng sẽ được tập trung chính vào vấn đề đó.
-\subsection{Ngôn ngữ lập trình Rust}
+\subsection{Các tính năng về ngôn ngữ lập trình}
 \begin{itemize}
     \item[--] Ngôn ngữ lập trình Rust có dễ học không, tính logic của ngôn ngữ này như thế nào?
     \item[--] Có dễ để viết một chương trình sử dụng ngôn ngữ Rust không?
@@ -180,3 +180,290 @@ Tuy nhiên để đánh giá chung về chất lượng của hệ thống thì 
     \item[--] Mã nguồn Rust có tính portability cao hay không?
     \item[--] Mã nguồn Rust được viết sử dụng tích hợp khi sử dụng với các thư viện C/C++ có sẵn như thế nào?
 \end{itemize}
+
+\section{Lý thuyết cơ bản về ngôn ngữ Rust}
+Phần này tôi sẽ đưa ra những lý thuyết cơ bản về ngôn ngữ Rust và những đặc điểm nổi bật của nó với mục tiêu giới thiệu sơ qua cho người đọc những lý thuyết chính sẽ được sử dụng để trình bày những phần sau trong đề tài này, cũng như trả lời một số câu hỏi về những khía cạnh sẽ được đánh giá đã nêu ra ở phần trên.
+Tôi giả định trước người đọc đã ít nhiều biết về một số thuật ngữ lập trình được sử dụng phổ biến trong thực tế trong các ngôn ngữ như C/C++ hay Java, đặc biệt là trong lĩnh vực lập trình nhúng.
+Những thuật ngữ ``mới'' được ngôn ngữ Rust đưa ra sử dụng sẽ được giới thiệu song song, so sánh với những ``cách làm cũ'' của các ngôn ngữ lập trình khác.
+
+\subsection{Giới thiệu chính thức về Rust}
+Trước khi đi vào phần giới thiệu các chứng năng nổi bật của ngôn ngữ Rust thì trước hết tôi xin giới thiệu một cách chính thức về ngôn ngữ lập trình này.
+Ngôn ngữ Rust là một ngôn ngữ lập trình mã nguồn mở được phát triển và tài trợ bởi tập đoàn Mozilla.
+Rust là một ngôn ngữ kiểu cố định (static type), đa mô hình (multi-paradigm).
+Rust học hỏi từ rất nhiều ngôn ngữ ``đàn anh'' đi trước, một trong số những tính năng này sẽ được giới thiệu trong những phần sau.
+Trong quá trình phát triển, ngôn ngữ Rust tập trung vào ba mục tiêu thiết kế chính là:
+\begin{itemize}
+\item Tính an toàn của hệ thống
+\item Hiệu suất của hệ thống
+\item Tính ổn định của hệ thống
+\end{itemize}
+Ngoài ba yêu tố chính trên thì Rust còn có rất nhiều mục tiêu thiết kế khác, tuy nhiên ngôn ngữ này sẽ luôn xoay quanh ba yếu tố trên nếu một trong những mục tiệu thiết kế kia không thể được triển khai đồng thời với ba mục tiêu này.
+
+\subsection{Lý thuyết cơ bản}
+Ở phần này, tôi bắt đầu giới thiệu các tính năng của Rust, đi từ thư viện chuẩn của ngôn ngữ, đến hệ thống kiểu, và những tính năng khác đồng thời cũng là một phần giới thiệu sơ qua về cú pháp, cấu trúc của một phần mềm viết sử dụng ngôn ngữ này.
+Một trong số tính năng nay sẽ có ít nhiều trùng lặp với các ngôn ngữ sử dụng phổ biến trong mảng lập trình nhúng là ngôn ngữ C.
+Tuy nhiên, vì Rust là một ngôn ngữ đa mô hình nên cấu trúc của ngôn ngữ Rust sẽ có nhiều tính năng ``mới'', ít gặp trong các hệ thống nhúng.
+\subsubsection{Thư viện chuẩn của Rust}
+Thư viện chuẩn của Rust (The Rust Standard Library -- RSL) là một thư viện được bao gồm trong tất cả các phần mềm Rust, nó là một abtraction layer để viết các phần mềm có tính portable cao.
+Thư viện chuẩn này cung cấp những câu lệnh call đến thư viện hệ thống như \emph{alloc} (dành cho việc cấp bộ nhớ), \emph{collections} (dành cho cấu trúc dữ liệu cơ bản) và \emph{core} (sẽ được giới thiệu ở phần sau).
+Tuy nhiên, thư viện này phụ thuộc vào hệ điều hành của hệ thống, vì vậy trong môi trường lập trình nhúng vi điều khiển khi mà mã nguồn chạy trực tiếp trên chip vi điều khiển thì thư viện này không thể sử dụng được.
+Để giải quyết vấn đề này thì chúng ta có thể chọn cách không sử dụng RSL với các cú pháp \emph{no\_std}.
+
+\subsubsection{Thư viện lõi của Rust}
+Thư viện lõi của Rust (The Rust Core Library -- RCL) có chức năng liên kết những chức năng của ngôn ngữ đến các thư viện được sử dụng trong phần mềm.
+RCL không tương tác trực tiếp với phần mềm Rust mà tương tác thông qua một giao diện được reexport bởi RSL.
+Vì vậy, ta có thể điều chỉnh thư viện lõi này một cách dễ dàng mà giao diện trên sẽ vẫn được giữ nguyên.
+Có thể hiểu cách khác là ta có thể dễ dàng điều chỉnh cách mà ngôn ngữ Rust tương tác với các thư viện được sử dụng trong một phần mềm Rust.
+Điều này rất hữu dụng trong một môi trường lập trình nhúng khi mà thư viện chuẩn không thể sử dụng được, nhưng ta vẫn có thể sử dụng được ít nhiều thư viện lõi của Rust.
+
+Bảng \ref{tbl:rust_primitive_type} liệt kê ra những loại dữ liệu cơ bản nhất của ngôn ngữ Rust.
+Có thể thấy, ngoài những loại dữ liệu thường gặp trong ngôn ngữ C, Rust còn hỗ trợ một số kiểu dữ liệu khác như \emph{slices}, \emph{string} và \emph{tuples}.
+RCL được sử dụng để định nghĩa cách sử dụng các loại dữ liệu này thông qua các thư viện khác của Rust.
+
+\begin{longtable}{r|l}
+\textbf{Kiểu} & \textbf{Mô tả} \\
+\midrule
+\endhead
+bool & \emph{true} hoặc \emph{false} \\
+char & Giá trị UTF-8 vô hướng (scalar) \\
+f32, f64 & Số thực dấu phẩy động, độ chính xác đơn hay kép \\
+u8, u16, u32, u64 & Số nguyên không dấu \\
+i8, i16, i32, i64 & Số nguyên có dấu \\
+isize, usize & Số nguyên chỉ độ rộng của trỏ \\
+Pointer & Con trỏ thông thường (raw), không an toàn của C (*const T, *mut T) \\
+Array & Mảng có độ rộng cố định, kí hiệu [T] \\
+slice & Mọt phần nhỏ của mảng, kí hiệu \&[T] \\
+str & Giá trị UTF-8 được mã hóa thành mảng byte \\
+Tuple & List các phần tử, có giới hạn và đã được sắp xếp \\
+\bottomrule
+\caption{Các loại dữ liệu cơ bản của Rust}
+\label{tbl:rust_primitive_type}
+\end{longtable}
+\subsubsection{Các kiểu biến và bindings của Rust}
+Như đã liệt kê ở phần trên thì ngôn ngữ Rust hỗ trợ nhiều loại dữ liệu phổ biến, ta có thể sử dụng các loại dữ liệu này để gán vào các biến (\emph{variable}) sử dụng các \emph{binding} được cung cấp bởi RCL.
+Từ khóa quan trọng nhất để thực hiện điều này chính là từ khóa \emph{let}.
+Một biến trong phần mềm Rust có cấu trúc tương tự như các ngôn ngữ lập trình phổ biến hiện nay đó là bao gồm hai phần chính: tên và giá trị.
+Tuy nhiên, so với ngôn ngữ C thì biến của Rust có một đặc điểm khác biệt đó là tính mutability (khả năng biến đổi) của biến đó.
+
+Về mặc định, một biến của Rust không thể thay đổi giá trị.
+Nếu người lập trình thay đổi những biến này trong quá trình chương trình thực thi thì bộ compiler sẽ báo lỗi lúc biên dịch chương trình.
+Nếu muốn thay đổi giá trị của một biến, ta phải khai báo rõ ràng sử dụng từ khóa \emph{mut}.
+Ví dụ \ref{code:rust_var_example} là một ví dụ cơ bản về cách gán giá trị cho một biến, và tính mutability của các biến này.
+
+\begin{listing}
+\begin{rustcode}
+let x: i32 = 10; // gán giá trị 10 cho biến x (và gán loại dữ liệu là i32)
+let mut y = 50; // gán giá trị 50 cho biến y (mặc định sẽ tự gán loại dữ liệu i32)
+y = x; // biến y được thay đổi thành giá trị 10
+x = y; // lỗi! vì mặc định biến x là không thay đổi nên không thể thay đổi giá trị
+\end{rustcode}
+\caption{Bindings cơ bản của các biến}
+\label{code:rust_var_example}
+\end{listing}
+
+Như đã comment ở trong ví dụ thì mã Rust này khi biên dịch sẽ báo lỗi vì tính immutability của biến x.
+Khác với ngôn ngữ C thì mọi biến đều có thể thay đổi được thì ở ví dụ chương trình Rust sẽ không biên dịch thành công, đây là một điều khá quan trọng mà người lập trình cần lưu ý.
+Một điều thú vị khác trong ví dụ này là khả năng tự gán loại dữ liệu \emph{i32} cho biến \emph{y}.
+Để giải thích cho điều này thì có thể hiểu rằng, ở trong ví dụ thì ở dòng thứ 3 ta có biến \emph{y} được gán bằng giá trị của biến \emph{x}, mà biến \emph{x} ở dòng 1 đã được định nghĩa là một biến \emph{i32}.
+Vì vậy, khi bộ phiên dịch xử lý mã nguồn này, nó sẽ tự động gán loại dữ liệu cho biến \emph{y} là một biến \emph{i32}.
+Ngoài ra, nếu như bộ phiên dịch không rõ biến số nguyên là loại gì thì theo RFC 212 nó sẽ tự động gán cho là loại biến \emph{i32}.
+
+\subsubsection{Enums}
+Một \emph{enum} trong ngôn ngữ Rust có thể hiểu là một loại cấu trúc dữ liệu chứa một hoặc một số ít tập hợp các giá trị khác có thể xảy ra.
+Khi sử dụng \emph{enum} của Rust, ta có thể xác định được rõ tất cả những kết quả có thể trả về, vì vậy đây là một công cu quan trọng và mạnh mẽ của Rust.
+Ví dụ \ref{code:rust_enum_example} là một ví dụ cơ bản về một \emph{enum} được sử dụng rất rộng rãi trong thư viện chuẩn của Rust cũng như các thư viện bên ngoài.
+\begin{listing}
+\begin{rustcode}
+pub enum Option<T> {
+  Some(T),
+  None,
+}
+\end{rustcode}
+\caption{Ví dụ về một enum cơ bản}
+\label{code:rust_enum_example}
+\end{listing}
+
+Có thể hiểu rằng, biến \emph{Option} khi trả về sẽ có thể có giá trị \emph{Some(T)} nào đó, hoặc là giá trị \emph{None}.
+Nếu giá trị trả về là \emph{Some} thì theo định nghĩa nó sẽ chứa một giá trị kiểu \emph{T} nào đó.
+Kiểu \emph{T} này có thể là bất kì loại dữ liệu nào được hỗ trợ bởi Rust, thậm chí là loại dữ liệu tùy chỉnh được khai báo bởi người lập trình.
+Đây cũng là cách mà ngôn ngữ Rust định nghĩa các biến loại generic type.
+
+Để sử dụng \emph{enum}, người lập trình phải sử dụng từ khóa \emph{match} (được giới thiệu ở phần \hyperref[pattern_matching]{pattern matching}) để giải quyết toàn bộ những giá trị có thể trả về.
+Sử dụng cách này giúp xử lý toàn bộ những trường hợp có thể xảy ra.
+Đây cũng là cách Rust đã giải quyết được một trong những vấn đề gây đau đầu cho các nhà phát triển phần mềm C/C++ đó là \emph{null-pointer} (con trỏ rỗng).
+
+\subsubsection{Structs}
+Một \emph{struct} trong ngôn ngữ Rust khá tương đồng với struct của ngôn ngữ C, nó là một cách giúp người lập trình có thể tạo ra một loại dữ liệu phức tạp hơn so với \emph{enum}.
+Ta có thể kết hợp nhiều loại dữ liệu trong một \emph{struct} duy nhất, được xác định bởi tên của \emph{struct} đó.
+Ví dụ \ref*{code:rust_struct_example} là ví dụ về một \emph{struct} có tên là \emph{Person}.
+
+\begin{listing}
+\begin{rustcode}
+pub struct Person {
+  pub name: String,
+  pub age: u16,
+  location: String,
+}
+
+impl Person {
+  pub fn info(&self) {
+    println!("{} is {} years old!", self.name, self.age)
+  }
+}
+\end{rustcode}
+\caption{Ví dụ về một struct có tên gọi là Person}
+\label{code:rust_struct_example}
+\end{listing}
+
+Có thể dễ dàng nhận thấy sự tương đồng của một \emph{struct} của ngôn ngữ Rust với struct được sử dụng trong C.
+Tuy nhiên, có một điều khác biệt lớn đó là mọi giá trị của \emph{struct} của Rust về mặc định đều là \emph{private}.
+Để một hàm khác có thể sử dụng các giá trị này ta cần phải sử dụng từ khóa \emph{pub} để khai báo điều này một cách rõ ràng rằng đây là các giá trị \emph{public}.
+Ngoài ra, ta còn có thể sử dụng từ khóa \emph{impl} để khai báo các hàm con cho \emph{struct} này như trong ví dụ trên, khá tương đồng với cách lập trình hướng đối tượng trong ngôn ngữ C++.
+
+\subsubsection{Pointers}
+Trong RCL, có hai loại pointers (con trỏ) được hỗ trợ, tuy nhiên cả hai đều là xét là \emph{unsafe} (xem thêm ở phần TODO).
+Mặc dù cả hai loại con trỏ này được sử dụng khá rộng rãi khi tích hợp mã nguồn C chung với mã nguồn Rust trong cùng một chương trình nhưng trong phần lớn các trường hợp khác thì loại con trỏ này hoàn toàn không được sử dụng đến (trừ những trường hợp bắt buộc phải sử dụng mã \emph{unsafe}) vì trong thư viện lõi Rust đã cung cấp cho người dùng một abtraction layer để người lập trình có tương tác giữa dữ liệu và con trỏ của dữ liệu đó một cách dễ dàng.
+
+\subsubsection{Slices}
+\emph{Slice} trong Rust đơn giản là một cách để sử dụng một phần dữ liệu trong một array, thường được sử dụng để đọc một phần dữ liệu hay chỉnh sửa một số phần tử trong mảng đó.
+Lưu ý rằng, chỉ khi mảng có tính mutable (khai báo bằng cách sử dụng từ khóa \emph{mut}) thì ta mới có thể chỉnh sửa được các giá trị trong mảng đó.
+\emph{Slice} được kí hiệu bằng \emph{\&[T]}.
+\begin{listing}
+\begin{rustcode}
+let x = &mut [1, 2, 3];
+x[1] = 7; // lúc này mảng x sẽ có giá trị [7, 2, 3]
+\end{rustcode}
+\caption{Ví dụ về một slice đơn giản}
+\label{code:rust_slice_vector_example}
+\end{listing}
+
+Ngoài ra, \emph{slice} cũng thường được sử dụng để chung với loại dữ liệu \emph{String} như một cách tiện lợi để đọc hay chỉnh sửa một phần dữ liệu đó.
+Rust đặt tên cho cách sử dụng này là \emph{string slice}.
+Ví dụ \ref{code:rust_string_slice} cho ta thấy một cách sử dụng đơn giản của một \emph{string slice}.
+\begin{listing}
+\begin{rustcode}
+let s = String::from("hello world");
+let hello = &s[0..5];
+let world = &s[6..11];
+\end{rustcode}
+\caption{Ví dụ về một string slice}
+\label{code:rust_string_slice}
+\end{listing}
+\subsubsection{Giá trị Box}
+Về mặc định, mọi giá trị khi khai báo trong Rust đều được cấp bộ nhớ trên \emph{stack}.
+Ta có thể sử dụng \emph{box} để khai báo các biến này trên \emph{heap} bằng cách sử dụng cú pháp \emph{Box<T>}.
+Một \emph{box} về cơ bản là một \emph{smart pointer} (con trỏ thông minh), trỏ đến vùng nhớ \emph{heap} có giá trị của kiểu \emph{T} cho trước.
+Một khi giá trị \emph{box} không được sử dụng nữa (out of scope), thì giá trị của kiểu \emph{T} sẽ được xóa, và vùng nhớ heap trên được giải phóng.
+Ví dụ \ref{code:rust_box_example} cho ta một ví dụ về cách sử dụng một giá trị \emph{box} cơ bản.
+
+\begin{listing}
+\begin{rustcode}
+use std::mem;
+
+struct Point {
+    x: f64,
+    y: f64,
+}
+fn boxed_origin() -> Box<Point> {
+    // Khai báo điểm này trên heap, và trả về con trỏ của nó
+    Box::new(Point { x: 0.0, y: 0.0 })
+}
+\end{rustcode}
+\caption{Ví dụ về cách sử dụng một giá trị box}
+\label{code:rust_box_example}
+\end{listing}
+
+\pagebreak
+\subsubsection{Pattern matching}\label{pattern_matching}
+\emph{Pattern matching} trong ngôn ngữ Rust khá tương đồng với cách sử dụng từ khóa \emph{switch} trong C.
+Ta sử dụng từ khóa \emph{match} để xử lý toàn bộ các giá trị có thể trả về của một \emph{enum}.
+Một điểm khác biệt của từ khóa \emph{match} so cách sử dụng \emph{switch} trong C đó là khi sử dụng \emph{match} ta phải xử lý toàn bộ tất cả các trường hợp, trong khi đó thì khi lập trình sử dụng \emph{switch} ta có thể bỏ qua một số trường hợp, ví dụ như ta có thể bỏ qua trường hợp \emph{default} mặc định.
+
+Ta có thể sử dụng pattern matching để xử lý các giá trị của biến \emph{Option} như đã giới thiệu ở ví dụ \ref{code:rust_enum_example} như ví dụ \ref{code:rust_pattern_matching} sau:
+\begin{listing}
+\begin{rustcode}
+let tmp: Option<u16> = Some(15);
+
+match tmp {
+  Some(number) => println!("The value is {}", number),
+  None => (),
+}
+\end{rustcode}
+\caption{Ví dụ về cách sử dụng pattern matching}
+\label{code:rust_pattern_matching}
+\end{listing}
+
+\subsubsection{Traits}
+Cách sử dụng của \emph{trait} trong Rust khá tương đồng với cách sử dụng \emph{Interface} trong Java đó là để tải sử dụng hoặc đa hình hóa (polymorphism) một phần mã đã viết trước đó.
+Vì Rust là một ngôn ngữ hỗ trợ lối viết lập trình hàm (functional programming) nên khác với Java, một \emph{trait} không thể thừa kế (inherit) các hàm khác một cách trực tiếp mà nó đơn giản chỉ định nghĩa các hàm mà một object khác có thể tương tác với nó.
+Ví dụ \ref{code:rust_trait_example} là một ví dụ cơ bản về cách sử dụng \emph{trait} trong Rust.
+Người đọc có thể xem một ví dụ nâng cao khác về \emph{trait} trong phần phụ lục TODO.
+\begin{listing}[ht]
+\begin{rustcode}
+pub struct NewsArticle {
+    pub headline: String,
+    pub location: String,
+    pub author: String,
+    pub content: String,
+}
+
+impl Summary for NewsArticle {
+    fn summarize(&self) -> String {
+        format!("{}, by {} ({})", self.headline, self.author, self.location)
+    }
+}
+\end{rustcode}
+\caption{Ví dụ về cách sử dụng trait đơn giản}
+\label{code:rust_trait_example}
+\end{listing}
+
+\subsubsection{Các loại vòng lặp}
+Rust cung cấp hai loại vòng lặp cơ bản tương tự như C đó là vòng lặp \emph{for} và vòng lặp \emph{while}, ngoài ra còn có thêm vòng lặp \emph{loop} dành cho các thao tác lặp vĩnh viễn để tiện hơn cho việc lập trình.
+Tuy nhiên, hoàn toàn khác với cấu trúc lặp \emph{for} của C là \mintinline[breaklines]{c}{for(initialize; condition; increment)} thì vòng lặp \emph{for} của Rust được sử dụng chung với các biến có kiểu có thể lặp được (iterator).
+Ví dụ \ref{code:rust_loops} là ví dụ cơ bản về cách sử dụng hai vòng lặp cơ bản này.
+
+\begin{center}
+\begin{listing}
+\begin{minipage}[ht]{0.4\linewidth}
+\begin{rustcode}
+fn main() {
+    let mut number = 3;
+    while number != 0 {
+        println!("{}!", number);
+        number -= 1;
+    }
+    println!("Khởi động!!!");
+}
+\end{rustcode}
+\end{minipage}
+\qquad
+\begin{minipage}[ht]{0.55\linewidth}
+\begin{rustcode}
+fn main() {
+    let a = [5, 4, 3, 2, 1];
+    for number in a.iter() {
+        println!("the value is: {}", number);
+    }
+}
+\end{rustcode}
+\end{minipage}
+\caption{Ví dụ về hai vòng lặp cơ bản của Rust}
+\label{code:rust_loops}
+\end{listing}
+\end{center}
+
+\subsubsection{Closures}
+\emph{Closure} có thể hiểu đơn giản là một hàm ẩn danh (anonymous), được dùng để tạm thời giữ lại giá trị của một biến để rồi trở thành một argument (đối số) của một hàm khác.
+Cách dùng \emph{closure} của Rust tương đối điển hình cho lối lập trình hàm nói chung, nó tương tự với cách sử dụng \emph{lamba} trong Python.
+Ví dụ \ref{code:rust_closure_example} là cách sử dụng một \emph{closure} đơn giản.
+\begin{listing}[H]
+\begin{rustcode}
+let a = 3;
+let b = 4;
+let line = |x| a*x + b;
+
+println!("{} and {}", line(2), line(5)); // kết quả hiện ra màn hình là "10 and 19"
+\end{rustcode}
+\caption{Ví dụ về cách sử dụng closure đơn giản}
+\label{code:rust_closure_example}
+\end{listing}
