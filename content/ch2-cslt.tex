@@ -119,7 +119,7 @@ Khái niệm này có thể hiểu là các tài nguyên sẽ được giải ph
 
 \section{Đánh giá một ngôn ngữ lập trình}
 Đánh giá một ngôn ngữ lập trình, trên mọi khía cạnh là một công việc không hề dễ dàng, và bài luận văn này cũng không tập trung vào khía cạnh đánh giá toàn vẹn một ngôn ngữ lập trình, trong bài luận văn này là đánh giá về ngôn ngữ lập trình Rust mà sẽ chỉ đưa ra một số tài liệu, số liệu, đánh giá đã được nghiên cứu trong các bài báo, tài liệu khác.
-Các tài liệu, số liệu, đánh giá này được đưa ra với mong muốn tập trung vào khía cạnh sử dụng ngôn ngữ Rust trong môi trường thực tế, đưa dần mã nguồn viết sử dụng ngôn ngữ Rust dần vào codebase, tích hợp sử dụng chung với mã nguồn C/C++ có sẵnm v.v..
+Các tài liệu, số liệu, đánh giá này được đưa ra với mong muốn tập trung vào khía cạnh sử dụng ngôn ngữ Rust trong môi trường thực tế, đưa dần mã nguồn viết sử dụng ngôn ngữ Rust dần vào codebase, tích hợp sử dụng chung với mã nguồn C/C++ có sẵn v.v..
 
 Một trong những vấn đề chính sẽ được thảo luận sẽ là các vấn đề về bảo mật an toàn, cả về các lỗi có thể xảy ra trong các ngôn ngữ không an toàn khác cũng như là các vấn đề về race condition hay tương tự trong mảng lập trình concurrent mà ngôn ngữ Rust đã giải quyết; một số vấn đề về thư viện chuẩn của Rust (standard library), cũng như môi trường không có thư viện chuẩn này để có thể lập trình trong mảng lập trình nhúng; một phần khác cũng sẽ được thảo luận là tích hợp ngôn ngữ Rust với các thư viện hay mã nguồn C có sẵn trong codebase để tiết kiệm thời gian, không phải viết lại toàn bộ codebase mà vẫn sử dụng được các tính năng mà ngôn ngữ Rust mang lại; và trong các phần này, một số nhược điểm khi sử dụng Rust so với các ngôn ngữ khác (chủ yếu ở đây là so sánh với ngôn ngữ C) cũng sẽ được đưa ra.
 
@@ -149,7 +149,6 @@ Vì vậy, vấn đề về cộng đồng sử dụng ngôn ngữ Rust nói chu
     \item[--] Có dễ để viết một chương trình sử dụng ngôn ngữ Rust không?
     \item[--] Cấu trúc của ngôn ngữ Rust hỗ trợ người phát triển đến đâu?
     \item[--] Ngôn ngữ Rust được duy trì và phát triển như thế nào?
-    \item[--] Các vấn đề về giấy tờ hợp pháp khi sử dụng ngôn ngữ Rust.
 \end{itemize}
 
 \subsection{Linking, Building và Compiling}
@@ -279,7 +278,7 @@ pub enum Option<T> {
   None,
 }
 \end{rustcode}
-\caption{Ví dụ về một enum cơ bản}
+\caption{Một enum cơ bản}
 \label{code:rust_enum_example}
 \end{listing}
 
@@ -311,7 +310,7 @@ impl Person {
   }
 }
 \end{rustcode}
-\caption{Ví dụ về một struct có tên gọi là Person}
+\caption{Một struct có tên gọi là Person}
 \label{code:rust_struct_example}
 \end{listing}
 
@@ -333,7 +332,7 @@ Lưu ý rằng, chỉ khi mảng có tính mutable (khai báo bằng cách sử 
 let x = &mut [1, 2, 3];
 x[1] = 7; // lúc này mảng x sẽ có giá trị [7, 2, 3]
 \end{rustcode}
-\caption{Ví dụ về một slice đơn giản}
+\caption{Một slice đơn giản}
 \label{code:rust_slice_vector_example}
 \end{listing}
 
@@ -346,7 +345,7 @@ let s = String::from("hello world");
 let hello = &s[0..5];
 let world = &s[6..11];
 \end{rustcode}
-\caption{Ví dụ về một string slice}
+\caption{Một string slice}
 \label{code:rust_string_slice}
 \end{listing}
 \subsubsection{Giá trị Box}
@@ -369,7 +368,7 @@ fn boxed_origin() -> Box<Point> {
     Box::new(Point { x: 0.0, y: 0.0 })
 }
 \end{rustcode}
-\caption{Ví dụ về cách sử dụng một giá trị box}
+\caption{Cách sử dụng một giá trị box}
 \label{code:rust_box_example}
 \end{listing}
 
@@ -389,7 +388,7 @@ match tmp {
   None => (),
 }
 \end{rustcode}
-\caption{Ví dụ về cách sử dụng pattern matching}
+\caption{Cách sử dụng pattern matching}
 \label{code:rust_pattern_matching}
 \end{listing}
 
@@ -413,7 +412,7 @@ impl Summary for NewsArticle {
     }
 }
 \end{rustcode}
-\caption{Ví dụ về cách sử dụng trait đơn giản}
+\caption{Cách sử dụng trait đơn giản}
 \label{code:rust_trait_example}
 \end{listing}
 
@@ -447,7 +446,7 @@ fn main() {
 }
 \end{rustcode}
 \end{minipage}
-\caption{Ví dụ về hai vòng lặp cơ bản của Rust}
+\caption{Hai vòng lặp cơ bản của Rust}
 \label{code:rust_loops}
 \end{listing}
 \end{center}
@@ -464,6 +463,174 @@ let line = |x| a*x + b;
 
 println!("{} and {}", line(2), line(5)); // kết quả hiện ra màn hình là "10 and 19"
 \end{rustcode}
-\caption{Ví dụ về cách sử dụng closure đơn giản}
+\caption{Cách sử dụng closure đơn giản}
 \label{code:rust_closure_example}
 \end{listing}
+
+\subsection{Một số khái niệm nâng cao}
+\subsubsection{Đảm bảo an toàn bộ nhớ}
+Một trong những tính năng mạnh mẽ của ngôn ngữ Rust là đảm bảo an toàn cho bộ nhớ mà vẫn giữ được hiệu suất cao.
+Điều này có được là nhờ cách quản lý biến và bộ nhớ trong suốt quá trình thực thi của chương trình.
+Rust sử dụng ba khái niệm chính để thực hiện điều này, đó là \emph{ownership} (quyền sở hữu), \emph{borrow} (phép mượn) và \emph{lifetime} (thời gian sống) của các biến.
+Các khái niệm này cũng có thể được tìm thấy ở một số ngôn ngữ có tính an toàn kiểu khác như \emph{Haskell} hay \emph{Cyclone}.
+
+\textbf{Ownership}\\
+\indent Một giá trị chỉ có thể có một chủ ở bất kì thời điểm nào. Quyền sở hữu của biến này có thể được được chuyển giao cho một chủ khác.
+Khi biến không được sử dụng nữa thì chủ sẽ có nhiệm vụ giải phóng bộ nhớ của biến này.
+
+\textbf{Borrowing}\\
+\indent Quyền sở hữu của một biến có thể được tạm thời trao cho một chủ khác. Lúc này chủ mới có thể sử dụng giá trị của biến đã mượn đó, nhưng quyền sở hữu chính vẫn thuộc về chủ cũ, và chủ cũ vẫn có nhiệm vụ giải phóng bộ nhớ của biến này.
+
+\textbf{Lifetime}\\
+\indent Mỗi biến luôn có một \emph{lifetime} nhất định. \emph{Lifetime} này thường được kiểm tra bằng \emph{borrow checker} lúc biên dịch mã nguồn nhằm đảm bảo mọi phép mượn đều có hiệu lực.
+
+Hệ thống sử dụng ba khái niệm trên được gọi là \emph{ownership system} (hệ thống quản lý quyền sở hữu) của biến.
+Hệ thống này không làm chậm chương trình khi thực thi vì mọi kiểm tra về quyền sở hữu của biến đều được kiểm tra lúc phiên dịch trương trình.
+Mặc dù điều này ít nhiều làm chậm thời gian biên dịch chương trình, tuy nhiên nó đảm bảo an toàn cho bộ nhớ, giúp người lập trình có thể yên tâm về những lỗi bộ nhớ có thể gặp phải lúc thực thi chương trình mà họ có thể bỏ qua lúc phát triển hệ thống.
+Điều này làm cho Rust rất đáng được quan tâm, là một ứng cử viên để có thể dần thay thế ngôn ngữ C trong hướng lập trình nhúng, vì mã nguồn Rust đảm bảo an toàn về bộ nhớ mà vẫn giữ được tốc độ thực thi chương trình, mà lại hoàn toàn không sử dụng \emph{garbage collector}.
+
+\subsubsection{Một vài ví dụ về hệ thống quản lý quyền sở hữu}
+Để hiểu rõ hơn về hệ thống quản lý quyền sở hữu, cũng như cách Rust sử dụng hệ thống này để đảm bảo tính an toàn bộ nhớ, ta cùng phân tích một vài ví dụ về hệ thống này ở phần này.
+
+\textbf{Quyền sở hữu cơ bản}
+\begin{listing}[H]
+\begin{rustcode}
+fn introduce_name(p: Person) {
+  println!("My name is {}", p.name);
+}
+
+fn main() {
+  // a lúc này đang sở hữu struct Person
+  let a = Person{ name: "Alice".to_string(), age: 20 }
+  introduce_name(a); // quyền sở hữu của a trao lại cho hàm introduce_name
+  // sau khi hàm thực thi xong, bộ nhớ được giải phóng
+  introduce_name(a); // lỗi! a đã được giải phóng nên không thể đọc giá trị a được nữa
+}
+\end{rustcode}
+\caption{Ví dụ quyền sở hữu cơ bản}
+\label{code:rust_ownership_example}
+\end{listing}
+
+Sử dụng một phương pháp cấp và giải phóng bộ nhớ một cách tự động như trên ví dụ trên, người lập trình không cần phải quan tâm đến việc quản lý bộ nhớ các biến này.
+Điều này làm tăng hiệu suất làm việc lên rất nhiều, và cũng là một phương pháp tiện lợi, hiện đại để quản lý bộ nhớ.
+Người lập trình có thể luôn tin tưởng vào bộ compiler sẽ kiểm tra những lỗi về bộ nhớ, sẽ nhắc về những lỗi có thể gặp phải.
+Như ví dụ trên, quyền sở hữu được trao hẳn cho một hàm khác.
+Ngoài cách làm này, ta có thể tạm thời trao quyền sở hữu cho một hàm khác như ví dụ sau.
+
+\textbf{Borrowing}
+\begin{listing}[H]
+\begin{rustcode}
+fn introduce_name(p: &Person) {
+  println!("My name is {}", p.name);
+}
+
+fn main() {
+  // a lúc này đang sở hữu struct Person
+  let a = Person{ name: "Alice".to_string(), age: 20 }
+  introduce_name(&a); // quyền sở hữu của a trao lại cho hàm introduce_name
+  // sau khi hàm thực thi xong, quyền sở hữu được trả lại cho hàm main
+  // vì thế dòng lệnh sau không xảy ra lỗi.
+  introduce_name(&a);
+}
+\end{rustcode}
+\caption{Ví dụ về phép mượn}
+\label{code:rust_borrowing_example}
+\end{listing}
+
+\textbf{Lifetime}
+\begin{listing}[H]
+\begin{rustcode}
+fn main() {
+  // a lúc này đang sở hữu struct Person
+  let a = Person{ name: "Alice".to_string(), age: 20 }
+  {
+    let b = &a; // b mượn giá trị của a ở dòng này
+  } // lifetime của b kết thúc ở đây nên bộ nhớ được giải phóng
+} // lifetime của a kết thúc ở đây và bộ nhớ được giải phóng
+\end{rustcode}
+\caption{Ví dụ về lifetime}
+\label{code:rust_lifetime_example}
+\end{listing}
+
+Trong phần lớn trường hợp, lifetime được gán bởi bộ compiler là kiểm tra nhờ bộ \emph{borrow checker} như trong ví dụ \ref{code:rust_lifetime_example}.
+Tuy nhiên nếu cần thiết thì ta cũng có thể định nghĩa rõ ràng lifetime của từng biến trong một hàm như trong ví dụ \ref{code:rust_explicit_lifetime}.
+\begin{listing}[H]
+\begin{rustcode}
+fn print_ref<'a, 'b>(x: &'a i32, y: &'b i32) {
+    println!("First number is {}, second number is {}", x, y);
+}
+fn main() {
+  let (one, two) = (1, 2);
+  print_ref(&one, &two);
+}
+\end{rustcode}
+\caption{Ví dụ về lifetime rõ ràng}
+\label{code:rust_explicit_lifetime}
+\end{listing}
+
+\subsubsection{Lập trình đồng thời}
+Concurrent programming (hay lập trình đồng thời), còn được biết bởi một tên gọi khác là \emph{Multi-thread programming} là cách nói về các tác vụ trong một phần mềm được thực thi một cách đồng thời.
+Rust đã giải quyết vấn đề về an toàn bộ nhớ, tuy nhiên hóa ra cách giải quyết vấn đề này sử dụng hệ thống quản lý quyền sở hữu trên lại là chìa khóa để người lập trình có thể thực hiện sử dụng lối lập trình concurrent programming.
+Đề tài không đi vào phân tích concurrent programming, tuy nhiên nó là một tính năng khá quan trọng và cần thiết trong lập trình hệ thống hiện đại nên ở phần này, concurrent programming được giới thiệu sơ qua.
+
+Như đã phân tích ở phần trước, hệ thống quản lý quyền sở hữu, được kiểm tra nhờ bộ \emph{borrow checker} tính hợp trong compiler của ngôn ngữ Rust đảm bảo cho sự an toàn của bộ nhớ hệ thống.
+Và vì cách hoạt động của hệ thống này có những đặc điểm như không cho phép nhiều dữ liệu cùng thay đổi một giá trị (một biến chỉ có thể có một chủ ở một thời điểm bất kì), hay việc giải phóng bộ nhớ được thực hiện bởi chủ sở hữu của biến đó giúp cho không xảy ra vấn đề use-after-free hay double-free, v.v..
+Từ cách hoạt động này mà ta có thể đảm bảo không xảy ra các vấn đề gây nhiều khó khăn trong việc thực hiện concurrent programming.
+Một điều lý thú khác đó là mọi thứ đã nêu trên đều được thực hiện bởi bộ compiler chứ nó không phải là một tính năng của ngôn ngữ Rust, không được quy định bởi thư viện chuẩn.
+Vì vậy, những nhà phát triển có thể tự mình phát triển lên những thư viện cho mục đích concurrent programming khác nhau.
+Một số thư viện điển hình cho concurrent programming ở thời điểm bài viết là \emph{tokio}, \emph{crossbeam}, \emph{rayon}, v.v..
+
+\subsubsection{Mã unsafe}
+Trong tất cả các ví dụ đã được nêu lên từ đầu bài viết đến giờ thì mọi chương trình đều được xem là ổn định, an toàn về bộ nhớ, điều này được bộ compiler của Rust đảm bảo, và được thực hiện một cách tự động.
+Tuy nhiên, ở một số trường hợp người lập trình cần loại bỏ những rào cản này để thực hiện hệ thống.
+Khi đó, họ sẽ sử dụng mã unsafe (hay mã không an toàn).
+Mã unsafe tồn tại vì dẫu bộ compiler có thông minh đến đâu thì việc phân tích mã nguồn ở thời điểm biên dịch cũng có thể đạt đến một mức xác định nào đó, không thể hoàn toàn phân tích mọi trường hợp có thể xảy ra trong một chương trình Rust.
+Có thể hiểu rằng mã unsafe có nghĩa là bộ compiler sẽ bỏ qua, không kiểm tra phần mã trong khối unsafe, mọi vấn đề có thể phát sinh sẽ được giải quyết một cách thủ công bởi người lập trình.
+Mã unsafe, về cấu trúc cũng chỉ là một mã Rust thông thường, nhưng nó cho phép người lập trình có thêm một số ``sức mạnh'' mới, danh sách liệt kê sau là một số thao tác lập trình unsafe hay được sử dụng.
+\begin{itemize}
+\item Dereference raw pointer
+\item Gọi một hàm unsafe khác
+\item Sử dụng và thay đổi một giá trị tĩnh có thể thay đổi (mutable static variable)
+\item Thực hiện lập trình các trait unsafe
+\end{itemize}
+
+\begin{longtable}{>{\raggedleft\arraybackslash}p{6cm}|p{8cm}  >{\raggedleft\arraybackslash}p{6cm}|p{8cm}}
+\textbf{Thao tác unsafe} & \textbf{Mô tả về tính an toàn} \\
+\midrule
+\endhead
+Sử dụng và thay đổi\linebreak mutable static variable & Khi đọc và viết các giá trị này có thể dẫn đến race condition vì tất cả các thread trong scope có thể sử dụng biến này \\
+\\
+Dereference raw pointer & Không có binding trong quan hệ giữa raw pointer và dữ liệu nó trỏ đến nên \emph{borrow checker} không thể kiểm tra được quyền sở hữu của các raw pointer này. Điều này nó nghĩa là thao tác dereference raw pointer có thể dẫn đến race condition hoặc dangling pointer (con trỏ lơ lửng)\\
+Sử dụng các hàm hay trait unsafe & Bộ compiler Rust không thể đảm bảo tính an toàn cho các hàm unsafe vì ví như gọi một hàm FFI đến mã C thì mã được dịch bởi một bộ compiler của C chứ không phải là bộ compiler Rust\\
+\bottomrule
+\caption{Các loại mã unsafe thông dụng của Rust}
+\label{tbl:rust_unsafe}
+\end{longtable}
+
+Như đã phân tích trên, mặc dù các khối unsafe là một công cụ mạnh, cho phép người lập trình có thêm một công cụ mạnh mẽ và tạm thời bỏ qua sự kiểm tra nghiêm ngặc của bộ compiler của Rust để thực hiện được những thao tác lập trình nâng cao hơn.
+Tuy nhiên, nếu người lập trình không cẩn thận thì có thể dẫn đến nhiều hệ lụy không mong muốn.
+Để mô tả cho một thao tác unsafe, người đọc có thể xem thêm ở ví dụ \ref{code:rust_unsafe_basic} sau.
+Một số thao tác unsafe khác sẽ được giới thiệu trong phần tích hợp mã nguồn Rust và mã nguồn C ở phần sau.
+
+\begin{listing}[H]
+\begin{rustcode}
+let mut num = 5;
+
+let r1 = &num as *const i32;
+let r2 = &mut num as *mut i32;
+
+unsafe {
+    println!("r1 is: {}", *r1);
+    println!("r2 is: {}", *r2);
+}
+\end{rustcode}
+\caption{Ví dụ về mã unsafe}
+\label{code:rust_unsafe_basic}
+\end{listing}
+
+Ở trên là những cú pháp, cấu trúc một phần mềm Rust cơ bản để thực hiện viết những chương trình sử dụng ngôn ngữ này.
+Ngoài những cú pháp này còn nhiều loại dữ liệu và cú pháp nâng cao khác như \emph{Cell}, \emph{RefCell}, \emph{smart pointer}, v.v.. nhưng hầu hết những cú pháp này không được sử dụng trong đề tài này nên các cú pháp và loại dữ liệu này đã được bỏ qua.
+Người đọc có thể xem thêm về khái niệm này ở các tài liệu tham khảo.
+
+\subsection{Cấu trúc một dự án trong Rust}
+
