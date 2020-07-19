@@ -1,11 +1,10 @@
 \chapter{Cơ sở lý thuyết}\label{ch2-top}
-\section{Một số vấn đề về ngôn ngữ lập trình}
+\section{Thiết kế một ngôn ngữ lập trình}
 Trước hết, cần khẳng định một điều là mọi ngôn ngữ lập trình, xét về chức năng thì đều có thể xem là ngang bằng nhau.
 Điều này còn được gọi là Turing compatible.
+%All computing languages or computers can compute anything in theory but nothing of practical interest is easy.
 
-All computing languages or computers can compute anything in theory but nothing of practical interest is easy.
-
-Vì vậy, tuy rằng mọi vấn đề trong thực tế tuy rằng trên lý thuyết đều có thể tính toán được bằng bất cứ ngôn ngữ lập trình nào.
+Tuy rằng mọi vấn đề trong thực tế tuy rằng trên lý thuyết đều có thể tính toán được bằng bất cứ ngôn ngữ lập trình nào.%(TODO: add reference)
 Tuy nhiên dựa trên cấu trúc và thiết kế của một ngôn ngữ lập trình thì quá trình giải quyết này có thể sẽ gặp nhiều bất lợi, hay thậm chí là tốn quá nhiều thời gian dẫn đến vấn đề không hoàn thành trước hạn chót, mang lại hiệu quả công việc thấp.
 
 Để vượt qua vấn đề này thì điều phù hợp, logic nhất cần làm là thiết kế một ngôn ngữ lập trình phù hợp để giải quyết các vấn đề đó, và chỉ các vấn đề đó.
@@ -13,7 +12,7 @@ Cũng chính vì lý do này mà ngôn ngữ Rust khi được thiết kế cũn
 Chúng ta cần hiểu rõ những quyết định đưa ra của các nhà phát triển khi thiết kế một ngôn ngữ để có thể hiểu rõ được cách mã nguồn Rust được thực hiện như thế nào, cấu trúc ra sao, mà từ đó có thể đưa ra những nhận xét về ngôn ngữ Rust nói chung, cũng như có thể so sánh được Rust với các ngôn ngữ lập trình khác (mà trong lĩnh vực lập trình nhúng, thì chủ đạo sẽ là so sánh ngôn ngữ Rust với ngôn ngữ C).
 Trong các chương sau, một số ý tưởng ``mới'' của ngôn ngữ Rust như ownership (quyền sở hữu), mutability (khả năng chỉnh sửa, biến đổi) hay borrowing lifetimes (vay mượn thời gian sống) cũng sẽ được giới thiệu.
 Sau đấy là một số quyết định cốt lõi trong việc thiết kế ngôn ngữ Rust mà các nhà phát triển ở tập đoàn Mozzila đã lựa chọn khi thiết kế ngôn ngữ Rust.
-\subsection{Mục tiêu thiết kế của một ngôn ngữ}
+
 Mục tiêu thiết kế của ngôn ngữ Rust, theo như FAQ của website chính thức của ngôn ngữ Rust được viết như sau:
 \bigskip
 
@@ -45,77 +44,6 @@ Ngày nay ta có thể tìm thấy rất nhiều lỗi bảo mật liên quan đ
 
 Bjarne Stroustrup giải thích về nguyên tắt ``zero overhead'' trong bài viết về ngôn ngữ C++ của ông như sau: ``In general, C++ implementations obey the zero-overhead principle: What you don’t use, you don’t pay for. And further: What you do use, you couldn’t hand code any better.''
 
-\subsection{Undefined behavior}
-Một trong những vấn đề phổ biến có thể gặp khi lập trình sử dụng ngôn ngữ C/C++ đó là ``undefined behavior''. Trong \emph{The Current C Programming Language Standard – ISO/IEC 9899:2018 (C18)}, undefined behavior được định nghĩa như sau:
-
-\bigskip
- 3.4.3\par
- undefined behavior:\par
- behavior, upon use of a nonportable or erroneous program construct or of erroneous data, for whichthis document imposes no requirements
-\bigskip
-
-Trong thực tế, một trong những hiệu ứng sau (nhưng không chỉ những hiệu ứng đã liệt kê sau) có thể xảy ra khi một chương trình có undefined behavior xảy ra:
-
-\begin{enumerate}
-    \item Không xảy ra vấn đề, chương trình chạy đúng.
-    \item Không có hiệu ứng gì.
-    \item Chương trình chạy một cách ngẫu nhiên.
-    \item Chương trình gặp phải lỗi và crash.
-    \item Chương trình tiếp tục chạy và crash sau đó (có thể bất cứ lúc nào).
-    \item Chương trình tiếp tục chạy nhưng kết quả cho ra không chính xác.
-    \item Chương trình ghi đè các biến khác trong bộ nhớ.
-    \item Chương trình trả về kết quả của hàm không đúng.
-    \item Chương trình chạy ``ngẫu nhiên'' phụ thuộc vào data nhận vào.
-\end{enumerate}
-
-Trong những vấn đề có thể xảy ra như đã liệt kê trên thì hiệu ứng được liệt kê cuối là một vấn đề nguy hiểm nhất đối với bảo mật hệ thống.
-Một người tấn công hệ thống có thể thiết kế data nhận vào hệ thống để có thể điều khiển chương trình chạy theo cách họ muốn.
-
-Một chương trình không thể xảy ra undefined behavior ở bất kì tình huống nào được gọi là ``well defined''.
-Để chương trình không xả ra undefined behavior thì trong ngôn ngữ C/C++ người lập trình phải nắm rõ các edge cases có thể xảy ra undefined behavior, từ đó mà viết mã nguồn để tránh các trường hợp này.
-Tuy nhiên như đã thảo luận ở phần trước, con người rất hay bỏ qua các trường hợp edge case hiếm gặp.
-Để giải quyết vấn đề này, ngôn ngữ Rust được thiết kế với yêu cầu an toàn nên toàn bộ chương viết sử dụng ngôn ngữ Rust luôn luôn là một chương trình well defined, trừ khi người lập trình sử dụng từ khóa \emph{unsafe}, vấn đề này sẽ được trình bày ở các phần sau.
-
-%Undefined behavior có một ưu điểm giúp mã nguồn có thể được tối ưu hóa một cách dễ dàng hơn.
-%Khi xảy ra undefined behavior, bộ compiler sẽ chọn cách tối ưu hóa tốt nhất.
-%Chúng ta có thể xem một ví dụ về undefined behavior trong ví dụ mã nguồn sau:
-%#include <stdio.h>
-%int main(int argc, char *argv[]) {
-%    int a = 0;
-%    if (argc == 1) {
-%        a = 2147483647;
-%    }
-%
-%    printf("a = %i\n", a);
-%    if (a + a < 0) {
-%        printf("Overflow.\n");
-%    } else {
-%        printf("No overflow.\n");
-%    }
-%}
-
-\subsection{An toàn kiểu}
-Type safety (an toàn kiểu) là một trong những thuộc tính mà một chương trình well defined luôn có. Type safety đảm bảo một biến không được hiểu ngầm sai về kiểu của nó, type safety cũng giúp bảo hệ về vấn đề bảo mật bộ nhớ, vì khi chương trình không hiểu ngầm sai về kiểu của một biến thì sẽ không xảy ra hiện tượng copy, chỉnh sửa, v.v.. sai, dẫn đến undefined behavior.
-
-Phần lớn ngôn ngữ có đảm bảo tính an toàn về kiểu, điển hình như Python, Java hay JavaScipt, v.v.. thì hầu hết đều sử dụng garbage collector, dẫn đến vấn đề khó sử dụng trong môi trường lập trình cấp thấp hay trong các môi trường hạn chế về bộ nhớ như vi điều khiển như đã thảo luận ở trên.
-
-Ngôn ngữ C và C++ là một trong số ít ngôn ngữ phổ biến hiện hay không đảm bảo tính an toàn về kiểu, điều này lại một lần nữa giao lại cho người lập trình thủ công nhận biết và phát triển hệ thống tránh gặp phải các trường hợp này.
-Tuy phần lớn các vấn đề có thể xảy ra khi một hệ thống được viết bởi ngôn ngữ C, C++ không đảm bảo về tính an toàn, và thường là nằm ngoài mong muốn của người phát triển hệ thống thì cũng có thể người lập trình lại muốn sử dụng tính không an toàn này để điều khiển driver cho phần cứng, viết vào các vùng nhớ hoặc chạy intruction một cách kéo léo để điều khiển hệ thống chạy đúng với mong muốn với người lập trình.
-Tính an toàn về kiểu có thể sẽ làm cho những công việc trên rất khó hoặc hoàn toàn không thể thực hiện được.
-
-Xét về type safety thì mọi chương trình viết bằng ngôn ngữ Rust đều đảm bảo về tính an toàn kiểu. Tuy nhiên, nếu người lập trình muốn thực hiện những thao tác không an toàn như đã liệt kệ trên thì điều đó là hoàn toàn có thể thực hiện được bằng cách sử dụng từ khóa \emph{unsafe}.
-Mã nguồn trong khối unsafe có thể được sử dụng để làm bất kì điều gì, và khi biên dịch thì bộ compiler sẽ bỏ qua kiểm tra tính an toàn trong các khối này.
-Nếu sử dụng không đúng cách thì các khối unsafe này có thể dẫn đến undefined behavior trong một chương trình viết bởi ngôn ngữ Rust, tuy nhiên không thể phủ nhận được tính hữu dụng cho người phát triển hệ thống để có thể bỏ qua một số kiểm tra an toàn của hệ thống để có thể điều khiển nó theo ý muốn của mình.
-
-\subsection{Quản lý bộ nhớ}
-Về quản lý bộ nhớ, ngôn ngữ Rust sử dụng mô hình RAII (Resource Accquistion Is Initialization) hay còn biết tới một tên khác là SBRM (Scope-Bound Resource Management).
-Khái niệm này có thể hiểu là các tài nguyên sẽ được giải phóng ngược lại với thứ tự nó nhận vào, và được thực hiện một cách tự động khi một hàm hay một method trả về, điều này phải thực hiện ngay cả khi gặp phải lỗi trong quá trình này.
-Điều này giúp đảm bảo không bị rò rỉ tài nguyên hệ thống (resource leak), các tài nguyên này luôn được giữ trong quá trình nhận được tài nguyên này cho đến khi giải phóng. Vì vậy, nếu không có tài nguyên bị rò rỉ thì sẽ không bị rò rỉ bộ nhớ.
-%\subsection{Các nền tảng được hỗ trợ}
-%\subsection{Từ khóa}
-%Ở thời điểm bài viết, ngôn ngữ Rust có tổng cộng 39 từ khóa so với C89 với 35 từ khóa.
-%Ngoài ra Rust còn dự trữ trước 13 từ khóa khác với mục đích thêm các tính năng mới cho ngôn ngữ Rust trong tương lai (https://doc.rust-lang.org/reference/keywords.html#reserved-keywords).
-%Trong những từ khóa dữ trữ trước này thì từ khóa \emph{box} và \emph{macro} đã có thể được sử dụng, tuy nhiên được các nhà phát triển đánh giá là không ổn định (unstable) TODO: https://github.com/rust-lang/rust/issues/39412 https://github.com/rust-lang/rust/issues/49733
 
 \section{Đánh giá một ngôn ngữ lập trình}
 Đánh giá một ngôn ngữ lập trình, trên mọi khía cạnh là một công việc không hề dễ dàng, và bài luận văn này cũng không tập trung vào khía cạnh đánh giá toàn vẹn một ngôn ngữ lập trình, trong bài luận văn này là đánh giá về ngôn ngữ lập trình Rust mà sẽ chỉ đưa ra một số tài liệu, số liệu, đánh giá đã được nghiên cứu trong các bài báo, tài liệu khác.
@@ -126,7 +54,7 @@ Một trong những vấn đề chính sẽ được thảo luận sẽ là các
 Cũng trong phần đánh giá, một số vấn đề khác về phát triển một hệ thống sử dụng ngôn ngữ lập trình nói chung và ngôn ngữ Rust nói riêng cũng được đánh giá, đó là:
 
 \begin{enumerate}
-    \item Linking và Building: nếu một ngôn ngữ có vấn đề trong khâu linking, building sẽ dẫn tới các vấn đề trong quá trình  phát triển hệ thống, dẫn đến việc không phù hợp trong việc kiểm tra hệ thống hay chạy thực tế. Cũng trong phần này, vấn đề tích hợp với ngôn ngữ C, sử dụng hai thư viện Glib hay D-Bus cũng được thảo luận.
+    \item Quản lý dự án: nếu một ngôn ngữ có vấn đề trong khâu công việc quản lý một dự án, hay gặp các vấn đề trong quá trình biên dịch mã nguồn sẽ có thể dẫn tới các vấn đề trong quá trình phát triển hệ thống. Vì vậy, các công cụ quản lý dự án có vai trò tương đối quan trọng trong một dự án phát triển hệ thống.
 
     \item Debugging: debugging là một khâu quan trọng trong phát triển hệ thống để tìm các lỗi về logic hay bộ nhớ có thể phát sinh trong quá trình viết mã nguồn.
 Nếu hệ thống debugging của một ngôn ngữ được hỗ trợ quá kém hay không đủ mạnh có thể dẫn đến sự trễ nãi trong quá trình phát triển hệ thống hay mang lại hiệu quả công việc thấp.
@@ -134,7 +62,7 @@ Nếu hệ thống debugging của một ngôn ngữ được hỗ trợ quá k�
     \item Testing, thời gian phiên dịch, các vấn đề về tài liệu, IDE và một số vấn đề khác cũng được đề cập qua.
 \end{enumerate}
 
-Ngoài ra còn có nhiều vấn đề kỹ thuật khác trong lĩnh vực lập trình nhúng cần được thảo luận như các hệ thống hệ điều hành thời gian thực RTOS, sử dụng ngôn ngữ Rust trong các thiết bị trong mức hỗ trợ thấp (tier 3 support) hay các design pattern, language design, v.v..
+Ngoài ra còn có nhiều vấn đề kỹ thuật khác trong lĩnh vực lập trình nhúng cần được thảo luận như các hệ thống hệ điều hành thời gian thực RTOS, sử dụng ngôn ngữ Rust trong các thiết bị trong mức hỗ trợ thấp, hay các design pattern, language paradigms, v.v..
 Tuy nhiên, với mục đích chính của đề tài là nghiên cứu ngôn ngữ Rust nhằm nâng cao nhận thức về cách sử dụng một ngôn ngữ tiềm năng mới này và phân tích thực hiện một hệ thống thực tế sử dụng ngôn ngữ Rust nên các vấn đề này sẽ được bỏ qua.
 
 Như đã liệt kê trên là những vấn đề chính khi thảo luận phân tích về một ngôn ngữ lập trình, nhưng cũng có thể sẽ có những vấn đề không lường trước xảy ra trong quá trình phát triển hệ thống.
@@ -151,16 +79,23 @@ Vì vậy, vấn đề về cộng đồng sử dụng ngôn ngữ Rust nói chu
     \item[--] Ngôn ngữ Rust được duy trì và phát triển như thế nào?
 \end{itemize}
 
-\subsection{Linking, Building và Compiling}
+\subsection{Quản lý một dự án phần mềm Rust}
 \begin{itemize}
-    \item[--]Compiler khi gặp lỗi sẽ đưa ra lỗi gì, những lỗi này có giúp người phát triển nhanh chóng sữa lỗi không?
-    \item[--]Hệ thống Linking/Building chính thức của Rust là Cargo có dễ sử dụng không?
-    \item[--]Các mức hỗ trợ của bộ compiler là gì? Các mức hỗ trợ có ảnh hưởng như thế nào tới việc dịch mã trong quá trình phát triển?
-    \item[--]Những vấn đề thông thường gặp phải khi tích hợp Rust với ngôn ngữ C là gì? Liệu việc tích hợp này có dễ dàng không?
-    \item[--]Khi tích hợp thành công thì quá trình linking, building và compiling này khác gì so với chỉ sử dụng hệ thống chính thức của Rust là Cargo?
+    \item[--]Một dự án sử dụng ngôn ngữ Rust được quản lý như thế nào?
+    \item[--]Cách sử dụng một số thư viện bên thứ ba như thế nào?
+    \item[--]Các nấc hỗ trợ đối tượng được hỗ trợ bởi bộ biên dịch là gì?
+    \item[--]Một số vấn đề cần lưu ý để biên dịch đúng cho đối tượng nhúng là gì?
 \end{itemize}
+%\subsection{Linking, Building và Compiling}
+%\begin{itemize}
+%    \item[--]Compiler khi gặp lỗi sẽ đưa ra lỗi gì, những lỗi này có giúp người phát triển nhanh chóng sữa lỗi không?
+%    \item[--]Hệ thống Linking/Building chính thức của Rust là Cargo có dễ sử dụng không?
+%    \item[--]Các mức hỗ trợ của bộ compiler là gì? Các mức hỗ trợ có ảnh hưởng như thế nào tới việc dịch mã trong quá trình phát triển?
+%    \item[--]Những vấn đề thông thường gặp phải khi tích hợp Rust với ngôn ngữ C là gì? Liệu việc tích hợp này có dễ dàng không?
+%    \item[--]Khi tích hợp thành công thì quá trình linking, building và compiling này khác gì so với chỉ sử dụng hệ thống chính thức của Rust là Cargo?
+%\end{itemize}
 
-\subsection{Các công cụ phát triển}
+\subsection{Các công cụ phát triển khác}
 \begin{itemize}
     \item[--] Bộ Debugger được hỗ trợ chính trong một chương trình viết sử dụng ngôn ngữ Rust là gì?
     \item[--] Các vấn đề về testing, CI/CD trong một hệ thống sử dụng ngôn ngữ Rust như thế nào?
@@ -320,7 +255,7 @@ Tuy nhiên, có một điều khác biệt lớn đó là mọi giá trị của
 Ngoài ra, ta còn có thể sử dụng từ khóa \emph{impl} để khai báo các hàm con cho \emph{struct} này như trong ví dụ trên, khá tương đồng với cách lập trình hướng đối tượng trong ngôn ngữ C++.
 
 \subsubsection{Pointers}
-Trong RCL, có hai loại pointers (con trỏ) được hỗ trợ, tuy nhiên cả hai đều là xét là \emph{unsafe} (xem thêm ở phần TODO).
+Trong RCL, có hai loại pointers (con trỏ) được hỗ trợ, tuy nhiên cả hai đều là xét là \emph{unsafe} (xem thêm ở phần \hyperref[lbl:unsafe_code]{mã unsafe} được giới thiệu sau).
 Mặc dù cả hai loại con trỏ này được sử dụng khá rộng rãi khi tích hợp mã nguồn C chung với mã nguồn Rust trong cùng một chương trình nhưng trong phần lớn các trường hợp khác thì loại con trỏ này hoàn toàn không được sử dụng đến (trừ những trường hợp bắt buộc phải sử dụng mã \emph{unsafe}) vì trong thư viện lõi Rust đã cung cấp cho người dùng một abtraction layer để người lập trình có tương tác giữa dữ liệu và con trỏ của dữ liệu đó một cách dễ dàng.
 
 \subsubsection{Slices}
@@ -396,7 +331,7 @@ match tmp {
 Cách sử dụng của \emph{trait} trong Rust khá tương đồng với cách sử dụng \emph{Interface} trong Java đó là để tải sử dụng hoặc đa hình hóa (polymorphism) một phần mã đã viết trước đó.
 Vì Rust là một ngôn ngữ hỗ trợ lối viết lập trình hàm (functional programming) nên khác với Java, một \emph{trait} không thể thừa kế (inherit) các hàm khác một cách trực tiếp mà nó đơn giản chỉ định nghĩa các hàm mà một object khác có thể tương tác với nó.
 Ví dụ \ref{code:rust_trait_example} là một ví dụ cơ bản về cách sử dụng \emph{trait} trong Rust.
-Người đọc có thể xem một ví dụ nâng cao khác về \emph{trait} trong phần phụ lục TODO.
+Người đọc có thể xem một ví dụ nâng cao khác về \emph{trait} trong phần phụ lục.%TODO
 \begin{listing}[ht]
 \begin{rustcode}
 pub struct NewsArticle {
@@ -436,12 +371,12 @@ fn main() {
 \end{rustcode}
 \end{minipage}
 \qquad
-\begin{minipage}[ht]{0.55\linewidth}
+\begin{minipage}[ht]{0.5\linewidth}
 \begin{rustcode}
 fn main() {
     let a = [5, 4, 3, 2, 1];
     for number in a.iter() {
-        println!("the value is: {}", number);
+        println!("Giá trị là {}", number);
     }
 }
 \end{rustcode}
@@ -467,7 +402,16 @@ println!("{} and {}", line(2), line(5)); // kết quả hiện ra màn hình là
 \label{code:rust_closure_example}
 \end{listing}
 
-\subsection{Một số khái niệm nâng cao}
+\subsection{Quản lý bộ nhớ}
+Về quản lý bộ nhớ, ngôn ngữ Rust sử dụng mô hình RAII (Resource Accquistion Is Initialization) hay còn biết tới một tên khác là SBRM (Scope-Bound Resource Management).
+Khái niệm này có thể hiểu là các tài nguyên sẽ được giải phóng ngược lại với thứ tự nó nhận vào, và được thực hiện một cách tự động khi một hàm hay một method trả về, điều này phải thực hiện ngay cả khi gặp phải lỗi trong quá trình này.
+Điều này giúp đảm bảo không bị rò rỉ tài nguyên hệ thống (resource leak), các tài nguyên này luôn được giữ trong quá trình nhận được tài nguyên này cho đến khi giải phóng. Vì vậy, nếu không có tài nguyên bị rò rỉ thì sẽ không bị rò rỉ bộ nhớ.
+%\subsection{Các nền tảng được hỗ trợ}
+%\subsection{Từ khóa}
+%Ở thời điểm bài viết, ngôn ngữ Rust có tổng cộng 39 từ khóa so với C89 với 35 từ khóa.
+%Ngoài ra Rust còn dự trữ trước 13 từ khóa khác với mục đích thêm các tính năng mới cho ngôn ngữ Rust trong tương lai (https://doc.rust-lang.org/reference/keywords.html#reserved-keywords).
+%Trong những từ khóa dữ trữ trước này thì từ khóa \emph{box} và \emph{macro} đã có thể được sử dụng, tuy nhiên được các nhà phát triển đánh giá là không ổn định (unstable) TODO: https://github.com/rust-lang/rust/issues/39412 https://github.com/rust-lang/rust/issues/49733
+
 \subsubsection{Đảm bảo an toàn bộ nhớ}
 Một trong những tính năng mạnh mẽ của ngôn ngữ Rust là đảm bảo an toàn cho bộ nhớ mà vẫn giữ được hiệu suất cao.
 Điều này có được là nhờ cách quản lý biến và bộ nhớ trong suốt quá trình thực thi của chương trình.
@@ -492,6 +436,7 @@ Mặc dù điều này ít nhiều làm chậm thời gian biên dịch chương
 \subsubsection{Một vài ví dụ về hệ thống quản lý quyền sở hữu}
 Để hiểu rõ hơn về hệ thống quản lý quyền sở hữu, cũng như cách Rust sử dụng hệ thống này để đảm bảo tính an toàn bộ nhớ, ta cùng phân tích một vài ví dụ về hệ thống này ở phần này.
 
+\pagebreak
 \textbf{Quyền sở hữu cơ bản}
 \begin{listing}[H]
 \begin{rustcode}
@@ -537,6 +482,7 @@ fn main() {
 \label{code:rust_borrowing_example}
 \end{listing}
 
+\pagebreak
 \textbf{Lifetime}
 \begin{listing}[H]
 \begin{rustcode}
@@ -568,6 +514,71 @@ fn main() {
 \label{code:rust_explicit_lifetime}
 \end{listing}
 
+\subsection{Một số khái niệm khác}
+Trong phần này, một số khái niệm khác có liên quan đến ngôn ngữ lập trình nói chung và ngôn ngữ Rust nói riêng được trình bày qua với mục đích trình bày một số khái niệm về các vấn đề thường gặp trong các ngôn ngữ lập trình khác và cách mà ngôn ngữ Rust đã được thiết kế để xử lý các vấn đề đã gặp phải này.
+\subsubsection{Undefined behavior}
+Một trong những vấn đề phổ biến có thể gặp khi lập trình sử dụng ngôn ngữ C/C++ đó là ``undefined behavior''. Trong \emph{The Current C Programming Language Standard – ISO/IEC 9899:2018 (C18)}, undefined behavior được định nghĩa như sau:
+
+\bigskip
+ 3.4.3\par
+ undefined behavior:\par
+ behavior, upon use of a nonportable or erroneous program construct or of erroneous data, for whichthis document imposes no requirements
+\bigskip
+
+Trong thực tế, một trong những hiệu ứng sau (nhưng không chỉ những hiệu ứng đã liệt kê sau) có thể xảy ra khi một chương trình có undefined behavior xảy ra:
+
+\begin{enumerate}
+    \item Không xảy ra vấn đề, chương trình chạy đúng.
+    \item Không có hiệu ứng gì.
+    \item Chương trình chạy một cách ngẫu nhiên.
+    \item Chương trình gặp phải lỗi và crash.
+    \item Chương trình tiếp tục chạy và crash sau đó (có thể bất cứ lúc nào).
+    \item Chương trình tiếp tục chạy nhưng kết quả cho ra không chính xác.
+    \item Chương trình ghi đè các biến khác trong bộ nhớ.
+    \item Chương trình trả về kết quả của hàm không đúng.
+    \item Chương trình chạy ``ngẫu nhiên'' phụ thuộc vào data nhận vào.
+\end{enumerate}
+
+Trong những vấn đề có thể xảy ra như đã liệt kê trên thì hiệu ứng được liệt kê cuối là một vấn đề nguy hiểm nhất đối với bảo mật hệ thống.
+Một người tấn công hệ thống có thể thiết kế data nhận vào hệ thống để có thể điều khiển chương trình chạy theo cách họ muốn.
+
+Một chương trình không thể xảy ra undefined behavior ở bất kì tình huống nào được gọi là ``well defined''.
+Để chương trình không xả ra undefined behavior thì trong ngôn ngữ C/C++ người lập trình phải nắm rõ các edge cases có thể xảy ra undefined behavior, từ đó mà viết mã nguồn để tránh các trường hợp này.
+Tuy nhiên như đã thảo luận ở phần trước, con người rất hay bỏ qua các trường hợp edge case hiếm gặp.
+Để giải quyết vấn đề này, ngôn ngữ Rust được thiết kế với yêu cầu an toàn nên toàn bộ chương viết sử dụng ngôn ngữ Rust luôn luôn là một chương trình well defined, trừ khi người lập trình sử dụng từ khóa \emph{unsafe}, vấn đề này sẽ được trình bày ở các phần sau.
+
+%Undefined behavior có một ưu điểm giúp mã nguồn có thể được tối ưu hóa một cách dễ dàng hơn.
+%Khi xảy ra undefined behavior, bộ compiler sẽ chọn cách tối ưu hóa tốt nhất.
+%Chúng ta có thể xem một ví dụ về undefined behavior trong ví dụ mã nguồn sau:
+%#include <stdio.h>
+%int main(int argc, char *argv[]) {
+%    int a = 0;
+%    if (argc == 1) {
+%        a = 2147483647;
+%    }
+%
+%    printf("a = %i\n", a);
+%    if (a + a < 0) {
+%        printf("Overflow.\n");
+%    } else {
+%        printf("No overflow.\n");
+%    }
+%}
+
+\subsubsection{An toàn kiểu}
+Type safety (an toàn kiểu) là một trong những thuộc tính mà một chương trình well defined luôn có.
+Type safety đảm bảo một biến không được hiểu ngầm sai về kiểu của nó, type safety cũng giúp bảo hệ về vấn đề bảo mật bộ nhớ, vì khi chương trình không hiểu ngầm sai về kiểu của một biến thì sẽ không xảy ra hiện tượng copy, chỉnh sửa, v.v.. sai, dẫn đến undefined behavior.
+
+Phần lớn ngôn ngữ có đảm bảo tính an toàn về kiểu, điển hình như Python, Java hay JavaScipt, v.v.. thì hầu hết đều sử dụng garbage collector, dẫn đến vấn đề khó sử dụng trong môi trường lập trình cấp thấp hay trong các môi trường hạn chế về bộ nhớ như vi điều khiển như đã thảo luận ở trên.
+
+Ngôn ngữ C và C++ là một trong số ít ngôn ngữ phổ biến hiện hay không đảm bảo tính an toàn về kiểu, điều này lại một lần nữa giao lại cho người lập trình thủ công nhận biết và phát triển hệ thống tránh gặp phải các trường hợp này.
+Tuy phần lớn các vấn đề có thể xảy ra khi một hệ thống được viết bởi ngôn ngữ C, C++ không đảm bảo về tính an toàn, và thường là nằm ngoài mong muốn của người phát triển hệ thống thì cũng có thể người lập trình lại muốn sử dụng tính không an toàn này để điều khiển driver cho phần cứng, viết vào các vùng nhớ hoặc chạy intruction một cách kéo léo để điều khiển hệ thống chạy đúng với mong muốn với người lập trình.
+Tính an toàn về kiểu có thể sẽ làm cho những công việc trên rất khó hoặc hoàn toàn không thể thực hiện được.
+
+Xét về type safety thì mọi chương trình viết bằng ngôn ngữ Rust đều đảm bảo về tính an toàn kiểu. Tuy nhiên, nếu người lập trình muốn thực hiện những thao tác không an toàn như đã liệt kệ trên thì điều đó là hoàn toàn có thể thực hiện được bằng cách sử dụng từ khóa \emph{unsafe}.
+Mã nguồn trong khối unsafe có thể được sử dụng để làm bất kì điều gì, và khi biên dịch thì bộ compiler sẽ bỏ qua kiểm tra tính an toàn trong các khối này.
+Nếu sử dụng không đúng cách thì các khối unsafe này có thể dẫn đến undefined behavior trong một chương trình viết bởi ngôn ngữ Rust, tuy nhiên không thể phủ nhận được tính hữu dụng cho người phát triển hệ thống để có thể bỏ qua một số kiểm tra an toàn của hệ thống để có thể điều khiển nó theo ý muốn của mình.
+
 \subsubsection{Lập trình đồng thời}
 Concurrent programming (hay lập trình đồng thời), còn được biết bởi một tên gọi khác là \emph{Multi-thread programming} là cách nói về các tác vụ trong một phần mềm được thực thi một cách đồng thời.
 Rust đã giải quyết vấn đề về an toàn bộ nhớ, tuy nhiên hóa ra cách giải quyết vấn đề này sử dụng hệ thống quản lý quyền sở hữu trên lại là chìa khóa để người lập trình có thể thực hiện sử dụng lối lập trình concurrent programming.
@@ -580,7 +591,7 @@ Một điều lý thú khác đó là mọi thứ đã nêu trên đều đượ
 Vì vậy, những nhà phát triển có thể tự mình phát triển lên những thư viện cho mục đích concurrent programming khác nhau.
 Một số thư viện điển hình cho concurrent programming ở thời điểm bài viết là \emph{tokio}, \emph{crossbeam}, \emph{rayon}, v.v..
 
-\subsubsection{Mã unsafe}
+\subsubsection{Mã unsafe}\label{lbl:unsafe_code}
 Trong tất cả các ví dụ đã được nêu lên từ đầu bài viết đến giờ thì mọi chương trình đều được xem là ổn định, an toàn về bộ nhớ, điều này được bộ compiler của Rust đảm bảo, và được thực hiện một cách tự động.
 Tuy nhiên, ở một số trường hợp người lập trình cần loại bỏ những rào cản này để thực hiện hệ thống.
 Khi đó, họ sẽ sử dụng mã unsafe (hay mã không an toàn).
@@ -594,19 +605,19 @@ Mã unsafe, về cấu trúc cũng chỉ là một mã Rust thông thường, nh
 \item Thực hiện lập trình các trait unsafe
 \end{itemize}
 
-\begin{longtable}{>{\raggedleft\arraybackslash}p{6cm}|p{8cm}  >{\raggedleft\arraybackslash}p{6cm}|p{8cm}}
+\begin{longtable}{>{\raggedleft\arraybackslash}p{6cm}|p{7cm}  >{\raggedleft\arraybackslash}p{5cm}|p{7cm}}
 \textbf{Thao tác unsafe} & \textbf{Mô tả về tính an toàn} \\
 \midrule
 \endhead
 Sử dụng và thay đổi\linebreak mutable static variable & Khi đọc và viết các giá trị này có thể dẫn đến race condition vì tất cả các thread trong scope có thể sử dụng biến này \\
 \\
 Dereference raw pointer & Không có binding trong quan hệ giữa raw pointer và dữ liệu nó trỏ đến nên \emph{borrow checker} không thể kiểm tra được quyền sở hữu của các raw pointer này. Điều này nó nghĩa là thao tác dereference raw pointer có thể dẫn đến race condition hoặc dangling pointer (con trỏ lơ lửng)\\
+\\
 Sử dụng các hàm hay trait unsafe & Bộ compiler Rust không thể đảm bảo tính an toàn cho các hàm unsafe vì ví như gọi một hàm FFI đến mã C thì mã được dịch bởi một bộ compiler của C chứ không phải là bộ compiler Rust\\
 \bottomrule
 \caption{Các loại mã unsafe thông dụng của Rust}
 \label{tbl:rust_unsafe}
 \end{longtable}
-
 Như đã phân tích trên, mặc dù các khối unsafe là một công cụ mạnh, cho phép người lập trình có thêm một công cụ mạnh mẽ và tạm thời bỏ qua sự kiểm tra nghiêm ngặc của bộ compiler của Rust để thực hiện được những thao tác lập trình nâng cao hơn.
 Tuy nhiên, nếu người lập trình không cẩn thận thì có thể dẫn đến nhiều hệ lụy không mong muốn.
 Để mô tả cho một thao tác unsafe, người đọc có thể xem thêm ở ví dụ \ref{code:rust_unsafe_basic} sau.
@@ -632,5 +643,169 @@ unsafe {
 Ngoài những cú pháp này còn nhiều loại dữ liệu và cú pháp nâng cao khác như \emph{Cell}, \emph{RefCell}, \emph{smart pointer}, v.v.. nhưng hầu hết những cú pháp này không được sử dụng trong đề tài này nên các cú pháp và loại dữ liệu này đã được bỏ qua.
 Người đọc có thể xem thêm về khái niệm này ở các tài liệu tham khảo.
 
-\subsection{Cấu trúc một dự án trong Rust}
+\subsection{Quản lý một dự án ngôn ngữ Rust}
+\emph{Cargo} là công cụ được Rust cung cấp để giúp người lập trình quản lý một dự án sử dụng ngôn ngữ này.
+Về cơ bản, nó tự động hóa hoàn toàn quá trình xây dựng, liên kết, biên dịch và phát hành các phần mềm Rust.
+\emph{Cargo} không phải là một công cụ riêng lẻ mà nó là một tập hợp bao gồm các phần mềm khác thể thực hiện các quá trình nêu trên.
+Có thể nói, sử dụng \emph{cargo} tăng hiệu suất là việc của người lập trình lên rất nhiều so với cách gọi bộ biên dịch \emph{rustc} thủ công.
+Ngoài ra, \emph{cargo} còn đảm nhận vai trò quản lý các thư viện bên thứ ba hay các thư viện khác được sử dụng trong dự án.
+Cấu trúc của một đề tài ngôn ngữ Rust và các chức năng của bộ công cụ mạnh mẽ quản lý dự án đó là \emph{cargo} sẽ được giới thiệu trong phần này.
 
+\subsubsection{Cấu trúc một dự án trong Rust}
+Mỗi dự án được tạo bởi \emph{cargo} đều có chung một cấu trúc cơ bản.
+File quan trọng nhất để do \emph{cargo} tạo ra để quản lý dự án đó là file \emph{Cargo.toml}.
+Khi \emph{cargo} nhận được lệnh biên dịch dự án, nó sẽ đọc các lệnh được viết trong file \emph{Cargo.toml} để từ đó tự động tải thêm các thư viện bên thứ ba (nếu có), biên dịch mã nguồn hệ thống và liên kết các file sau khi biên dịch để xuất ra kết quả cuối cùng.
+Sau khi biên dịch thành công dự án, \emph{cargo} tạo ra một file mới là \emph{Cargo.lock}, file này chứa những thông tin về dự án ở thời điểm biên dịch.
+
+Ví dụ \ref{lst:cargo_basic_structure} là một cấu trúc một chương trình cơ bản ``Hello, World'' trong Rust.
+\begin{listing}
+\dirtree{%
+.1 hello\_world/.
+.2 Cargo.lock.
+.2 Cargo.toml.
+.2 src/.
+.3 main.rs.
+.2 target/.
+}
+\caption{Cấu trúc một dự án Rust cơ bản}
+\label{lst:cargo_basic_structure}
+\end{listing}
+
+Ta cũng có thể định nghĩa cách mà \emph{cargo} sẽ biên dịch chương trình sử dụng các thuộc tính \emph{cfg} và \emph{cfg\_attr}, ví dụ như cách mà mỗi hệ điều hành sẽ được biên dịch một số tính năng nhất định, hay chạy một số mã nhất định nào đó mà không phải toàn bộ mã đã viết trong file.
+
+Điều này khá hữu dụng cho việc cross-compiling cho nhiều đối tượng khác nhau mà sử dụng một mã nguồn duy nhất.
+
+Ví dụ \ref{lst:cargo_cfg_example} là một ví dụ về cách sử dụng thuộc tính \emph{cfg}.
+\begin{listing}
+\begin{rustcode}
+if cfg!(taget_os = "windows") {
+    println!("[Type in data for snippet - Termiate by Ctrl-Z and Return (Enter)]");
+} else {
+    println!("[Type in data for snippet - Termiate by Return (Enter) and Ctrl-D]");
+}
+\end{rustcode}
+\caption{Cách sử dụng macro cho thuộc tính \emph{cfg} cơ bản}
+\label{lst:cargo_cfg_example}
+\end{listing}
+
+\subsubsection{Một số chức năng khác của \emph{cargo}}
+Như đã nêu ở trên thì ngoài chức năng biên dịch chương trình thì \emph{cargo} còn có một vài chức năng khác hỗ trợ cho công việc quản lý một dự án Rust.
+Bảng \ref{tbl:cargo_other_features} liệt kê một số chức năng và mô tả thông dụng của các chức năng này.
+Các chức năng được liệt kê trong bảng tương đối dễ sử dụng, còn riêng hai chức năng \emph{build} và \emph{benchmark} sẽ được nói kĩ hơn trong phần này vì tính quan trọng của chúng.
+
+\begin{longtable}{r|l}
+\textbf{Công cụ} & \textbf{Mô tả} \\
+\midrule
+\endhead
+build & Biên dịch dự án \\
+check & Kiểm tra lỗi nếu có của dự án, nhưng không biên dịch ra file object \\
+clean & Xóa thư mục \emph{target/} \\
+doc & Biên dịch tài liệu cho dự án \\
+new & Tạo một dự án mới \\
+init & Tạo dự án trong thư mục hiện tại \\
+run & Biên dịch và chạy file binary hay các ví dụ của dự ác \\
+bench & Chạy các benchmark \\
+update & Cập nhật các thư viện bên thứ ba từ file Cargo.lock \\
+search & Tìm crates từ registry \\
+publish & Đóng gói và tải dự án lên registry của Rust \\
+install & Cài đặt một Rust binary \\
+uninstall & Xóa cài đặt một Rust binary \\
+\bottomrule
+\caption{Một số chức năng khác của cargo}
+\label{tbl:cargo_other_features}
+\end{longtable}
+
+Ở chế độ mặc định, khi người dùng gọi lệnh \emph{cargo build} thì \emph{Cargo} sẽ quét qua đề tài, sau đó lần lượt thực hiện các công việc để thực hiện việc biên dịch hệ thống: tải và biên dịch các thư viện thứ ba, kích hoạt bộ compiler \emph{rustc} để biên dịch dự án và cuối cùng là liên kết các file đã được biên dịch để tạo ra binary hay các thư viện cuối cùng.
+
+Tương tự, khi người dùng gọi lệnh \emph{cargo test} thì \emph{Cargo} cũng sẽ biên dịch hệ thống như cách hoạt động của \emph{cargo build}, nhưng có một điều khác biệt là nó sẽ không tạo ra file binary cuối.
+Còn trong trường hợp dự án là một thư viện thì tất cả các hàm được gắn thuộc tính \emph{\#[test]} cũng sẽ được xem là một unit test.
+Ngoài ra, \emph{cargo test} cũng kiểm tra toàn bộ các ví dụ trong thư mục \emph{examples} để đảm bảo các ví dụ của đề tài không bị lỗi.
+
+%TODO: fix style of these flags to bash style
+\begin{longtable}{r|l}
+\textbf{Cờ} & \textbf{Mô tả} \\
+\midrule
+\endhead
+-{}-target TARGET & Biên dịch cho đối tượng TARGET \\
+-{}-features FEATURES & Biên dịch thêm các FEATURES trong đề tài \\
+\bottomrule
+\caption{Các cờ cơ bản cho cargo để thay đổi cách biên dịch}
+\label{tbl:cargo_flags_example}
+\end{longtable}
+
+Hai câu lệnh trên còn hỗ trợ thêm một số cờ như trong bảng \ref{tbl:cargo_flags_example} để thay đổi cách \emph{rustc} biên dịch mã nguồn của đề tài.
+Người đọc nên chú ý về cờ \emph{-{}-target} vì nó được sử dụng rất nhiều trong trường hợp cross-compiling từ một máy chủ x86 cho các đối tượng ARM, và cờ này cũng sẽ được sử dụng trong phần sau của đề tài này.
+Còn về cờ \emph{-{}-features}, có thể rằng cờ này để thêm hoặc thay đổi cách hoạt động của một số hàm khi thực hiện biên dịch mã nguồn hệ thống.
+
+Một ví dụ đơn giản về cờ này có thể được xem ở ví dụ \ref{code:cargo_feature_example}.
+
+\begin{listing}
+\begin{rustcode}
+#[cfg(feature = "norm")]
+fn num() -> i16{10}
+
+#[cfg(feature = "extr")]
+fn num() -> i16{20}
+
+fn main() {
+    println!("num() + num() = {} ", num(), num());
+}
+\end{rustcode}
+\caption{Ví dụ về cách sử dụng thuộc tính \emph{feature} của Cargo}
+\label{code:cargo_feature_example}
+\end{listing}
+
+\pagebreak
+Trong ví dụ trên, khi thực hiện biên dịch sử dụng cờ \emph{-{}-features} thì sẽ cho hai kết quả khác nhau như bảng \ref{tbl:cargo_feature_result}.
+
+\begin{longtable}{r|l}
+\textbf{Lệnh biên dịch} & \textbf{Kết quả} \\
+\midrule
+\endhead
+\mintinline{bash}{$ cargo build --features norm} & \mintinline{bash}{num() + num() = 20} \\
+\mintinline{bash}{$ cargo build --features extr} & \mintinline{bash}{num() + num() = 40} \\
+\bottomrule
+\caption{Kết quả biên dịch của ví dụ \ref{code:cargo_feature_example}}
+\label{tbl:cargo_feature_result}
+\end{longtable}
+
+Trong kỹ thuật lập trình nhúng, cờ này thường được hay sử dụng cho các đối tượng có Hardware Abtraction Layer (HAL) tương tự nhau, nhưng chỉ khác một vài thông số khác ví như kit \emph{EK-TM4C123GXL} là dòng TM4C123 thông thường trong khi đó kit \emph{EK-TM4C1294XL} là dòng TM4C129x có thêm chức năng kết nối internet trực tiếp.
+
+Có thể nói cách sử dụng cờ \emph{-{}-features} khá tương đồng với cách sử dụng các lệnh \emph{\#DEFINE} trong các header của mã nguồn ngôn ngữ C, nhưng cách hoạt động của cờ \emph{-{}-features} của Cargo có phần hiện đại và tiện lợi hơn.
+
+\subsection{Hiệu suất thực thi và bộ nhớ}
+Mục tiêu của đề tài này không phải tập trung vào so sánh về tốt độ giữa các ngôn ngữ lập trình.
+Nhưng trong mảng lập trình nhúng, tốc độ xử lý của vi điều khiển là một vấn đề lớn, một chương trình chậm có thể gây ra nhiều lỗi trong các ứng dụng hệ điều hành thời gian thực hay chậm chí là hoàn toàn không thể sử dụng ngôn ngữ đó cho việc viết hệ điều hành.
+Vì vậy, trong phần này, một vài thông số về việc so sánh tốc độ giữa mã C và mã Rust được đưa ra.
+Các số liệu lấy từ website benchmarkgames của Debian.
+
+\pagebreak
+\begin{longtable}{p{0.25\textwidth} p{0.15\textwidth} p{0.15\textwidth} p{0.15\textwidth} p{0.15\textwidth}} \toprule
+\multirow{2}{0.1\textwidth}{Test} & \multicolumn{2}{c}{C++} & \multicolumn{2}{c}{Rust} \\
+\cline{2-5}
+& Times (s) & RAM (B) & Time (s) & RAM (B) \\
+\midrule
+\endhead
+binary-tree & 1.96 & 103,240 & 1.20 & 111.528 \\
+n-body & 4.25 & 8 & 3.43 & 692 \\
+k-nucleoide & 3.43 & 130,252  & 2.81 & 131,400 \\
+reverse-complement & 0.86 & 624,308 & 0.75 & 994,900 \\
+mandelbrot & 1.26 & 24,836 & 1.19 & 30,608 \\
+fannkuch-redux & 7.45 & 692 & 7.29 & 1.016 \\
+spectral-norm & 0.72 & 1,020 & 0.71 & 2,468 \\
+pidigits & 0.81 & 2,664 & 0.88 & 2,928 \\
+fasta & 0.82 & 2,888 & 0.93 & 2,180 \\
+regex-redux & 0.8 & 148,844 & 1.30 & 153,268 \\
+\bottomrule
+\caption{Hiệu suất của mã C so với mã Rust sử dụng rustc 1.45.0 và gcc 9.3.0}
+\label{tbl:rust_c_comparison}
+\end{longtable}
+
+Có thể thấy trong đa số trường hợp, tốc độ của chương trình Rust là tương đương, thậm chí là nhanh hơn ở một số trường hợp.
+Tuy nhiên, người đọc không nên đưa ra kết luận chung rằng tốc độ của mã Rust là vượt trội hơn so với mã C vì điều này còn phụ thuộc nhiều vào các cờ và bộ compiler được sử dụng để biên dịch các chương trình này.
+Và các số liệu trong bảng \ref{tbl:rust_c_comparison} là các số liệu trong trường hợp nhanh nhất, không phải trong mọi trường hợp đã đo.
+
+Cần hiểu rằng, tốc độ thực thi của chương trình phụ thuộc phần lớn vào việc tối ưu hóa mã nguồn lúc biên dịch, và mã nguồn đó phải sử dụng tối đa khả năng của phần cứng.
+Kết luận chung của phần này là, trong đa số trường hợp, hiệu suất của mã Rust không hề kém cạnh so với mã C.
+Và trong thời gian gần đây, rất nhiều nhà lập trình đã và đang làm việc để càng tối ưu hóa hơn cho tốc độ thực thi của một chương trình Rust.
+Vì vậy, người phát triển hệ thống hoàn toàn có thể tin cậy vào việc sử dụng Rust cho các đề tài của họ mà không phải lo lắng về hiệu suất của mã máy được dịch ra.
