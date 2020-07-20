@@ -12,7 +12,7 @@
 \usepackage{graphicx} % Enhanced support for graphics (DRAW STUFF)
 \usepackage{tikz} % Create PostSscript and PDF graphics (DRAW MORE STUFF)
 \usepackage{setspace} % Set custom space between lines
-\usepackage[unicode, hidelinks]{hyperref} % Hypertext support, useful for making bookmarks and click-able hyperlinks
+\usepackage[unicode]{hyperref} % Hypertext support, useful for making bookmarks and click-able hyperlinks
 \usepackage[perpage]{footmisc} % Footnote restart everypage
 \usepackage{amsmath} % Nice math package
 \usepackage{siunitx} % Handles basically all of the SI Units stuff
@@ -36,6 +36,7 @@
 \renewcommand{\thesubsubsection}{} % Don't label subsubsection
 %\renewcommand{\arraystretch}{1.2} % More space between table lines
 \newminted[rustcode]{rust}{frame=lines, linenos, breaklines, breakanywhere, fontsize=\footnotesize} % format rust code
+\newminted[ccode]{c}{frame=lines, linenos, breaklines, breakanywhere, fontsize=\footnotesize} % format rust code
 \renewcommand\listingscaption{Ví dụ}
 \renewcommand\listoflistingscaption{Danh sách ví dụ}
 
