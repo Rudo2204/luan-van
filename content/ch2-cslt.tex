@@ -59,7 +59,7 @@ Cũng trong phần đánh giá, một số vấn đề khác về phát triển 
     \item Debugging: debugging là một khâu quan trọng trong phát triển hệ thống để tìm các lỗi về logic hay bộ nhớ có thể phát sinh trong quá trình viết mã nguồn.
 Nếu hệ thống debugging của một ngôn ngữ được hỗ trợ quá kém hay không đủ mạnh có thể dẫn đến sự trễ nãi trong quá trình phát triển hệ thống hay mang lại hiệu quả công việc thấp.
 
-    \item Testing, thời gian phiên dịch, các vấn đề về tài liệu, IDE và một số vấn đề khác cũng được đề cập qua.
+    \item Testing, thời gian phiên dịch, các vấn đề về tài liệu, CI/CD và một số vấn đề khác cũng được đề cập qua.
 \end{enumerate}
 
 Ngoài ra còn có nhiều vấn đề kỹ thuật khác trong lĩnh vực lập trình nhúng cần được thảo luận như các hệ thống hệ điều hành thời gian thực RTOS, sử dụng ngôn ngữ Rust trong các thiết bị trong mức hỗ trợ thấp, hay các design pattern, language paradigms, v.v..
@@ -98,8 +98,8 @@ Vì vậy, vấn đề về cộng đồng sử dụng ngôn ngữ Rust nói chu
 \subsection{Các công cụ phát triển khác}
 \begin{itemize}
     \item[--] Bộ Debugger được hỗ trợ chính trong một chương trình viết sử dụng ngôn ngữ Rust là gì?
-    \item[--] Các vấn đề về testing, CI/CD trong một hệ thống sử dụng ngôn ngữ Rust như thế nào?
-    \item[--] IDE cho Rust hiện tại như thế nào?
+    \item[--] Các vấn đề về testing, benchmarking một chương trình Rust như thế nào?
+    \item[--] CI/CD trong một hệ thống sử dụng ngôn ngữ Rust như thế nào?
 \end{itemize}
 
 \subsection{Yếu tố chất lượng}
@@ -307,7 +307,6 @@ fn boxed_origin() -> Box<Point> {
 \label{code:rust_box_example}
 \end{listing}
 
-\pagebreak
 \subsubsection{Pattern matching}\label{pattern_matching}
 \emph{Pattern matching} trong ngôn ngữ Rust khá tương đồng với cách sử dụng từ khóa \emph{switch} trong C.
 Ta sử dụng từ khóa \emph{match} để xử lý toàn bộ các giá trị có thể trả về của một \emph{enum}.
@@ -433,10 +432,10 @@ Hệ thống này không làm chậm chương trình khi thực thi vì mọi ki
 Mặc dù điều này ít nhiều làm chậm thời gian biên dịch chương trình, tuy nhiên nó đảm bảo an toàn cho bộ nhớ, giúp người lập trình có thể yên tâm về những lỗi bộ nhớ có thể gặp phải lúc thực thi chương trình mà họ có thể bỏ qua lúc phát triển hệ thống.
 Điều này làm cho Rust rất đáng được quan tâm, là một ứng cử viên để có thể dần thay thế ngôn ngữ C trong hướng lập trình nhúng, vì mã nguồn Rust đảm bảo an toàn về bộ nhớ mà vẫn giữ được tốc độ thực thi chương trình, mà lại hoàn toàn không sử dụng \emph{garbage collector}.
 
+\pagebreak
 \subsubsection{Một vài ví dụ về hệ thống quản lý quyền sở hữu}
 Để hiểu rõ hơn về hệ thống quản lý quyền sở hữu, cũng như cách Rust sử dụng hệ thống này để đảm bảo tính an toàn bộ nhớ, ta cùng phân tích một vài ví dụ về hệ thống này ở phần này.
 
-\pagebreak
 \textbf{Quyền sở hữu cơ bản}
 \begin{listing}[H]
 \begin{rustcode}
@@ -643,6 +642,61 @@ unsafe {
 Ngoài những cú pháp này còn nhiều loại dữ liệu và cú pháp nâng cao khác như \emph{Cell}, \emph{RefCell}, \emph{smart pointer}, v.v.. nhưng hầu hết những cú pháp này không được sử dụng trong đề tài này nên các cú pháp và loại dữ liệu này đã được bỏ qua.
 Người đọc có thể xem thêm về khái niệm này ở các tài liệu tham khảo.
 
+\subsection{Tích hợp mã Rust với mã C}
+Ở phần này, việc tích hợp một ít mã C trong một dự án Rust được giới thiệu một cách ngắn gọn.
+Công việc tích hợp này gốm hai phần chính:
+\begin{itemize}
+\item Viết một wrapper cho C API có sẵn trong Rust.
+\item Biên dịch hệ thống cho mã C này có thể tích hợp trong chương trình Rust.
+\end{itemize}
+
+Ta cùng đi vào phân tích các bước này.
+Đầu tiên là viết wrapper cho các hàm và các loại dữ liệu trong chương trình C.
+
+Thông thường, các hàm thư viện trong chương trình C có các file header định nghĩa kiểu dữ liệu và các hàm tương tự như ví dụ \ref{code:c_example_header}.
+Khi dịch về ngôn ngữ Rust, nó sẽ có dạng tương tự như ví dụ \ref{code:c_to_rust_header}.
+\begin{listing}
+\begin{ccode}
+/* File: test.h */
+typedef struct TestStruct {
+    int x;
+    int y;
+} TestStruct;
+
+void test_function(int i, char c, TestStruct* cs);
+\end{ccode}
+\caption{Ví dụ một header và hàm trong C}
+\label{code:c_example_header}
+\end{listing}
+
+\begin{listing}
+\begin{rustcode}
+/* File: test_bindings.rs */
+#[repr(C)]
+pub struct TestStruct {
+    pub x: cty::c_int,
+    pub y: cty::c_int,
+}
+
+pub extern "C" fn test_function(
+    i: cty::c_int,
+    c: cty::c_char,
+    cs: *mut TestStruct
+);
+\end{rustcode}
+\caption{Ví dụ một header và hàm trong C đã được dịch về chương trình Rust}
+\label{code:c_to_rust_header}
+\end{listing}
+
+Người lập trình có thể sử dụng một công cụ có tên gọi là \emph{bindgen} để thực hiện tự động công việc dịch các header tương tự như thế này sang Rust để thuận tiện hơn và tránh gặp các lỗi khi thực hiện dịch.
+Các thao tác sử dụng \emph{bindgen} có thể được tham thảo ở link trong phần tài liệu tham khảo.
+
+Sau bước dịch mã C sang Rust ở trên, bước tiếp theo là biên dịch mã cho hệ thống.
+Như đã trình bày ở các phần trước thì bộ compiler của Rust không biên dịch trực tiếp mã C/C++ (hay bất cứ các ngôn ngữ nào khác), nên muốn tích hợp mã C trong chương trình Rust ta cần phải biên dịch trước các mã này.
+
+Trong các đề tài nhúng, cách thông dụng nhất để thực hiện điều này là biên dịch mã C/C++ thành các file nén tĩnh (có dạng như \emph{test-library.a}), sau đó ta có thể sử dụng các file này để liên kết lại trong các bước linking cuối cùng.
+Cách thực hiện các bước này người đọc có thể tham khảo trong phần tài liệu tham khảo.
+
 \subsection{Quản lý một dự án ngôn ngữ Rust}
 \emph{Cargo} là công cụ được Rust cung cấp để giúp người lập trình quản lý một dự án sử dụng ngôn ngữ này.
 Về cơ bản, nó tự động hóa hoàn toàn quá trình xây dựng, liên kết, biên dịch và phát hành các phần mềm Rust.
@@ -688,7 +742,7 @@ if cfg!(taget_os = "windows") {
 \label{lst:cargo_cfg_example}
 \end{listing}
 
-\subsubsection{Một số chức năng khác của \emph{cargo}}
+\subsubsection{Một số chức năng khác của \emph{cargo}}\label{lbl:cargo_other_features}
 Như đã nêu ở trên thì ngoài chức năng biên dịch chương trình thì \emph{cargo} còn có một vài chức năng khác hỗ trợ cho công việc quản lý một dự án Rust.
 Bảng \ref{tbl:cargo_other_features} liệt kê một số chức năng và mô tả thông dụng của các chức năng này.
 Các chức năng được liệt kê trong bảng tương đối dễ sử dụng, còn riêng hai chức năng \emph{build} và \emph{benchmark} sẽ được nói kĩ hơn trong phần này vì tính quan trọng của chúng.
@@ -755,7 +809,6 @@ fn main() {
 \label{code:cargo_feature_example}
 \end{listing}
 
-\pagebreak
 Trong ví dụ trên, khi thực hiện biên dịch sử dụng cờ \emph{-{}-features} thì sẽ cho hai kết quả khác nhau như bảng \ref{tbl:cargo_feature_result}.
 
 \begin{longtable}{r|l}
@@ -791,7 +844,7 @@ n-body & 4.25 & 8 & 3.43 & 692 \\
 k-nucleoide & 3.43 & 130,252  & 2.81 & 131,400 \\
 reverse-complement & 0.86 & 624,308 & 0.75 & 994,900 \\
 mandelbrot & 1.26 & 24,836 & 1.19 & 30,608 \\
-fannkuch-redux & 7.45 & 692 & 7.29 & 1.016 \\
+fannkuch-redux & 7.45 & 692 & 7.29 & 1,016 \\
 spectral-norm & 0.72 & 1,020 & 0.71 & 2,468 \\
 pidigits & 0.81 & 2,664 & 0.88 & 2,928 \\
 fasta & 0.82 & 2,888 & 0.93 & 2,180 \\
@@ -809,3 +862,33 @@ Cần hiểu rằng, tốc độ thực thi của chương trình phụ thuộc 
 Kết luận chung của phần này là, trong đa số trường hợp, hiệu suất của mã Rust không hề kém cạnh so với mã C.
 Và trong thời gian gần đây, rất nhiều nhà lập trình đã và đang làm việc để càng tối ưu hóa hơn cho tốc độ thực thi của một chương trình Rust.
 Vì vậy, người phát triển hệ thống hoàn toàn có thể tin cậy vào việc sử dụng Rust cho các đề tài của họ mà không phải lo lắng về hiệu suất của mã máy được dịch ra.
+
+\subsection{Một số công cụ phát triển khác}
+\subsubsection{Testing}
+Công việc unit testing trong một đề tài Rust khá đơn giản vì nó được hỗ trợ ngay sau khi cài đặt bộ công cụ.
+Để test một hàm nhất định, ta chỉ việc thêm thuộc tính \emph{\#[test]} cho nó, sau đó người phát triển chỉ việc gọi lệnh \emph{cargo test} từ terminal và công đoạn thực hiện test sẽ được thực hiện như đã giới thiệu ở phần \hyperref[lbl:cargo_other_features]{một số chức năng khác của \emph{cargo}} ở trên.
+\subsubsection{Benchmarking}
+Cũng tương tự như testing thì bộ công cụ Cargo đã bao gồm sẵn phần mềm để benchmark một phần mềm Rust.
+Ta chí việc sử dụng thuộc tính \emph{\#[bench]} trước hàm để sử dụng tính năng này.
+Có một lưu ý khi sử dụng công cụ \emph{benchmark} của Rust đó là các hàm xử lý nhanh sẽ được sẽ được thực hiện nhiều lần và sẽ có độ chính xác cao hơn so với các hàm xử lý chậm.
+
+Để thực hiện công việc benchmarking, ta chỉ việc đơn giản gọi lệnh \emph{cargo bench}, sau khi quá trình được thực hiện xong thì sẽ có log được in ra màn hình để báo hiệu các thông số đã thu thập được sau quá trình benchmark.
+\subsubsection{Debugging} %TODO: Add reference here to the GDB
+Bộ ngôn ngữ Rust sau khi được cài đặt có đi kèm hai công cụ để hỗ trợ cho việc debugging là \emph{rust-gdb} và \emph{rust-lldb}.
+Cả hai công cụ này đều cần thêm hai công cụ ngoài là GDB và LLDB để hoạt động.
+Ta có thể sử dụng GDB để thực hiện công việc debugging trực tiếp trên một chương trình Rust, vì ở các phiên bản mới thì GDB đã hỗ trợ cho việc này.
+\emph{rust-gdb} chỉ đơn giản load GDB và có thêm chức năng pretty-printing cho một số biến của Rust như vectors và maps hay các structs.
+
+Mọi công cụ để thực hiện việc debugging như tạo breakpoints, step into, step over, v.v.. của GDB đều hoạt động như bình thường mà không cần phải hiệu chỉnh gì.
+Một số tính năng khác cũng được bộ công cụ này hỗ trợ như từ GDB ta có thể gọi hàm Rust trực tiếp (tuy còn nhiều giới hạn về các hàm sử dụng generics), hay khi chương trình bị lỗi và crash (có thể do sử dụng mã unsafe) thì crash log cũng được viết ra terminal một cách bình thường.
+Và cộng thêm việc sử dụng \emph{rust-gdb} cùng với tính năng pretty-printing làm cho việc debug một chương trình Rust không gặp quá nhiều khó khăn, thậm chí là có phần suông sẻ nếu người dùng có nhiều kinh nghiệm sử dụng bộ công cụ này.
+
+Tuy không thể chối cãi rằng bộ công cụ hỗ trợ việc debugging của Rust so với các bộ công cụ hỗ trợ các ngôn ngữ lập trình khác như C/C++ thì còn rất non nớt, tuy nhiên với tính năng đảm bảo an toàn của Rust đi từ thiết kế ngôn ngữ, và các lỗi thường gặp có thể dẫn đến lỗi ở các ngôn ngữ khác đều được bộ compiler phân tính và báo lỗi lúc biên dịch mã nguồn thì phần lớn công việc debugging một chương trình Rust là công đoạn tìm lỗi logic trong chương trình chứ ít khi là các lỗi về các edge cases bị bỏ qua ở các ngôn ngữ khác.
+
+Trong thời gian gần đây, bộ công cụ debugging hỗ trợ cho Rust cũng ngày càng được phát triển hơn cùng với sự phát triển của ngôn ngữ này.
+Vì vậy, trong thời gian tới, chắc rằng việc debugging một chương trình Rust cũng sẽ ngày càng thuận tiện hơn.
+\subsubsection{CI/CD cho chương trình Rust}
+Hiện tại ở thời điểm bài viết thì phần lớn các website hỗ trợ thực hiện CI/CD nổi tiếng như \emph{Travis CI}, \emph{Appveyor}, \emph{Gitlab} và \emph{Github Action} đều có hỗ trợ cho các chương trình Rust.
+
+Tôi cũng đã có nhiều trải nghiệm tốt với các bộ công cụ này với một phần mềm Rust và thực hiện CI trên ba website là \emph{Travis CI}, \emph{Appveyor} và \emph{Github Action}. %TODO: add rtend
+Có thể nói rằng, công việc CI/CD cho một chương trình Rust khá thuận tiện và hiện đại, không hề gặp bất cứ trở ngại nào.
