@@ -22,6 +22,7 @@
 \usepackage{multirow} % Multirow for tables
 \usepackage{minted} % Code highlighting
 \usepackage{./custom_package/dirtree/dirtree}
+\usepackage{pifont}
 
 % Bibliography management: by default LaTeX uses Biblatex which werks (with an e)
 % but if you cite documents with non-ascii stuff in it (or want to customize bibiography)
@@ -39,6 +40,8 @@
 \newminted[ccode]{c}{frame=lines, linenos, breaklines, breakanywhere, fontsize=\footnotesize} % format rust code
 \renewcommand\listingscaption{Ví dụ}
 \renewcommand\listoflistingscaption{Danh sách ví dụ}
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
 
 %----- SUB-SETTINGS PACKAGES AND GENERAL PAGES -----%
 \usetikzlibrary{calc} % For calculating space to draw stuff
@@ -171,14 +174,15 @@ TRƯỜNG ĐẠI HỌC BÁCH KHOA\\
 \mainmatter
 \include{content/ch1-introduction}
 \include{content/ch2-cslt}
-%\include{content/ch3-ketqua}
+\include{content/ch3-application}
+\include{content/ch4-tomtat}
 
 \backmatter
 \phantomsection
 \addcontentsline{toc}{chapter}{Tài liệu tham khảo}
-%\nocite{*} % Basically don't cite anything but print all of the stuff in bibliography file out
-%\emergencystretch=1em
-%\printbibliography[title=Tài liệu tham khảo]
+\nocite{*} % Basically don't cite anything but print all of the stuff in bibliography file out
+\emergencystretch=1em
+\printbibliography[title=Tài liệu tham khảo]
 % This is the default way to handle bibliography
 %\bibliographystyle{ieeetr}
 %\bibliography{uni}

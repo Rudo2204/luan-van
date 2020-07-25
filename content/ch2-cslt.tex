@@ -102,7 +102,7 @@ Vì vậy, vấn đề về cộng đồng sử dụng ngôn ngữ Rust nói chu
     \item[--] CI/CD trong một hệ thống sử dụng ngôn ngữ Rust như thế nào?
 \end{itemize}
 
-\subsection{Yếu tố chất lượng}
+\subsection{Yếu tố chất lượng}\label{lbl:quality_iso}
 Để đánh giá một chương trình, hệ thống thì có thể được chia thành rất nhiều yếu tố khác nhau.
 Theo như ISO/IEC 25010:2011 thì có một số yếu tố chính như sau: functional sustainability, reliability, performance efficiency, operationality, security, compability, maintainability và transferbility. Các hạng mục này được chia thành 31 hạng mục nhỏ hơn.
 Để đánh giá chính xác một hệ thống theo như chuẩn trên là một vấn đề kỹ thuật khó khăn và vượt ngoài tầm của đề tài này.
@@ -775,13 +775,12 @@ Tương tự, khi người dùng gọi lệnh \emph{cargo test} thì \emph{Cargo
 Còn trong trường hợp dự án là một thư viện thì tất cả các hàm được gắn thuộc tính \emph{\#[test]} cũng sẽ được xem là một unit test.
 Ngoài ra, \emph{cargo test} cũng kiểm tra toàn bộ các ví dụ trong thư mục \emph{examples} để đảm bảo các ví dụ của đề tài không bị lỗi.
 
-%TODO: fix style of these flags to bash style
 \begin{longtable}{r|l}
 \textbf{Cờ} & \textbf{Mô tả} \\
 \midrule
 \endhead
--{}-target TARGET & Biên dịch cho đối tượng TARGET \\
--{}-features FEATURES & Biên dịch thêm các FEATURES trong đề tài \\
+\mintinline{text}{--target TARGET} & Biên dịch cho đối tượng TARGET \\
+\mintinline{text}{--features FEATURES} & Biên dịch thêm các FEATURES trong đề tài \\
 \bottomrule
 \caption{Các cờ cơ bản cho cargo để thay đổi cách biên dịch}
 \label{tbl:cargo_flags_example}
@@ -826,7 +825,7 @@ Trong kỹ thuật lập trình nhúng, cờ này thường được hay sử d�
 
 Có thể nói cách sử dụng cờ \emph{-{}-features} khá tương đồng với cách sử dụng các lệnh \emph{\#DEFINE} trong các header của mã nguồn ngôn ngữ C, nhưng cách hoạt động của cờ \emph{-{}-features} của Cargo có phần hiện đại và tiện lợi hơn.
 
-\subsection{Hiệu suất thực thi và bộ nhớ}
+\subsection{Hiệu suất thực thi và bộ nhớ}\label{lbl:benchmarkgames}
 Mục tiêu của đề tài này không phải tập trung vào so sánh về tốt độ giữa các ngôn ngữ lập trình.
 Nhưng trong mảng lập trình nhúng, tốc độ xử lý của vi điều khiển là một vấn đề lớn, một chương trình chậm có thể gây ra nhiều lỗi trong các ứng dụng hệ điều hành thời gian thực hay chậm chí là hoàn toàn không thể sử dụng ngôn ngữ đó cho việc viết hệ điều hành.
 Vì vậy, trong phần này, một vài thông số về việc so sánh tốc độ giữa mã C và mã Rust được đưa ra.
@@ -892,3 +891,80 @@ Hiện tại ở thời điểm bài viết thì phần lớn các website hỗ 
 
 Tôi cũng đã có nhiều trải nghiệm tốt với các bộ công cụ này với một phần mềm Rust và thực hiện CI trên ba website là \emph{Travis CI}, \emph{Appveyor} và \emph{Github Action}. %TODO: add rtend
 Có thể nói rằng, công việc CI/CD cho một chương trình Rust khá thuận tiện và hiện đại, không hề gặp bất cứ trở ngại nào.
+
+\section{Đối tượng phần cứng}
+\section{Bậc hỗ trợ chính thức của Rust}
+Rust có thể biên dịch trên rất nhiều đối tượng phần cứng khác nhau.
+Các đối tượng này được chia thành các bậc tùy theo mức độ được hỗ trợ chính thức từ các nhà phát triển ngôn ngữ này.
+Các đối tượng bậc 1 là ``đảm bảo có thể biên dịch và chạy'', các đối tượng bậc 2 là ``đảm bảo có thể biên dịch được'' và các đối tượng bậc 3 -- là bậc hỗ trợ thấp nhất -- là bậc hỗ trợ không có bất kì sự đảm bảo nào.
+
+Các đối tượng bậc 1 thường là các hệ thống phần cứng dùng cho desktop: Windows (GNU, MSVC ABI), Linux và MacOS trên x84 hay x86\_64.
+Các đối tượng này được nhà phát triển ngôn ngữ Rust cung cấp sẵn cho binary của các tool trong Cargo, được hỗ trợ biên dịch, testing tự động và đầy đủ trên các dịch vụ CI/CD và là đối tượng có tài liệu đầy đủ và hoàn chỉnh nhất, và các tài liệu này được viết và duy trì bởi các thành viên chính thức của Mozzila.
+Người đọc có thể tham khảo các đối tượng được hỗ trợ cấp 1 ở bảng \ref{tbl:tier_1_support}
+
+\begin{longtable}{lcccr}
+\textbf{Đối tượng} & \textbf{std} & \textbf{rustc} & \textbf{cargo} & \textbf{Ghi chú}\\
+\midrule
+\endhead
+i686-pc-windows-gnu & \cmark & \cmark & \cmark & 32-bit MinGW (Windows 7+)\\
+i686-pc-windows-msvc & \cmark & \cmark & \cmark & 32-bit MSVC (Windows 7+)\\
+i686-unknown-linux-gnu & \cmark & \cmark & \cmark & 32-bit Linux (kernel 2.6.32+, glibc 2.11+)\\
+x86\_64-apple-darwin & \cmark & \cmark & \cmark & 64-bit OSX (10.7+, Lion+)\\
+x86\_64-pc-windows-gnu & \cmark & \cmark & \cmark & 64-bit MinGW (Windows 7+)\\
+x86\_64-pc-windows-msvc & \cmark & \cmark & \cmark & 64-bit MSVC (Windows 7+)\\
+x86\_64-unknown-linux-gnu & \cmark & \cmark & \cmark & 64-bit Linux (kernel 2.6.32+, glibc 2.11+)\\
+\bottomrule
+\caption{Các đối tượng hỗ trợ bậc 1 của Rust}
+\label{tbl:tier_1_support}
+\end{longtable}
+
+Các đối tượng hỗ trợ bậc 2 thường là các chip sử dụng kiến trúc ARM hoặc MIPS (ngoài ra còn nhiều kiến trúc khác) chạy Linux hay Android hoặc iOS.
+Các đối tượng này giống với các đối tượng ở bậc 1 ở chỗ chúng cũng được cung cấp sẵn các binary, tuy nhiên các đối tượng này chỉ được hỗ trợ biên dịch tự động, còn phần việc esting bị hạn chế ở trên một số dịch vụ CI/CD.
+Và ở một số thư viện nhất định thì chỉ có thư viện chuẩn được biên dịch sẵn, còn các đối tượng khác thì vẫn được hỗ trợ sẵn hai công cụ \emph{rustc} và \emph{cargo}.
+Một số đối tượng ở bậc 2 có thể được xem ở bảng \ref{tbl:tier_2_support}\footnote{``*'' là các đối tượng chỉ được hỗ trợ thư viện \emph{core}, không được hỗ trợ \emph{alloc} hay \emph{std}.}.
+
+\begin{longtable}{lccc p{0.35\textwidth}}
+\textbf{Đối tượng} & \textbf{std} & \textbf{rustc} & \textbf{cargo} & \textbf{Ghi chú}\\
+\midrule
+\endhead
+aarch64-apple-ios & \cmark & \xmark & \xmark & ARM64 iOS\\
+aarch64-fuchsia & \cmark & \xmark & \xmark & ARM64 Fuchsia\\
+aarch64-linux-android & \cmark & \xmark & \xmark & ARM64 Android\\
+aarch64-pc-windows-msvc & \cmark & \xmark & \xmark & ARM64 Windows MSVC\\
+aarch64-unknown-linux-gnu & \cmark & \cmark & \cmark & ARM64 Linux (kernel 4.2, glibc 2.17)\\
+aarch64-unknown-linux-musl & \cmark & \xmark & \xmark & ARM64 Linux with MUSL\\
+aarch64-unknown-none & * & \xmark & \xmark & Bare ARM64, hardfloat\\
+aarch64-unknown-none-softfloat & * & \xmark & \xmark & Bare ARM64, softfloat\\
+arm-linux-androideabi & \cmark & \xmark & \xmark & ARMv7 Android\\
+arm-unknown-linux-gnueabi & \cmark & \cmark & \cmark & ARMv6 Linux (kernel 3.2, glibc 2.17)\\
+arm-unknown-linux-gnueabihf & \cmark & \cmark & \cmark & ARMv6 Linux, hardfloat (kernel 3.2, glibc 2.17)\\
+\bottomrule
+\caption{Một vài đối tượng hỗ trợ bậc 2 của Rust}
+\label{tbl:tier_2_support}
+\end{longtable}
+Và cuối cùng là các đối tượng còn lại ở bậc hỗ trợ 3, các đối tượng được ngôn ngữ Rust hỗ trợ về mặt thiết kế tuy nhiên mọi vấn đề về biên dịch, testing và hoạt động của mã nguồn đều không được đảm bảo.
+Và các file binary cũng không được hỗ trợ chính thức.
+
+Một số đối tượng ở bậc hỗ trợ 3 có thể được tham khảo ở bảng \ref{tbl:tier_3_support}\footnote{``*'' là các đối tượng chỉ được hỗ trợ thư viện \emph{core}, không được hỗ trợ \emph{alloc} hay \emph{std}.}\footnote{``**'' là các đối tượng chỉ hỗ trợ thư viện \emph{core} hoặc \emph{alloc}, không có \emph{std}.}\footnote{``?'' là các đối tượng chưa có đầy đủ tài liệu.}.
+
+\begin{longtable}{lcccr}
+\textbf{Đối tượng} & \textbf{std} & \textbf{rustc} & \textbf{cargo} & \textbf{Ghi chú}\\
+\midrule
+\endhead
+aarch64-apple-tvos & ** & \xmark & \xmark & ARM64 tvOS\\
+aarch64-unknown-cloudabi & \cmark & \xmark & \xmark & ARM64 CloudABI\\
+aarch64-unknown-freebsd & \cmark & \cmark & \cmark & ARM64 FreeBSD\\
+aarch64-unknown-openbsd & \cmark & \cmark & \cmark & ARM64 OpenBSD\\
+aarch64-unknown-redox & ? & \xmark & \xmark & ARM64 Redox OS\\
+armv7-unknown-freebsd & \cmark & \cmark & \cmark & ARMv7 FreeBSD\\
+armv7a-none-eabihf & * & \xmark & \xmark & ARM Cortex-A, hardfloat\\
+avr-unknown-unknown & ? & \xmark & \xmark & AVR\\
+\bottomrule
+\caption{Một vài đối tượng hỗ trợ bậc 3 của Rust}
+\label{tbl:tier_3_support}
+\end{longtable}
+
+\subsection{Biên dịch cho các đối tượng khác}
+Cần nhớ rằng, các đối tượng được liệt kê ở các bậc chỉ là các đối tượng được hỗ trợ khi biên dịch mã nguồn sử dụng bộ compiler chính thức của Rust là \emph{rustc} (và có thể cross-compile sử dụng thêm tính năng \mintinline{text}{--target TARGET} như đã giới thiệu ở phần \hyperref[lbl:cargo_other_features]{``một số chức năng khác của \emph{cargo}''} trước).
+Trong hướng lập trình nhúng thì có rất nhiều đối tượng có thể không được Rust hỗ trợ chính thức, tuy nhiên vẫn được hỗ trợ bởi LLVM (backend mà bộ compiler \emph{rustc} sử dụng để tạo binary).
+Người lập trình hoàn toàn có thể liên kết thư viện lõi \emph{core} với các đối tượng ``bare-metal'' khác của kiến trúc x86, ARM, MIPS, PowerPC, v.v.. này sử dụng các định nghĩa riêng tích hợp vào mã nguồn hệ thống, khi đó bộ compiler sẽ có thể sử dụng các định nghĩa này để biên dịch mã.

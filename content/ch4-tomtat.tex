@@ -1,0 +1,39 @@
+\chapter{Tóm tắt đề cương}
+\section{Kết quả sơ khởi đã đạt được}
+Về phần phân tích ngôn ngữ lập trình Rust, tôi đã phân tích gần đầy đủ các lý thuyết về ngôn ngữ này sẽ được sử dụng trong đề tài và một số lý thuyết cơ bản về phần cứng để chuẩn bị thực hiện phần ứng dụng ngôn ngữ lập trình này cho một dự án thực tế.
+\section{Kết quả dự kiến đạt được}
+Trong thời gian tiếp theo, ở những phần nội dung chưa hoàn thành như: bổ sung thêm các lý thuyết về đánh giá chất lượng, các lý thuyết mô tả phần mềm của đề tài thực tế và so sánh, đánh giá kết quả đạt được từ đề tài sẽ được thực hiện trong quá trình thực hiện luận văn.
+\section{Giải pháp thực hiện}
+Để thực hiện những nội dung trong phần dự kiến kết quả đạt được, ở phần này tôi nêu ra giải pháp thực hiện các nội dung này.
+
+Thứ nhất, về nội dung đánh giá chất lượng, cần bám sát hơn và bổ sung các nội dung về đánh giá chất lượng theo chuẩn ISO/IEC 25010:2011 như đã giới thiệu ở phần \ref{lbl:quality_iso}.
+Hiện tại, đề cương chỉ thực hiện trả lời bốn trong năm câu hỏi đã đặt ra đó là:
+\begin{enumerate}
+\item Nội dung về hiệu suất mã thực thi đã được so sánh và đánh giá trong phần \ref{lbl:benchmarkgames}
+\item Những điểm mạnh hơn về thiết kế ngôn ngữ Rust đã giải quyết được những vấn đề gì so với lập trình sử dụng ngôn ngữ C.
+\item Những điểm đã mang lại tính portability cao cho chương trình Rust đó là sử dụng LLVM, tuy nhiên phần này cần bổ sung thêm.
+\item Những vấn đề về tích hợp ngôn ngữ Rust trong các codebase các ngôn ngữ khác (đặt biệt là ngôn ngữ C) có sẵn.
+\end{enumerate}
+Còn nội dung cuối cùng của vấn đề về đánh giá chất lượng là tính duy trì ổn định của ngôn ngữ Rust, cả về nội dung mã nguồn lẫn hướng phát triển trong tương lai chưa được đề cập sẽ được nghiên cứu, khảo sát kĩ hơn để bổ sung nội dung này.
+
+Thứ hai, về nội dung thực hiện đề tài thực tế sử dụng ngôn ngữ Rust đó là đề tài ``Hệ thống vườn tưới cây thông minh'': hiện tại nội dung này đang được thực hiện và đã có kết quả sơ bộ về quá trình nghiên cứu phần cứng để thực hiện đề tài, cũng như là các nội dung về mô tả phần mềm, các thư viện có thể được sử dụng để thực hiện viết mã nguồn cho phần mềm một cách dễ dàng hơn.
+Ngoài ra, các lý thuyết có thể phát sinh trong quá trình thực hiện viết mã nguồn phần mềm cũng sẽ được bổ sung thêm vào các nội dung lý thuyết ở chương \ref{ch2-top} nếu có.
+
+Phần nội dung cuối cùng là so sánh, đánh giá và thảo luận kết quả đạt được thì tôi sẽ đánh giá theo các tiêu chuẩn về chất lượng theo các tiêu chí chính đã giới thiệu ở phần trước.
+Các câu hỏi thảo luận về kết quả của đề tài cũng sẽ được chọn lọc và trả lời trong phần này của đề tài.
+
+\section{Kế hoạch thực hiện}
+Trong thời gian 4 tháng tiếp tục phát triển đề tài trong học kì thực hiện luận văn, kế hoạch để thực hiện các nội dung đã nêu trên sẽ được chia nhỏ hơn và lập kế hoạch theo từng tháng để thực hiện.
+Bảng \ref{tbl:plans} nêu kế hoạch dự kiến cơ bản để thực hiện các nội dung này.
+
+\begin{longtable}{p{3cm} p{2.75cm} p{2.75cm} p{2.75cm} p{2.75cm}}
+\textbf{Nội dung} & \textbf{Tháng 1} & \textbf{Tháng 2} & \textbf{Tháng 3} & \textbf{Tháng 4}\\
+\midrule
+\endhead
+1. Bổ sung hoàn thiện đánh giá chất lượng & Thực hiện nghiên cứu, khảo sát hoặc lấy các kết quả các được nghiên cứu trước để thực hiện & Kiểm tra các thông tin đã thực hiện & --- & Kiểm tra lần cuối các thông tin đã thực hiện \\
+2. Thực hiện mô tả phần mềm cho đề tài thực tế & Thực hiện viết các thư viện để tương tác với phần cứng thực hiện đề tài & Thực hiện viết hoàn chỉnh phần mềm, bắt đầu thực hiện làm ra sản phẩm thử nghiệm & Thực hiện làm ra sản phẩm hoàn thiện, sửa các lỗi có thể phát sinh & Kiểm tra lại các nội dung của phần này \\
+3. So sánh, đánh giá kết quả thu được từ đề tài & Thực hiện nghiên cứu các tiêu chuẩn dùng để đánh giá đề tài & Viết bản thảo đánh giá các tiêu chuẩn này & Thực hiện viết và trả lời các câu hỏi thảo luận & Kiểm tra tổng thể các nội dung trong phần này, cũng như là nội dung của luận văn \\
+\bottomrule
+\caption{Bảng dự kiến kế hoạch thực hiện luận văn}
+\label{tbl:plans}
+\end{longtable}
