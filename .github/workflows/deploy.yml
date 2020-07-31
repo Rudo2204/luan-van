@@ -1,0 +1,51 @@
+name: Deploy document on tagged commit
+# Only tagged commit on master will get deployed
+on:
+    push:
+        tags:
+            - 'v*' # matches v1.0, v2.15.23, ect.
+
+jobs:
+    deploy:
+        if: "!contains(github.event.head_commit.message, 'skip ci')"
+        runs-on: ubuntu-18.04
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@master
+            - name: Set PDF_NAME as env variable
+              # TODO: Change the name of file to match writing guidelines
+              run: echo "::set-env name=PDF_NAME::Thesis-Rudo2204-$(date +'%Y-%m-%d')"
+            - name: Compile LaTeX document
+              uses: xu-cheng/latex-action@v2
+              with:
+                  root_file: main.tex # # TODO: Change this to compile the correct file(s)
+                  latexmk_shell_escape: true
+                  post_compile: mv main.pdf $PDF_NAME.pdf
+            - name: Create release
+              id: create_release
+              if: startsWith(github.ref, 'refs/tags/v')
+              uses: actions/create-release@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  tag_name: ${{ github.ref }}
+                  release_name: Release ${{ github.ref }}
+                  draft: true
+                  prerelease: false
+            # This is a workaround of the upload-release-asset step because it doesn't support env variable
+            # https://github.com/actions/upload-release-asset/issues/17
+            - name: Prepare artifact metadata
+              id: prepare_artifact_metadata
+              run: |
+                  echo ::set-output name=ARTIFACT_PDF_PATH::./$PDF_NAME.pdf
+                  echo ::set-output name=ARTIFACT_PDF_NAME::$PDF_NAME.pdf
+            - name: Upload PDF file
+              id: upload-release-asset-pdf-file
+              uses: actions/upload-release-asset@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  upload_url: ${{ steps.create_release.outputs.upload_url }}
+                  asset_path: ${{ steps.prepare_artifact_metadata.outputs.ARTIFACT_PDF_PATH }}
+                  asset_name: ${{ steps.prepare_artifact_metadata.outputs.ARTIFACT_PDF_NAME }}
+                  asset_content_type: application/pdf
