@@ -52,6 +52,7 @@ deploy:
     - ./*.7z
   on:
     tags: true
+    condition: $DEPLOY = never
   provider: releases
   skip_cleanup: true
 
