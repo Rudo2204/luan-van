@@ -14,7 +14,7 @@ jobs:
               uses: actions/checkout@master
             - name: Set PDF_NAME as env variable
               # TODO: Change the name of file to match writing guidelines
-              run: echo "::set-env name=PDF_NAME::Thesis-Rudo2204-$(date +'%Y-%m-%d')"
+              run: echo "::set-env name=PDF_NAME::Thesis-VuDangKhoa-$(date +'%Y-%m-%d')"
             - name: Compile LaTeX document
               uses: xu-cheng/latex-action@v2
               with:

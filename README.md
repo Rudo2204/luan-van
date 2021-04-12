@@ -1,5 +1,4 @@
 # [WIP!] luan-van
-> It's another report for some more useless I do.
 
 **Build status:**\
 Travis CI: [![Build Status](https://travis-ci.com/Rudo2204/luan-van.svg?branch=master)](https://travis-ci.com/Rudo2204/luan-van)\
