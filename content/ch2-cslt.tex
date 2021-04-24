@@ -516,13 +516,9 @@ fn main() {
 \subsection{Một số khái niệm khác}
 Trong phần này, một số khái niệm khác có liên quan đến ngôn ngữ lập trình nói chung và ngôn ngữ Rust nói riêng được trình bày qua với mục đích trình bày một số khái niệm về các vấn đề thường gặp trong các ngôn ngữ lập trình khác và cách mà ngôn ngữ Rust đã được thiết kế để xử lý các vấn đề đã gặp phải này.
 \subsubsection{Undefined behavior}
-Một trong những vấn đề phổ biến có thể gặp khi lập trình sử dụng ngôn ngữ C/C++ đó là ``undefined behavior''. Trong \emph{The Current C Programming Language Standard – ISO/IEC 9899:2018 (C18)}, undefined behavior được định nghĩa như sau:
+Một trong những vấn đề phổ biến có thể gặp khi lập trình sử dụng ngôn ngữ C/C++ đó là ``undefined behavior''. Trong \emph{The Current C Programming Language Standard – ISO/IEC 9899:2018 (C18)} \cite{iso_iec_9899}, undefined behavior được định nghĩa như sau:
 
-\bigskip
- 3.4.3\par
- undefined behavior:\par
  behavior, upon use of a nonportable or erroneous program construct or of erroneous data, for whichthis document imposes no requirements
-\bigskip
 
 Trong thực tế, một trong những hiệu ứng sau (nhưng không chỉ những hiệu ứng đã liệt kê sau) có thể xảy ra khi một chương trình có undefined behavior xảy ra:
 
@@ -747,10 +743,11 @@ Như đã nêu ở trên thì ngoài chức năng biên dịch chương trình t
 Bảng \ref{tbl:cargo_other_features} liệt kê một số chức năng và mô tả thông dụng của các chức năng này.
 Các chức năng được liệt kê trong bảng tương đối dễ sử dụng, còn riêng hai chức năng \emph{build} và \emph{benchmark} sẽ được nói kĩ hơn trong phần này vì tính quan trọng của chúng.
 
+\clearpage
 \begin{longtable}{r|l}
 \textbf{Công cụ} & \textbf{Mô tả} \\
-\midrule
 \endhead
+\midrule
 build & Biên dịch dự án \\
 check & Kiểm tra lỗi nếu có của dự án, nhưng không biên dịch ra file object \\
 clean & Xóa thư mục \emph{target/} \\
@@ -777,8 +774,8 @@ Ngoài ra, \emph{cargo test} cũng kiểm tra toàn bộ các ví dụ trong th�
 
 \begin{longtable}{r|l}
 \textbf{Cờ} & \textbf{Mô tả} \\
-\midrule
 \endhead
+\midrule
 \mintinline{text}{--target TARGET} & Biên dịch cho đối tượng TARGET \\
 \mintinline{text}{--features FEATURES} & Biên dịch thêm các FEATURES trong đề tài \\
 \bottomrule
