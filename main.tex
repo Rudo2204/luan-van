@@ -21,7 +21,7 @@
 \usepackage{longtable} % longtable, able to span multiples pages
 \usepackage{multirow} % Multirow for tables
 \usepackage{minted} % Code highlighting
-\usepackage{./custom_package/dirtree/dirtree}
+\usepackage{dirtree}
 \usepackage{pifont}
 
 % Bibliography management: by default LaTeX uses Biblatex which werks (with an e)
@@ -55,7 +55,7 @@
 % Read more: https://en.wikibooks.org/wiki/LaTeX/Customizing_Page_Headers_and_Footers
 \pagestyle{fancy}
 \fancyhf{}
-\lhead{Đề cương luận văn - \csCompileTime}
+\lhead{Luận văn tốt nghiệp - \csCompileTime}
 \rhead{GVHD: TS. Trương Quang Vinh}
 \cfoot{\thepage}
 
@@ -64,8 +64,8 @@
 \newcommand{\csCouncil}{Khoa Điện Điện tử}
 \newcommand{\csSupervise}{TS. Trương Quang Vinh}
 \newcommand{\csReviewer}{ThS. Trần Hoàng Quân}
-\newcommand{\crname}{BÁO CÁO ĐỀ CƯƠNG LUẬN VĂN} % Thesis, report, whatever
-\newcommand{\csCompileTime}{07/2020}
+\newcommand{\crname}{LUẬN VĂN TỐT NGHIỆP} % Thesis, report, whatever
+\newcommand{\csCompileTime}{06/2021}
 
 %----- SUB-SETTINGS FOR STUDENT NAMES -----%
 \newcommand{\csSVone}{Vũ Đăng Khoa}
@@ -174,8 +174,9 @@ TRƯỜNG ĐẠI HỌC BÁCH KHOA\\
 \mainmatter
 \include{content/ch1-introduction}
 \include{content/ch2-cslt}
+\include{content/ch4-rust-embedded-overview}
 \include{content/ch3-application}
-\include{content/ch4-tomtat}
+%\include{content/ch4-tomtat}
 
 \backmatter
 \phantomsection
