@@ -136,11 +136,17 @@ Ngoài ra, nếu các HAL được viết tốt, ta hoàn toàn có thể dựa 
 \subsection{Các thiết bị ngoài}
 Bước tiếp theo để lập trình một hệ thống nhúng là tương tác với các thiết bị bên ngoài.
 Ở đây, tôi sẽ đưa ví dụ về cách sử dụng HAL để tương tác với cảm biến nhiệt độ, độ ẩm AHT20 \cite{aht20_datasheet}.
-Đây là một HAL thực tế làm driver để điều khiển AHT20 trong Rust được viết bởi các nhà phát triển lập trình nhúng. \cite{hal_aht20}
+Đây là một HAL thực tế làm driver để điều khiển AHT20 trong Rust được viết bởi các nhà phát triển lập trình nhúng \cite{hal_aht20}.
 
-\pagebreak
 Ví dụ \ref{code:rust_hal_aht20_setup} sau đây là mã để thiết lập một thiết bị AHT20.
 
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.5]{images/aht20.png}
+\caption{AHT20 Temperature, Humidity Sensor}
+\end{figure}
+
+\clearpage
 \begin{listing}[ht]
 \begin{rustcode}
 pub fn new(i2c: I2C, delay: D) -> Result<Self, Error<E>> {
