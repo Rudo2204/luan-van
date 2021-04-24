@@ -1,4 +1,4 @@
-\chapter{Tổng quan về hệ sinh thái lập trình nhúng của Rust}
+\chapter{Lập trình hệ thống nhúng trong Rust}
 \section{Điều khiển vi điều khiển}
 Trước hết, ta cần phải hiểu về cách để điều khiển một vi điều khiển.
 Ta thực hiện điều khiển vi điều khiển bằng cách điều khiển (đọc hoặc viết) các register trên vi điều khiển.
@@ -71,6 +71,7 @@ void setup_GPIOs()
 Có thể thấy rằng, khi sử dụng các thư viện này ta có thể điều khiển các vi điều khiển một cách tương đối dễ dàng và an toàn.
 Tuy nhiên, mặc dù đã được abstract, để có thể sử dụng điều khiển vi điều khiển một cách thích hợp ta vẫn phải đọc datasheet.
 Ngoài ra, cách này có một nhược điểm lớn đó là các thư viện abstract này là platform-specific, điều này có nghĩa là chúng ta không thể sử dụng được thư viện này cho các các vi điều khiển khác.
+Nếu ta muốn sử dụng một thư viện driver ngoài để tương tác với thiết bị ngoài, ta phải tự định nghĩa lại các thông số trong các thư viện này thì mới có thể sử dụng được nó.
 Đây là một nhược điểm lớn đối với người lập trình nhúng, vì nếu muốn sử dụng nhiều vi điều khiển khác nhau thì ta phải học các thư viện viện khác nhau.
 
 \subsection{Các thư viện abstract trong Rust}
@@ -134,7 +135,7 @@ Ngoài ra, nếu các HAL được viết tốt, ta hoàn toàn có thể dựa 
 
 \subsection{Các thiết bị ngoài}
 Bước tiếp theo để lập trình một hệ thống nhúng là tương tác với các thiết bị bên ngoài.
-Ở đây, tôi sẽ đưa ví dụ về cách sử dụng HAL để tương tác với cảm biến nhiệt độ, độ ẩm AHT20.
+Ở đây, tôi sẽ đưa ví dụ về cách sử dụng HAL để tương tác với cảm biến nhiệt độ, độ ẩm AHT20 \cite{aht20_datasheet}.
 Đây là một HAL thực tế làm driver để điều khiển AHT20 trong Rust được viết bởi các nhà phát triển lập trình nhúng. \cite{hal_aht20}
 
 \pagebreak
@@ -182,7 +183,7 @@ pub fn calibrate(&mut self) -> Result<(), Error<E>> {
 let mut dev = Aht20::new(i2c, hal::Delay).unwrap();
 let (h, t) = dev.read().unwrap(); // h = humidity, t = temperature
 \end{rustcode}
-\caption{Ví dụ về sử dụng HAL để tương tác thiết bị ngoài trong Rust}
+\caption{Ví dụ về sử dụng driver HAL để tương tác thiết bị ngoài trong Rust}
 \end{listing}
 
 Có thể thấy rằng, sử dụng HAL, ta có thể viết các mã ở mức rất cao, cực kỳ tiện lợi.
@@ -190,4 +191,39 @@ Các driver sử dụng type system của Rust để đảm bảo rằng các th
 (nếu thiết lập I\textsuperscript{2}C sai thì sẽ không thể thiết lập được thiết bị AHT20).
 Hệ thống ownership đảm bảo rằng các pin cũng như các ngoại vi hệ thống như I\textsuperscript{2}C không bị dùng chung ở bất cứ thời điểm nào.
 
-TODO: watch 16:43 https://www.youtube.com/watch?v=vLYit_HHPaY
+Tuy nhiên, ta vẫn có thể dễ dàng nhận ra nhiều nhược điểm của HAL.
+Một vài nhược điểm lớn có thể được nêu ra như:
+
+\begin{itemize}
+    \item Toàn bộ những HAL này được viết thủ công để abstract PAC.
+        Không có HAL nào được viết tự động từ PAC cả.
+        Điều này dẫn đến hai vấn đề khác là chất lượng của các HAL này phụ thuộc phần lớn vào người thiết kế các HAL này.
+        Một vấn đề khác là vì viết các HAL là công việc thủ công nên không phải toàn bộ các chức năng của vi xử lý được định nghĩa trong PAC sẽ có lớp abstraction HAL.
+    \item Vì mỗi HAL sẽ có một API để tương tác với vi điều khiển khác nhau nên người dùng thiết kế hệ thống nhúng sử dụng nhiều vi điều khiển khác nhau thì họ vẫn phải học cách sử dụng nhiều HAL khác nhau.
+    \item Đến đây, ta vẫn chưa giải quyết được vấn đề về platform specific. Nếu muốn crate driver tương tác với thiết bị ngoài hỗ trợ cho vi xử lý nào đó, người lập trình HAL phải tự viết một HAL riêng cho các driver này. \label{list:hal_prob}
+\end{itemize}
+
+\subsection{Embedded HAL}
+Để giải quyết vấn đề này, các nhà lập trình nhúng của Rust dựa trên một tính năng có sẵn trong Rust đó là sử dụng \mintinline{bash}{traits} để tái sử dụng lại các thuộc tính được định nghĩa sẵn.
+Crate dùng để định nghĩa các trait cho ngoại vi thông dụng (như GPIO, Timer, SPI, UART, v.v..) này được gọi là \mintinline{bash}{Embedded HAL} \cite{embedded_hal}.
+
+Sau khi có được các trait định nghĩa từ Embedded HAL, các nhà lập trình nhúng viết HAL cho các vi điều khiển riêng biệt tái sử dụng lại các trait này để viết HAL cho vi điều khiển của mình.
+Sau khi hoàn thành, những người viết driver cho các thiết bị ngoài trong Rust chỉ việc tái sử dụng lại các trait được định nghĩa trước này.
+Bất cứ HAL cho các vi điều khiển nào mà đã tái sử dụng các trait này thì chắc chắn driver sẽ hoạt động cho vi điều khiển đó mà không cần phải chỉnh sửa lại crate driver.
+Ta chỉ việc viết driver một lần duy nhất và toàn bộ tất cả các HAL cho vi điều khiển đều có thể sử dụng driver này.
+Đây chính là điểm then chốt trong hệ sinh thái lập trình nhúng của Rust.
+
+Để xem một ví dụ, ta xem lại ví dụ về driver AHT20 của Rust (ví dụ \ref{code:rust_hal_aht20_setup}).
+Ở đây, tôi đã thêm phần tái sử dụng trait trong ví dụ mới này.
+Có thể thấy rằng, driver này đã tái sử dụng hai trait từ Embedded HAL đó là \mintinline{bash}{delay} và \mintinline{bash}{i2c}.
+Điều này có nghĩa là bất cứ HAL cho vi điều khiển nào cũng tái sử dụng hai trait này từ Embedded HAL đều có thể sử dụng crate driver này một cách trực tiếp mà không cần thay đổ bất cứ thông số nào.
+\begin{listing}[ht]
+\begin{rustcode}
+use embedded_hal::blocking::{delay::DelayMs, i2c::{Write, WriteRead}};
+pub fn new(i2c: I2C, delay: D) -> Result<Self, Error<E>> {
+\end{rustcode}
+\caption{Ví dụ về tái sử dụng trait để viết driver trong Rust}
+\end{listing}
+
+Đến đây, ta đã có được một hệ thống hoàn chỉnh, sẵn sàng để áp dụng vào viết các hệ thống nhúng một cách nhanh gọn, an toàn và dễ dàng.
+Ở chương tiếp theo, tôi đi vào thực hiện áp dụng Rust để viết một số hệ thống nhúng và chạy các chương trình này trên một vi điều khiển thực để minh họa cách chúng ta có thể áp dụng Rust để lập trình nhúng như thế nào.
