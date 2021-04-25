@@ -231,5 +231,78 @@ pub fn new(i2c: I2C, delay: D) -> Result<Self, Error<E>> {
 \caption{Ví dụ về tái sử dụng trait để viết driver trong Rust}
 \end{listing}
 
+\subsection{no-std crates}
+Khi viết thư viện trong Rust, người lập trình có thể sử dụng thuộc tính \mintinline{rust}{#![no_std]} để liên kết với thư viện core thay vì thư viện std của Rust.
+Sau khi thiết lập điều này, các thư viện no-std này có thể được áp dụng vào sử dụng ngay trên các đối tượng vi xử lý nhúng mà không cần phải thay đổi gì.
+Một điểm cộng khác ở đây là vì Rust có hỗ trợ biên dịch cho đối tượng WebAssembly \cite{rustc_book}, nên có thể sử dụng các thư viện no-std này để viết các chương trình Rust trên trình duyệt web, thay thế cho JavaScript! \cite{hoffman2019programming, wasm_book}
+
+Đây là một điểm mạnh của Rust trong việc quản lý các crate, ta có thể dễ dàng biết được một crate có thể được sử dụng trong môi trường không có thư viện std hay không chỉ nhờ một dòng thuộc tính này ở trong crate.
+
+Crate \mintinline{bash}{rust-hex} \cite{hex_no_std} là một ví dụ sử dụng thuộc tính no-std này.
+Ta có thể thấy thuộc tính đó được đặt ở trong crate trong ví dụ \ref{code:rust_hex_no_std} sau.
+
+\begin{listing}[ht]
+\begin{rustcode}
+#![doc(html_root_url = "https://docs.rs/hex/0.4.3")]
+#![cfg_attr(not(feature = "std"), no_std)]
+#![cfg_attr(docsrs, feature(doc_cfg))]
+#![allow(clippy::unreadable_literal)]
+
+#[cfg(feature = "alloc")]
+extern crate alloc;
+#[cfg(feature = "alloc")]
+use alloc::{string::String, vec::Vec};
+use core::iter;
+\end{rustcode}
+\caption{Một ví dụ về crate rust-hex, một crate sử dụng thuộc tính no-std}
+\label{code:rust_hex_no_std}
+\end{listing}
+
+\subsection{Board Support Crate - BSP}
+Ngoài ra, trong hệ sinh thái nhúng của Rust, ta còn có gặp những Board Support Crate (BSP), những crate này thêm một lớp abstraction cho Embedded HAL.
+Chúng thường được viết để hỗ trợ cho những kit lập trình nhúng thông dụng, giúp chúng ta có thể tương tác với các kit dễ dàng hơn thay vì tương tác trực tiếp với các pin và các ngoại vi của CPU trên kit.
+
+Một ví dụ có thể thấy là crate \mintinline{bash}{stm32f407g-disc} \cite{stm32f407g_disc} được sử dụng để abstract để hỗ trợ cho vi điều khiển STM32F4DISCOVERY \cite{discovery_datasheet}.
+
+Sau khi sử dụng crate này, ta có thể viết mã theo dạng như ví dụ \ref{code:rust_stm32f407g} sau.
+
+Thay vì tương tác với các pin trên vi điều điều khiển để điều khiển LED thì ta có thể tương tác thông qua các struct đã được export bởi BSP này.
+
+\clearpage
+\begin{listing}[ht]
+\begin{rustcode}
+fn main() -> ! {
+    if let (Some(p), Some(cp)) = (stm32::Peripherals::take(), Peripherals::take()) {
+        let gpiod = p.GPIOD.split();
+
+        // Initialize on-board LEDs
+        let mut leds = Leds::new(gpiod);
+
+        // Constrain clock registers
+        let rcc = p.RCC.constrain();
+
+        // Configure clock to 168 MHz (i.e. the maximum) and freeze it
+        let clocks = rcc.cfgr.sysclk(168.mhz()).freeze();
+
+        // Get delay provider
+        let mut delay = Delay::new(cp.SYST, clocks);
+
+        loop {
+            leds[LedColor::Red].on();
+            delay.delay_ms(500_u16);
+            leds[LedColor::Red].off();
+
+            leds[LedColor::Blue].on();
+            delay.delay_ms(500_u16);
+            leds[LedColor::Blue].off();
+        }
+    }
+}
+\end{rustcode}
+\caption{Một ví dụ về BSP stm32f407g-disc}
+\label{code:rust_stm32f407g}
+\end{listing}
+
+\bigskip
 Đến đây, ta đã có được một hệ thống hoàn chỉnh, sẵn sàng để áp dụng vào viết các hệ thống nhúng một cách nhanh gọn, an toàn và dễ dàng.
 Ở chương tiếp theo, tôi đi vào thực hiện áp dụng Rust để viết một số hệ thống nhúng và chạy các chương trình này trên một vi điều khiển thực để minh họa cách chúng ta có thể áp dụng Rust để lập trình nhúng như thế nào.
