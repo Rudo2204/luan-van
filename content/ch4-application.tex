@@ -158,4 +158,80 @@ Dựa trên các yêu cầu này, có thể thấy có hai lựa chọn về vi 
 
 Ở đây, tôi quyết định chọn kit Tiva C làm đối tượng để nghiên cứu trong đề tài này vì giá thành của nó rẻ hơn so với kit STM32 Discovery.
 
-\section{Viết một phần mềm nhúng cho vi điều khiển trong Rust}
+\section{Viết phần mềm nhúng cho vi điều khiển trong Rust}
+Trước khi thực hiện viết chương trình nhúng cho vi điều khiển, ta cần chuẩn bị một số công cụ để thực hiện điều này.
+
+\begin{itemize}
+    \item Các công cụ của Rust: chi tiết cài đặt có thể xem tại website chính thức Rust Programming Language \cite{rust_website}.
+    \item Cargo clone: cài đặt thông qua \mintinline{bash}{cargo install cargo-clone} \cite{cargo_clone}.
+    \item Một số các công cụ biên dịch mã cho đối tượng ARM:
+
+    \mintinline{bash}{arm-none-eabi-gcc arm-none-eabi-ar arm-none-eabi-objcopy}
+    \item Công cụ flash cho Tiva C: \mintinline{bash}{lm4flash} \cite{lm4tools}.
+    \item GDB cho đối tượng ARM: \mintinline{bash}{gdb-arm-none-eabi} \cite{gdb_website}.
+    \item OpenOCD: \mintinline{bash}{openocd} \cite{openocd_website}.
+\end{itemize}
+
+Ở đây, vì kit Tiva C có một BSP là \mintinline{bash}{stellaris-launchpad} \cite{stellaris_launchpad_bsp} nên tôi sẽ sử dụng crate này để đấy nhanh tiến độ thực hiện lập trình.
+
+Trước hết, ta tham khảo cấu trúc của crate \mintinline{bash}{stellaris-launchpad} qua ví dụ \ref{lst:stellaris_launchpad_structure}.
+
+\begin{listing}
+\dirtree{%
+.1 stellaris-launchpad/.
+.2 .cargo.
+.2 examples.
+.2 src.
+.2 .gdbinit.
+.2 Cargo.lock.
+.2 Cargo.toml.
+.2 build.rs.
+.2 memory.x.in.
+}
+\caption{Cấu trúc của crate BSP stellaris-launchpad}
+\label{lst:stellaris_launchpad_structure}
+\end{listing}
+
+Ta thấy nó tương tự với cấu trúc một dự án Rust cơ bản (xem trang \pageref{lbl:basic_rust_proj_structure}), nhưng có thêm một số file khác.
+Tôi đi tiến hành phân tích về công dụng của các file này.
+
+\textbf{.gdbinit}
+
+File này chứa các lệnh của GDB sẽ thực hiện khi khởi động GDB \cite{gdbinit}.
+
+\textbf{build.rs}
+
+Một số thư viện cần phải biên dịch thêm một số mã nguồn khác (như C), một số khác cần phải link với các thư viện C trên hệ thống hay biên dịch từ mã nguồn.
+
+Vì \mintinline{bash}{cargo} không thể thực hiện những điều này nên file \mintinline{bash}{build.rs} được sử dụng để thông báo cho \mintinline{bash}{cargo} rằng nó sẽ không thực hiện biên dịch mã trực tiếp mà sẽ thông qua một số bước khác được định nghĩa trong file này \cite{cargo_book}.
+
+\textbf{memory.x}
+
+File này chứa thông số về địa chỉ FLASH và địa chỉ RAM cũng như độ lớn của chúng.
+
+Ví dụ \ref{lst:memory_x} là nội dung file \mintinline{bash}{memory.x} của crate BSP \mintinline{bash}{stellaris-launchpad}.
+
+\begin{listing}[ht]
+\begin{plaintext}
+MEMORY
+{
+    FLASH (rx) : ORIGIN = 0x00000000, LENGTH = 0x00040000
+    RAM (rwx) : ORIGIN = 0x20000000, LENGTH = 0x00008000
+}
+\end{plaintext}
+\caption{Một ví dụ về file memory.x}
+\label{lst:memory_x}
+\end{listing}
+
+Dựa theo hướng dẫn của crate, ta thấy rằng, các dự án sẽ được viết và đặt trong thư mục \mintinline{bash}{examples}.
+
+Biên dịch sử dụng lệnh \mintinline{bash}{cargo build --example <name> --release}.
+
+Chuyển thành dạng binary sử dụng lệnh \mintinline{bash}{arm-none-eabi-objcopy -O binary tgt dst}
+
+Và cuối cùng là flash file binary lên kit bằng lệnh \mintinline{bash}{lm4flash dst.bin}
+
+Tôi tiến hành viết một số chương trình có độ khó từ đơn giản đến phức tạp để thử nghiệm Rust trên Tiva C.
+
+\subsection{Chương trình nháy LED}
+Chương trình nháy LED được xem là chương trình đơn giản nhất trong một hệ thống nhúng.
