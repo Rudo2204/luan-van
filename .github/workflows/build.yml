@@ -13,3 +13,7 @@ jobs:
               with:
                   root_file: main.tex # # TODO: Change this to compile the correct file(s)
                   latexmk_shell_escape: true
+            - uses: actions/upload-artifact@v2
+              with:
+                name: main.pdf
+                path: main.pdf
