@@ -172,7 +172,7 @@ Trước khi thực hiện viết chương trình nhúng cho vi điều khiển,
     \item OpenOCD: \mintinline{bash}{openocd} \cite{openocd_website}.
 \end{itemize}
 
-Ở đây, vì kit Tiva C có một BSP là \mintinline{bash}{stellaris-launchpad} \cite{stellaris_launchpad_bsp} nên tôi sẽ sử dụng crate này để đấy nhanh tiến độ thực hiện lập trình.
+Ở đây, vì kit Tiva C có một BSP là \mintinline{bash}{stellaris-launchpad} \cite{stellaris_launchpad_bsp} nên tôi sẽ sử dụng crate này để đấy nhanh tiến độ thực hiện lập trình. \label{lbl:tivac_bsp}
 
 Trước hết, ta tham khảo cấu trúc của crate \mintinline{bash}{stellaris-launchpad} qua ví dụ \ref{lst:stellaris_launchpad_structure}.
 
@@ -235,3 +235,214 @@ Tôi tiến hành viết một số chương trình có độ khó từ đơn gi
 
 \subsection{Chương trình nháy LED}
 Chương trình nháy LED được xem là chương trình đơn giản nhất trong một hệ thống nhúng.
+Tôi tiến hành thực hiện viết một chương trình nháy LED để làm quen với cách làm việc với một đề tài hệ thống nhúng trong Rust.
+
+Để thực hiện một chương trình nháy LED, tôi trước tin thực hiện trực tiếp thông qua HAL của kit Tiva C \cite{tm4c_hal}.
+Chương trình có nội dung như trong ví dụ \ref{code:tivac_hal_blinky} sau.
+
+\begin{listing}[ht]
+\begin{rustcode}
+#![no_std]
+#![no_main]
+
+use panic_halt as _;
+
+use cortex_m_rt::entry;
+use tm4c123x_hal::{self as hal, prelude::*};
+
+#[entry]
+fn main() -> ! {
+    let p = hal::Peripherals::take().unwrap();
+
+    let mut sc = p.SYSCTL.constrain();
+    sc.clock_setup.oscillator = hal::sysctl::Oscillator::Main(
+        hal::sysctl::CrystalFrequency::_16mhz,
+        hal::sysctl::SystemClock::UsePll(hal::sysctl::PllOutputFrequency::_80_00mhz),
+    );
+    let clocks = sc.clock_setup.freeze();
+
+    let portf = p.GPIO_PORTF.split(&sc.power_control);
+    let mut led = portf.pf1.into_push_pull_output();
+
+    let mut delay = hal::delay::Delay::new(core_peripherals.SYST, &clocks);
+
+    loop {
+        led.set_high();
+        delay.delay_ms(500u32);
+        led.set_low();
+        delay.delay_ms(500u32);
+    }
+}
+\end{rustcode}
+\caption{Ví dụ blinky sử dụng Tiva C HAL}
+\label{code:tivac_hal_blinky}
+\end{listing}
+
+Tôi phân tích một vài điểm chưa được giải thích ở trong các phần trước từ ví dụ này.
+
+\begin{itemize}
+    \item Đầu tiên là hai thuộc tính \mintinline{rust}{#[no_std]} và \mintinline{rust}{#[no_main]} được đặt ở đầu chương trình.
+
+        \mintinline{rust}{#[no_std]} như đã phân tích ở phần \ref{lbl:no_std_crates} (trang \pageref{lbl:no_std_crates}), ở đây được đặt ra để báo với compiler là chương trình này không sử dụng thư viện std.
+
+    \mintinline{rust}{#[no_main]} thông báo với compiler rằng chương trình này sẽ không sử dụng symbol \mintinline{bash}{main} thông thường để làm entry point. Thông thường, một chương trình Rust suy đoán một số thông số từ môi trường mà chương trình sẽ chạy trên. Tuy nhiên ở trong môi trường nhúng, các thông số này có thể không đúng, vì vậy để chương trình được biên dịch chính xác ta cần phải có thuộc tính này \cite{rust_reference, embedonomicon}.
+
+    \item \mintinline{rust}{use panic_halt as _;} đoạn mã này tạo một hàm \mintinline{bash}{panic} để khi chương trình gặp lỗi thì nó sẽ chuyển sang chạy một vòng lặp vô hạn trong hàm này.
+    \item \mintinline{rust}{#[entry]} thông báo với compiler đây là điểm entry của chương trình.
+        Thuộc tính này được lấy từ crate \mintinline{bash}{cortex-m-rt-macros} để từ đó kết hợp với file \mintinline{bash}{memory.x} để flash chương trình đúng vào địa chỉ dùng cho bộ nhớ FLASH \cite{cortex_m_rt}.
+\end{itemize}
+
+Từ trong chương trình main, các lệnh để thực hiện khởi động ngoại vi, thiết lập xung clock có thể thấy tương đối tương tự như ta sử dụng các hàm trong C để thực hiện các thao tác này, chỉ có một điểm ở đây cần chỉ ra đó là khi khởi động LED (pin PF1 trên kit), ta phải đặt biến này ở dạng mutable vì khi thực hiện nháy LED thì ta phải thay đổi trạng thái ON/OFF của LED, nếu không khởi động ở dang mutable thì chương trình khi biên dịch sẽ gặp lỗi. Điều này tương tự với biến delay.
+
+Có thể thấy rằng, khi có HAL, thực hiện một chương trình đơn giản như nháy LED là tương đối đơn giản, dễ hiểu và nhanh chóng.
+Giao diện này là ở mức khá cao, có thể nói là cao hơn so với thư viện HAL TivaWare \cite{tivac_tivaware}, khá tương đồng với cách sử dụng HAL như trong IDE của Arduino.
+
+Tuy nhiên, ta vẫn có thể đi lên một nấc abstraction cao hơn nữa nhờ sử dụng BSP của kit Tiva C (đã giới thiệu ở trang \pageref{lbl:tivac_bsp}).
+Ta thực hiện viết viết một file \mintinline{bash}{blinky.rs} với nội dung như trong ví dụ \ref{code:tivac_bsp_blinky}.
+
+\begin{listing}[ht]
+\begin{rustcode}
+#![no_std]
+#![no_main]
+
+extern crate embedded_hal;
+extern crate stellaris_launchpad;
+extern crate tm4c123x_hal;
+
+use embedded_hal::blocking::delay::DelayMs;
+use embedded_hal::digital::v2::OutputPin;
+
+#[no_mangle]
+pub fn stellaris_main(mut board: stellaris_launchpad::board::Board) {
+    let mut delay = tm4c123x_hal::delay::Delay::new(
+        board.core_peripherals.SYST,
+        stellaris_launchpad::board::clocks(),
+    );
+
+    loop {
+        board.led_red.set_high().unwrap();
+        delay.delay_ms(500u32);
+        board.led_red.set_low().unwrap();
+        delay.delay_ms(500u32);
+    }
+}
+\end{rustcode}
+\caption{Ví dụ blinky sử dụng Tiva C BSP}
+\label{code:tivac_bsp_blinky}
+\end{listing}
+
+Ở đây, khi sử dụng BSP ta thấy việc nháy LED còn đơn giản hơn nữa vì BSP đã thực hiện các việc như khởi động kit, thiết lập clock, các ngoại vi cơ bản (như các LED trên kit) cho chúng ta và trả về một biến mutable là \mintinline{bash}{board} để ta mượn và sử dụng nó.
+
+\subsection{Sử dụng một vài ngoại vi đơn giản}
+Sau khi đã nắm được cách viết một chương trình cơ bản, tôi tiếp tục thực hiện tương tác với một vài ngoại vi cơ bản của kit.
+Ở ví dụ này, tôi chọn hai ngoại vi đó là UART và bộ Timer trên kit để tạo xung PWM điều khiển LED của kit.
+Nội dung của chương trình người đọc có thể tham khảo ở phần phụ lục. % TODO
+
+Một vài hình về kết quả thực hiện có thể xem ở các hình \ref{fig:cycle_kit}, \ref{fig:cycle_uart_out}, \ref{fig:cycle_uart_read}.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.4]{images/cycle_kit.jpg}
+\caption{LED cycle trên kit sử dụng Timer để tạo xung PWM}
+\label{fig:cycle_kit}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.7]{images/cycle_uart_out.png}
+\caption{Đọc thông tin từ kit sử dụng UART}
+\label{fig:cycle_uart_out}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.5]{images/cycle_uart_read.png}
+\caption{Truyền thông tin cho kit sử dụng UART}
+\label{fig:cycle_uart_read}
+\end{figure}
+
+\clearpage
+\subsection{Tương tác với một vài thiết bị ngoài}
+Sau khi đã làm quen với kit và các ngoại vi trên kit, bước tiếp theo tôi thực hiện tương tác với một số thiết bị ngoài.
+Ở đây, tôi chọn 2 thiết bị là LCD 1602 \cite{lcd_datasheet} và module MFRC522 \cite{mfrc522_datasheet} thực hiện mô phỏng một hệ thống khóa cửa đơn giản.
+
+Trước khi thực hiện hệ thống, tôi thực hiện gia công một mạch in đơn giản để thuận tiện hơn cho việc thực hiện hệ thống.
+Schematic của hệ thống được trình bày ở hình \ref{fig:schematic}.
+Kết quả thực hiện PCB và kết quả của hệ thống có thể xem ở các hình \ref{fig:pcb_routing}, \ref{fig:pcb_out}, \ref{fig:system}.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.75]{images/schematic.png}
+\caption{Schematic của hệ thống RFID}
+\label{fig:schematic}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.35]{images/routed.pdf}
+\caption{Kết quả mạch sau khi thực hiện routing}
+\label{fig:pcb_routing}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.3]{images/board_output.jpg}
+\caption{Kết quả mạch in}
+\label{fig:pcb_out}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.2]{images/board_finish.jpg}
+\caption{Kết quả PCB đã gắn các linh kiện}
+\label{fig:system}
+\end{figure}
+
+Lưu đồ giải thuật của chương trình được trình bày ở hình \ref{fig:rc522_flow}.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}
+\tikzset{startstop/.style = {draw, rectangle, rounded corners, align=center, minimum width=3cm, minimum height=1cm}, >= latex,}
+\tikzset{process/.style = {draw, rectangle, align=center, minimum width=3cm, minimum height=1cm}, >= latex,}
+\tikzset{decision/.style = {draw, diamond, align=center, minimum width=3cm, minimum height=1cm}, >= latex,}
+% Main nodes
+\node (start) [startstop] {Bắt đầu};
+\node (init) [process] [below=1cm of start] {Initialize hệ thống \\ Chọn chip slave};
+\node (lcd_default) [process] [below=1cm of init] {Hiển thị dòng chữ \\ "Scan your card" ra LCD};
+\node (card_check) [decision] [below=1cm of lcd_default] {Kiểm tra \\ có thẻ \\ được quét \\ không?};
+\node (data_process) [process] [below=1cm of card_check] {Xử lý dữ liệu \\ đọc từ thẻ};
+\node (led_blink) [process] [below=1cm of data_process] {Chớp LED trên board \\ báo hiệu đã đọc thẻ};
+% Various coordinates
+\coordinate[left=2cm of led_blink] (left_out);
+\coordinate[above=0.5cm of card_check] (loop);
+\coordinate[right=1cm of card_check] (right_card);
+\coordinate[right=1cm of loop] (right_loop);
+% Connectors
+\draw [->] (start) -- (init);
+\draw [->] (init) -- (lcd_default);
+\draw [->] (lcd_default) -- (card_check);
+\draw [->] (card_check) -- node [left] {Y} (data_process);
+\draw [->] (card_check) -- node [above] {N} (right_card) |- (right_loop) |- (loop);
+\draw [->] (data_process) -- (led_blink);
+\draw [->] (led_blink) -- (left_out) |- (lcd_default);
+\end{tikzpicture}
+\caption{Lưu đồ giải thuật của hệ thống RFID}
+\label{fig:rc522_flow}
+\end{figure}
+
+Nội dung của chương trình người đọc có thể tham khảo ở phần phụ lục. % TODO
+
+%Một vài hình về kết quả thực hiện có thể xem ở các hình \ref{fig:rc522_default}, \ref{fig:rc522_tag}, \ref{fig:rc522_card}, \ref{fig:rc522_student}. % TODO
+
+\clearpage
+\subsection{Sử dụng một crate giải thuật cờ vua no-std trên kit Tiva C}
+Một trong những điểm mạnh của Rust là các crate no-std có thể được sử dụng trên bất kỳ môi trường nào như đã giới thiệu ở phần trước.
+Vì vậy, ở phần này, tôi thực hiện sử dụng một crate giải thuật cờ vua \mintinline{bash}{chess-engine} \cite{rust_chess_engine} mô phỏng một hệ thống đánh cờ vua blindfolded (không bàn cờ) đơn giản để chứng minh điều này.
+
+Giải thuật cờ vua này tương đối đơn giản, dựa trên hai giải thuật Minimax \cite{minimax_chess_programming} và Alpha-Beta Pruning \cite{alpha_beta_chess_programming}.
+
+Người đọc có thể tham khảo về giải thuật này ở phần tài liệu tham khảo.
+
+Trong phần này, tôi cũng sử dụng thêm một module bàn phím 4x4 để tăng tính tương tác với người dùng.
+Nội dung của chương trình người đọc có thể tham khảo ở phần phụ lục. % TODO

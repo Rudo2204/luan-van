@@ -231,7 +231,7 @@ pub fn new(i2c: I2C, delay: D) -> Result<Self, Error<E>> {
 \caption{Ví dụ về tái sử dụng trait để viết driver trong Rust}
 \end{listing}
 
-\subsection{no-std crates}
+\subsection{no-std crates}\label{lbl:no_std_crates}
 Khi viết thư viện trong Rust, người lập trình có thể sử dụng thuộc tính \mintinline{rust}{#![no_std]} để liên kết với thư viện core thay vì thư viện std của Rust.
 Sau khi thiết lập điều này, các thư viện no-std này có thể được áp dụng vào sử dụng ngay trên các đối tượng vi xử lý nhúng mà không cần phải thay đổi gì.
 Một điểm cộng khác ở đây là vì Rust có hỗ trợ biên dịch cho đối tượng WebAssembly \cite{rustc_book}, nên có thể sử dụng các thư viện no-std này để viết các chương trình Rust trên trình duyệt web, thay thế cho JavaScript! \cite{hoffman2019programming, wasm_book}
