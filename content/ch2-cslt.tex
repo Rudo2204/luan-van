@@ -2,9 +2,8 @@
 \section{Thiết kế một ngôn ngữ lập trình}
 Trước hết, cần khẳng định một điều là mọi ngôn ngữ lập trình, xét về chức năng thì đều có thể xem là ngang bằng nhau.
 Điều này còn được gọi là Turing compatible.
-%All computing languages or computers can compute anything in theory but nothing of practical interest is easy.
 
-Tuy rằng mọi vấn đề trong thực tế tuy rằng trên lý thuyết đều có thể tính toán được bằng bất cứ ngôn ngữ lập trình nào.%(TODO: add reference)
+Tuy rằng mọi vấn đề trong thực tế tuy rằng trên lý thuyết đều có thể tính toán được bằng bất cứ ngôn ngữ lập trình nào.
 Tuy nhiên dựa trên cấu trúc và thiết kế của một ngôn ngữ lập trình thì quá trình giải quyết này có thể sẽ gặp nhiều bất lợi, hay thậm chí là tốn quá nhiều thời gian dẫn đến vấn đề không hoàn thành trước hạn chót, mang lại hiệu quả công việc thấp.
 
 Để vượt qua vấn đề này thì điều phù hợp, logic nhất cần làm là thiết kế một ngôn ngữ lập trình phù hợp để giải quyết các vấn đề đó, và chỉ các vấn đề đó.
@@ -330,7 +329,6 @@ match tmp {
 Cách sử dụng của \emph{trait} trong Rust khá tương đồng với cách sử dụng \emph{Interface} trong Java đó là để tái sử dụng hoặc đa hình hóa (polymorphism) một phần mã đã viết trước đó.
 Vì Rust là một ngôn ngữ hỗ trợ lối viết lập trình hàm (functional programming) nên khác với Java, một \emph{trait} không thể thừa kế (inherit) các hàm khác một cách trực tiếp mà nó đơn giản chỉ định nghĩa các hàm mà một object khác có thể tương tác với nó.
 Ví dụ \ref{code:rust_trait_example} là một ví dụ cơ bản về cách sử dụng \emph{trait} trong Rust.
-Người đọc có thể xem một ví dụ nâng cao khác về \emph{trait} trong phần phụ lục.%TODO
 \begin{listing}[ht]
 \begin{rustcode}
 pub struct NewsArticle {
@@ -405,11 +403,6 @@ println!("{} and {}", line(2), line(5)); // kết quả hiện ra màn hình là
 Về quản lý bộ nhớ, ngôn ngữ Rust sử dụng mô hình RAII (Resource Accquistion Is Initialization) hay còn biết tới một tên khác là SBRM (Scope-Bound Resource Management).
 Khái niệm này có thể hiểu là các tài nguyên sẽ được giải phóng ngược lại với thứ tự nó nhận vào, và được thực hiện một cách tự động khi một hàm hay một method trả về, điều này phải thực hiện ngay cả khi gặp phải lỗi trong quá trình này.
 Điều này giúp đảm bảo không bị rò rỉ tài nguyên hệ thống (resource leak), các tài nguyên này luôn được giữ trong quá trình nhận được tài nguyên này cho đến khi giải phóng. Vì vậy, nếu không có tài nguyên bị rò rỉ thì sẽ không bị rò rỉ bộ nhớ.
-%\subsection{Các nền tảng được hỗ trợ}
-%\subsection{Từ khóa}
-%Ở thời điểm bài viết, ngôn ngữ Rust có tổng cộng 39 từ khóa so với C89 với 35 từ khóa.
-%Ngoài ra Rust còn dự trữ trước 13 từ khóa khác với mục đích thêm các tính năng mới cho ngôn ngữ Rust trong tương lai (https://doc.rust-lang.org/reference/keywords.html#reserved-keywords).
-%Trong những từ khóa dữ trữ trước này thì từ khóa \emph{box} và \emph{macro} đã có thể được sử dụng, tuy nhiên được các nhà phát triển đánh giá là không ổn định (unstable) TODO: https://github.com/rust-lang/rust/issues/39412 https://github.com/rust-lang/rust/issues/49733
 
 \subsubsection{Đảm bảo an toàn bộ nhớ}
 Một trong những tính năng mạnh mẽ của ngôn ngữ Rust là đảm bảo an toàn cho bộ nhớ mà vẫn giữ được hiệu suất cao.
@@ -869,7 +862,7 @@ Ta chí việc sử dụng thuộc tính \emph{\#[bench]} trước hàm để s�
 Có một lưu ý khi sử dụng công cụ \emph{benchmark} của Rust đó là các hàm xử lý nhanh sẽ được sẽ được thực hiện nhiều lần và sẽ có độ chính xác cao hơn so với các hàm xử lý chậm.
 
 Để thực hiện công việc benchmarking, ta chỉ việc đơn giản gọi lệnh \emph{cargo bench}, sau khi quá trình được thực hiện xong thì sẽ có log được in ra màn hình để báo hiệu các thông số đã thu thập được sau quá trình benchmark.
-\subsubsection{Debugging} %TODO: Add reference here to the GDB
+\subsubsection{Debugging}
 Bộ ngôn ngữ Rust sau khi được cài đặt có đi kèm hai công cụ để hỗ trợ cho việc debugging là \emph{rust-gdb} và \emph{rust-lldb}.
 Cả hai công cụ này đều cần thêm hai công cụ ngoài là GDB và LLDB để hoạt động.
 Ta có thể sử dụng GDB để thực hiện công việc debugging trực tiếp trên một chương trình Rust, vì ở các phiên bản mới thì GDB đã hỗ trợ cho việc này.
@@ -886,7 +879,7 @@ Vì vậy, trong thời gian tới, chắc rằng việc debugging một chươn
 \subsubsection{CI/CD cho chương trình Rust}
 Hiện tại ở thời điểm bài viết thì phần lớn các website hỗ trợ thực hiện CI/CD nổi tiếng như \emph{Travis CI}, \emph{Appveyor}, \emph{Gitlab} và \emph{Github Action} đều có hỗ trợ cho các chương trình Rust.
 
-Tôi cũng đã có nhiều trải nghiệm tốt với các bộ công cụ này với một phần mềm Rust và thực hiện CI trên ba website là \emph{Travis CI}, \emph{Appveyor} và \emph{Github Action}. %TODO: add rtend
+Tôi cũng đã có nhiều trải nghiệm tốt với các bộ công cụ này với một phần mềm Rust và thực hiện CI trên ba website là \emph{Travis CI}, \emph{Appveyor} và \emph{Github Action}.
 Có thể nói rằng, công việc CI/CD cho một chương trình Rust khá thuận tiện và hiện đại, không hề gặp bất cứ trở ngại nào.
 
 \section{Đối tượng phần cứng}
