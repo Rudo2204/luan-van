@@ -612,12 +612,4 @@ Một số khó khăn có thể được liệt kê ra như sau:
 \end{itemize}
 
 Tuy nhiên về cơ bản thì việc thực hiện hệ thống sử dụng crate RTIC là tương đối đơn giản và dễ dàng.
-Crate RTIC kết hợp chặt chẽ với hệ thống ownership của Rust ngăn chặn được nhiều lỗi trong hệ thống ngắt nói chung như datarace.
-
-\section{Kết luận chương}
-Tuy hệ sinh thái nhúng của Rust còn nhiều thiếu sót nhưng trong những năm tiếp theo khi Rust nhận được nhiều sự chú ý từ các tập đoàn, công ty chuyên về lập trình nhúng thì trong tương lai các thiếu sót này sẽ dần được bổ sung, hoàn thiện.
-
-Thông qua việc thực hiện năm ví dụ có độ khó từ đơn giản đến tương đối phức tạp ở phần trên, có thể khẳng định rằng Rust hoàn toàn có thể được sử dụng để thực hiện một hệ thống nhúng trong thực tế trong hôm nay một cách tương đối dễ dàng và thuận tiện.
-Các hệ thống này được nhận các lợi ích từ hệ thống ownership system, giúp chúng tránh được nhiều lỗi thường gặp trong hệ thống C ngay trong lúc biên dịch chương trình.
-
-Trong chương tiếp theo, tôi tiến hành đánh giá, nhận xét các kết quả thu được trong cả quá trình nghiên cứu đề tài này.
+Crate RTIC kết hợp chặt chẽ với hệ thống ownership của Rust ngăn chặn được nhiều lỗi trong hệ thống ngắt nói chung như datarace thông qua hệ thống resource lock của mình.

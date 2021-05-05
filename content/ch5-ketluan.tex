@@ -1,39 +1,35 @@
-\chapter{Tóm tắt đề cương}
-\section{Kết quả sơ khởi đã đạt được}
-Về phần phân tích ngôn ngữ lập trình Rust, tôi đã phân tích gần đầy đủ các lý thuyết về ngôn ngữ này sẽ được sử dụng trong đề tài và một số lý thuyết cơ bản về phần cứng để chuẩn bị thực hiện phần ứng dụng ngôn ngữ lập trình này cho một dự án thực tế.
-\section{Kết quả dự kiến đạt được}
-Trong thời gian tiếp theo, ở những phần nội dung chưa hoàn thành như: bổ sung thêm các lý thuyết về đánh giá chất lượng, các lý thuyết mô tả phần mềm của đề tài thực tế và so sánh, đánh giá kết quả đạt được từ đề tài sẽ được thực hiện trong quá trình thực hiện luận văn.
-\section{Giải pháp thực hiện}
-Để thực hiện những nội dung trong phần dự kiến kết quả đạt được, ở phần này tôi nêu ra giải pháp thực hiện các nội dung này.
+\chapter{Kết luận}
+\section{Đánh giá kết quả}
+Nói chung, tôi đã có một trải nghiệm mới và tốt khi thực hiện một hệ thống nhúng sử dụng Rust trong suốt quá trình thực hiện đề tài này.
+Trong môi trường nhúng tuy ta không thể sử dụng được thư viện std của Rust gồm rất nhiều tính năng mạnh mẽ, chất lượng, v.v.. nhưng kể cả bỏ qua thư viện chuẩn, sử dụng thư viện core của Rust, cùng với hệ thống ownership mới mẻ đã tạo nên một bộ công cụ hỗ trợ công việc thực hiện một hệ thống nhúng một cách dễ dàng và hiệu quả.
 
-Thứ nhất, về nội dung đánh giá chất lượng, cần bám sát hơn và bổ sung các nội dung về đánh giá chất lượng theo chuẩn ISO/IEC 25010:2011 như đã giới thiệu ở phần \ref{lbl:quality_iso}.
-Hiện tại, đề cương chỉ thực hiện trả lời bốn trong năm câu hỏi đã đặt ra đó là:
+Hệ sinh thái nhúng của Rust được xây dựng một cách hiệu quả, an toàn ngay từ gốc đã góp phần không nhỏ trong việc sử dụng ngôn ngữ này trong hệ thống nhúng một cách hiệu quả và dễ dàng hơn. Ngoài ra, nó cũng góp phần tạo nên tính portability rất cao cho mã nguồn Rust. Hơn nữa, cũng vì tính portability cao này mà ta có thể dễ dàng học được cách viết các mã nguồn chất lượng cao từ các crate trong hệ sinh thái của Rust.
+
+Tuy hệ sinh thái nhúng của Rust còn nhiều thiếu sót nhưng trong những năm tiếp theo khi Rust nhận được nhiều sự chú ý từ các tập đoàn, công ty chuyên về lập trình nhúng thì trong tương lai các thiếu sót này sẽ dần được bổ sung, hoàn thiện. Trong tương lai gần, có thể hệ sinh thái nhúng của Rust sẽ phát triển đủ mạnh để dần chiếm được thị trường nhúng, nơi mà C đang làm chủ ở mọi mặt.
+
+Thông qua việc thực hiện năm ví dụ có độ khó từ đơn giản đến tương đối phức tạp ở phần trên, có thể khẳng định rằng Rust hoàn toàn có thể được sử dụng để thực hiện một hệ thống nhúng trong thực tế trong hôm nay một cách dễ dàng và thuận tiện.
+Các hệ thống này được nhận các lợi ích từ hệ thống ownership system, giúp chúng tránh được nhiều lỗi thường gặp trong hệ thống C ngay trong lúc biên dịch chương trình.
+
+Mã nguồn của hệ thống có thể được quản lý, debug, test, v.v.. một cách dễ dàng sử dụng công cụ \mintinline{bash}{cargo} đi kèm với ngôn ngữ.
+Các hệ thống cũng được kiểm tra qua Github CI một cách thuận tiện, không gặp trở ngại.
+Các công cụ khác hỗ trợ cho việc thiết kế và thực hiện ngôn ngữ Rust như IntelliJ hay Esclipse RustDT đang được phát triển một cách nhanh chóng.
+Trong tương lai gần, các bộ công cụ này có thể trở thành cánh tay phải đắc lực cho các nhà phát triển ngôn ngữ Rust.
+
+Một điểm yếu lớn trong quá trình thực hiện đề tài mà tôi rút ra được là: vì Rust là một ngôn ngữ còn mới, vì vậy tài liệu học tập cũng như các đề tài thực hiện sử dụng ngôn ngữ này là tương đối hạn chế.
+Một người lập trình muốn thử nghiệm ngôn ngữ Rust có thể sẽ gặp phải nhiều vướng mắt trong quá trình thực hiện.
+Tuy nhiên, cộng đồng những người lập trình Rust rất ưu ái đối với những câu hỏi về ngôn ngữ, cũng như cách thực hiện viết các mã nguồn chất lượng cao đã giúp tôi tự tin hơn trong quá trình thực hiện đề tài này.
+
+\section{Hướng phát triển}
+Rust là một ngôn ngữ mới nhưng có tiềm năng phát triển rất lớn, kể cả trong mảng lập trình nhúng.
+Để góp phần thúc đẩy sự phát triển này, tôi đề xuất một số hướng như sau:
 \begin{enumerate}
-\item Nội dung về hiệu suất mã thực thi đã được so sánh và đánh giá trong phần \ref{lbl:benchmarkgames}
-\item Những điểm mạnh hơn về thiết kế ngôn ngữ Rust đã giải quyết được những vấn đề gì so với lập trình sử dụng ngôn ngữ C.
-\item Những điểm đã mang lại tính portability cao cho chương trình Rust đó là sử dụng LLVM, tuy nhiên phần này cần bổ sung thêm.
-\item Những vấn đề về tích hợp ngôn ngữ Rust trong các codebase các ngôn ngữ khác (đặt biệt là ngôn ngữ C) có sẵn.
+    \item Mở rộng tầm ảnh hưởng cũng như nhận thức của mọi người về ngôn ngữ mới này:
+        Rust càng nhận được nhiều sự quan tâm từ mọi người, cũng như các công ty, tập đoàn chuyên về lập trình nhúng thì nguồn lực đổ vào để phát triển ngôn ngữ này sẽ càng lớn hơn.
+    \item Thúc đẩy sự phát triển của các bộ công cụ hỗ trợ cho việc thiết kế một hệ thống Rust:
+        Một bộ công cụ hỗ trợ tốt chính là chìa khóa để có được trải nghiệm tốt nhất khi thử nghiệm một ngôn ngữ mới.
+    \item Hỗ trợ, bổ sung thêm các crate chất lượng cao:
+        Hệ sinh thái nhúng của Rust còn tương đối non nớt vì vậyviệc bổ sung thêm các crate là điều cực kỳ cần thiết.
+    \item Hỗ trợ viết thêm các tài liệu học tập cho Rust:
+        Như đã phân tích ở phần trên, tài liệu học tập Rust, đặc biệt là trong mảng lập trình nhúng là tương đối hạn chế.
+        Vì vậy, hỗ trợ viết các tài liệu học tập này sẽ góp phần không nhỏ trong việc thúc đẩy sự phát triển của Rust.
 \end{enumerate}
-Còn nội dung cuối cùng của vấn đề về đánh giá chất lượng là tính duy trì ổn định của ngôn ngữ Rust, cả về nội dung mã nguồn lẫn hướng phát triển trong tương lai chưa được đề cập sẽ được nghiên cứu, khảo sát kĩ hơn để bổ sung nội dung này.
-
-Thứ hai, về nội dung thực hiện đề tài thực tế sử dụng ngôn ngữ Rust đó là đề tài ``Hệ thống vườn tưới cây thông minh'': hiện tại nội dung này đang được thực hiện và đã có kết quả sơ bộ về quá trình nghiên cứu phần cứng để thực hiện đề tài, cũng như là các nội dung về mô tả phần mềm, các thư viện có thể được sử dụng để thực hiện viết mã nguồn cho phần mềm một cách dễ dàng hơn.
-Ngoài ra, các lý thuyết có thể phát sinh trong quá trình thực hiện viết mã nguồn phần mềm cũng sẽ được bổ sung thêm vào các nội dung lý thuyết ở chương \ref{ch2-top} nếu có.
-
-Phần nội dung cuối cùng là so sánh, đánh giá và thảo luận kết quả đạt được thì tôi sẽ đánh giá theo các tiêu chuẩn về chất lượng theo các tiêu chí chính đã giới thiệu ở phần trước.
-Các câu hỏi thảo luận về kết quả của đề tài cũng sẽ được chọn lọc và trả lời trong phần này của đề tài.
-
-\section{Kế hoạch thực hiện}
-Trong thời gian 4 tháng tiếp tục phát triển đề tài trong học kì thực hiện luận văn, kế hoạch để thực hiện các nội dung đã nêu trên sẽ được chia nhỏ hơn và lập kế hoạch theo từng tháng để thực hiện.
-Bảng \ref{tbl:plans} nêu kế hoạch dự kiến cơ bản để thực hiện các nội dung này.
-
-\begin{longtable}{p{3cm} p{2.75cm} p{2.75cm} p{2.75cm} p{2.75cm}}
-\textbf{Nội dung} & \textbf{Tháng 1} & \textbf{Tháng 2} & \textbf{Tháng 3} & \textbf{Tháng 4}\\
-\midrule
-\endhead
-1. Bổ sung hoàn thiện đánh giá chất lượng & Thực hiện nghiên cứu, khảo sát hoặc lấy các kết quả các được nghiên cứu trước để thực hiện & Kiểm tra các thông tin đã thực hiện & --- & Kiểm tra lần cuối các thông tin đã thực hiện \\
-2. Thực hiện mô tả phần mềm cho đề tài thực tế & Thực hiện viết các thư viện để tương tác với phần cứng thực hiện đề tài & Thực hiện viết hoàn chỉnh phần mềm, bắt đầu thực hiện làm ra sản phẩm thử nghiệm & Thực hiện làm ra sản phẩm hoàn thiện, sửa các lỗi có thể phát sinh & Kiểm tra lại các nội dung của phần này \\
-3. So sánh, đánh giá kết quả thu được từ đề tài & Thực hiện nghiên cứu các tiêu chuẩn dùng để đánh giá đề tài & Viết bản thảo đánh giá các tiêu chuẩn này & Thực hiện viết và trả lời các câu hỏi thảo luận & Kiểm tra tổng thể các nội dung trong phần này, cũng như là nội dung của luận văn \\
-\bottomrule
-\caption{Bảng dự kiến kế hoạch thực hiện luận văn}
-\label{tbl:plans}
-\end{longtable}
