@@ -233,7 +233,7 @@ Và cuối cùng là flash file binary lên kit bằng lệnh \mintinline{bash}{
 
 Tôi tiến hành viết một số chương trình có độ khó từ đơn giản đến phức tạp để thử nghiệm Rust trên Tiva C.
 
-\subsection{Chương trình nháy LED}
+\subsection{Chương trình nháy LED}\label{lbl:rust_blinky}
 Chương trình nháy LED được xem là chương trình đơn giản nhất trong một hệ thống nhúng.
 Tôi tiến hành thực hiện viết một chương trình nháy LED để làm quen với cách làm việc với một đề tài hệ thống nhúng trong Rust.
 
@@ -333,7 +333,7 @@ pub fn stellaris_main(mut board: stellaris_launchpad::board::Board) {
 
 Ở đây, khi sử dụng BSP ta thấy việc nháy LED còn đơn giản hơn nữa vì BSP đã thực hiện các việc như khởi động kit, thiết lập clock, các ngoại vi cơ bản (như các LED trên kit) cho chúng ta và trả về một biến mutable là \mintinline{bash}{board} để ta mượn và sử dụng nó.
 
-\subsection{Sử dụng một vài ngoại vi đơn giản}
+\subsection{Sử dụng một vài ngoại vi đơn giản}\label{lbl:rust_peripheral}
 Sau khi đã nắm được cách viết một chương trình cơ bản, tôi tiếp tục thực hiện tương tác với một vài ngoại vi cơ bản của kit.
 Ở ví dụ này, tôi chọn hai ngoại vi đó là UART và bộ Timer trên kit để tạo xung PWM điều khiển LED của kit.
 Nội dung của chương trình người đọc có thể tham khảo ở phần phụ lục. % TODO
@@ -362,7 +362,7 @@ Một vài hình về kết quả thực hiện có thể xem ở các hình \re
 \end{figure}
 
 \clearpage
-\subsection{Tương tác với một vài thiết bị ngoài}
+\subsection{Tương tác với một vài thiết bị ngoài}\label{lbl:rust_mfrc522}
 Sau khi đã làm quen với kit và các ngoại vi trên kit, bước tiếp theo tôi thực hiện tương tác với một số thiết bị ngoài.
 Ở đây, tôi chọn 2 thiết bị là LCD 1602 \cite{lcd_datasheet} và module MFRC522 \cite{mfrc522_datasheet} thực hiện mô phỏng một hệ thống khóa cửa đơn giản.
 
@@ -393,7 +393,7 @@ Kết quả thực hiện PCB và kết quả của hệ thống có thể xem �
 
 \begin{figure}[ht]
 \centering
-\includegraphics[scale=0.2]{images/board_finish.jpg}
+\includegraphics[scale=0.3]{images/board_finish.jpg}
 \caption{Kết quả PCB đã gắn các linh kiện}
 \label{fig:system}
 \end{figure}
@@ -402,7 +402,7 @@ Lưu đồ giải thuật của chương trình được trình bày ở hình \
 
 \begin{figure}[ht]
 \centering
-\begin{tikzpicture}
+\begin{tikzpicture}[scale=0.75, every node/.style={scale=0.75}]
 \tikzset{startstop/.style = {draw, rectangle, rounded corners, align=center, minimum width=3cm, minimum height=1cm}, >= latex,}
 \tikzset{process/.style = {draw, rectangle, align=center, minimum width=3cm, minimum height=1cm}, >= latex,}
 \tikzset{decision/.style = {draw, diamond, align=center, minimum width=3cm, minimum height=1cm}, >= latex,}
@@ -433,16 +433,191 @@ Lưu đồ giải thuật của chương trình được trình bày ở hình \
 
 Nội dung của chương trình người đọc có thể tham khảo ở phần phụ lục. % TODO
 
-%Một vài hình về kết quả thực hiện có thể xem ở các hình \ref{fig:rc522_default}, \ref{fig:rc522_tag}, \ref{fig:rc522_card}, \ref{fig:rc522_student}. % TODO
+Một vài hình về kết quả thực hiện có thể xem ở các hình \ref{fig:rc522_default}, \ref{fig:rc522_tag}, \ref{fig:rc522_card}, \ref{fig:rc522_student}.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.3]{images/mfrc522_default.jpg}
+\caption{Kết quả hệ thống MFRC522 - Hệ thống ở trạng thái mặc định}
+\label{fig:rc522_default}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.3]{images/mfrc522_tag.jpg}
+\caption{Kết quả hệ thống MFRC522 - Sử dụng tag đi kèm}
+\label{fig:rc522_tag}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.3]{images/mfrc522_card.jpg}
+\caption{Kết quả hệ thống MFRC522 - Sử dụng card đi kèm}
+\label{fig:rc522_card}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.3]{images/mfrc522_student.jpg}
+\caption{Kết quả hệ thống MFRC522 - Sử dụng thẻ sinh viên}
+\label{fig:rc522_student}
+\end{figure}
 
 \clearpage
 \subsection{Sử dụng một crate giải thuật cờ vua no-std trên kit Tiva C}
 Một trong những điểm mạnh của Rust là các crate no-std có thể được sử dụng trên bất kỳ môi trường nào như đã giới thiệu ở phần trước.
 Vì vậy, ở phần này, tôi thực hiện sử dụng một crate giải thuật cờ vua \mintinline{bash}{chess-engine} \cite{rust_chess_engine} mô phỏng một hệ thống đánh cờ vua blindfolded (không bàn cờ) đơn giản để chứng minh điều này.
 
-Giải thuật cờ vua này tương đối đơn giản, dựa trên hai giải thuật Minimax \cite{minimax_chess_programming} và Alpha-Beta Pruning \cite{alpha_beta_chess_programming}.
-
+Crate thực hiện giải thuật cờ vua này tương đối đơn giản, dựa trên hai giải thuật Minimax \cite{minimax_chess_programming} và Alpha-Beta Pruning \cite{alpha_beta_chess_programming}.
 Người đọc có thể tham khảo về giải thuật này ở phần tài liệu tham khảo.
 
 Trong phần này, tôi cũng sử dụng thêm một module bàn phím 4x4 để tăng tính tương tác với người dùng.
 Nội dung của chương trình người đọc có thể tham khảo ở phần phụ lục. % TODO
+
+Để thực hiện demo cho phần này, tôi thực hiện thiết lập một vị trí đơn giản như hình \ref{chess:start_fen}.
+Ở đây, người chơi (điều khiển quân trắng) sẽ đi nước Qc6, cố tình tạo một thời cơ để cho máy tính (điều khiển quân đen) chơi một tactic 1. Bh2+ Kxh2 2. Qxc6.
+
+\begin{figure}[ht]
+\centering
+\newchessgame
+\def\fenstart{2kr2nr/p1p2ppp/1p1b2q1/3N4/2Q5/4B3/PPP2PPP/R3R1K1 w - - 4 16}
+\chessboard[smallboard, setfen=\fenstart]
+
+\mainline{1. Qc6??}
+\caption{Ví trí ban đầu để thử nghiệm giải thuật cờ vua}
+\label{chess:start_fen}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\newchessgame
+\def\fenbotezgambit{2kr2nr/p1p2ppp/1pQb2q1/3N4/8/4B3/PPP2PPP/R3R1K1 b - - 5 16}
+\chessboard[smallboard, setfen=\fenbotezgambit]
+
+\mainline{1. Bxh2+ Kxh2 2. Qxc6}
+\caption{Ví trí sau khi đi nước Qc6 để máy tính bắt đầu tính toán}
+\label{chess:botez_gambit}
+\end{figure}
+
+Một vài hình về kết quả thực hiện có thể xem ở các hình \ref{fig:chess_init}, \ref{fig:chess_c4c6}, \ref{fig:chess_wait_move2}, \ref{fig:chess_g1h2}, \ref{fig:chess_end}, \ref{fig:chess_illegal}.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.3]{images/chess_init.jpg}
+\caption{Kết quả hệ thống MFRC522 - Hệ thống ở trạng thái mặc định như ở hình \ref{chess:start_fen}}
+\label{fig:chess_init}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.3]{images/chess_c4c6.jpg}
+\caption{Kết quả hệ thống MFRC522 - Hệ thống đang giải nước Qc6}
+\label{fig:chess_c4c6}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.4]{images/chess_wait_move2.jpg}
+\caption{Kết quả hệ thống MFRC522 - Hệ thống sau khi giải xong nước Qc6}
+\label{fig:chess_wait_move2}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.4]{images/chess_g1h2.jpg}
+\caption{Kết quả hệ thống MFRC522 - Hệ thống đang giải nước Bxh2}
+\label{fig:chess_g1h2}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.4]{images/chess_end.jpg}
+\caption{Kết quả hệ thống MFRC522 - Hệ thống sau khi giải xong nước Bxh2}
+\label{fig:chess_end}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.4]{images/chess_illegal.jpg}
+\caption{Kết quả hệ thống giải thuật cờ vua - Người chơi đi nước không hợp lệ}
+\label{fig:chess_illegal}
+\end{figure}
+
+\clearpage
+\subsection{Sử dụng crate RTIC viết hệ thống real time sử dụng ngắt}
+Một trong những cơ chế quan trọng trong việc viết những phần mềm nhúng nâng cao đó là sử dụng tính năng ngắt của vi điều khiển.
+Trong phần này, tôi thực hiện sử dụng crate RTIC \cite{rtic_website} để viết một hệ thống nhúng real time sử dụng ngắt.
+
+Hệ thống real time này là một hệ thống đơn giản, kết hợp các kiến thức đã thực hiện ở các phần \ref{lbl:rust_blinky} (trang \pageref{lbl:rust_blinky}), \ref{lbl:rust_peripheral} (trang \pageref{lbl:rust_peripheral}), \ref{lbl:rust_mfrc522} (trang \pageref{lbl:rust_mfrc522}) trước và kết hợp thêm một vài ví dụ nhỏ để mô tả chức năng scheduler của RTIC.
+
+Hệ thống này gồm 5 tác vụ (tasks) trong đó 3 tác vụ là ngắt software và 2 tác vụ là ngắt hardware.
+Hệ thống có các tính năng như sau:
+\begin{itemize}
+    \item Tác vụ LED: Nháy LED xanh dương sau mỗi 1s. Tương tự như phần \ref{lbl:rust_blinky} (trang \pageref{lbl:rust_blinky}), tuy nhiên ở đây sử dụng tính năng scheduler của RTIC.
+    \item Tác vụ UART hardware: Thực hiện ngắt và đọc dữ liệu truyền đến kit qua UART. Tương tự hệ thống ở phần \ref{lbl:rust_peripheral} (trang \pageref{lbl:rust_peripheral}).
+    \item Tác vụ LCD: Sau mỗi 0.5s tăng 1 vào một biến (ở đây là biến \mintinline{bash}{lcd_counter}) và xuất ra màn hình LCD.
+    \item Tác vụ MFRC522: Thực hiện ngắt và đọc giá trị của thẻ RFID khi có thẻ được quét. Tương tự như hệ thống ở phần \ref{lbl:rust_mfrc522} (trang \pageref{lbl:rust_mfrc522}).
+    \item Tác vụ UART software: Sau mỗi 2s xuất ra UART các giá trị của hệ thống như \mintinline{bash}{lcd_counter} và số thẻ đã đọc được ở tác vụ MFRC522 (biến \mintinline{bash}{card_counter}).
+\end{itemize}
+
+Nội dung của chương trình người đọc có thể tham khảo ở phần phụ lục. % TODO
+Một vài hình về kết quả thực hiện có thể xem ở các hình \ref{fig:rtic_init}, \ref{fig:rtic_tag}, \ref{fig:rtic_card}, \ref{fig:rtic_student}, \ref{fig:rtic_uart}.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.3]{images/rtic_init.jpg}
+\caption{Kết quả hệ thống RTIC - Hệ thống ở trạng thái ban đầu}
+\label{fig:rtic_init}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.4]{images/rtic_tag.jpg}
+\caption{Kết quả hệ thống RTIC - Hệ thống khi quét tag}
+\label{fig:rtic_tag}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.4]{images/rtic_card.jpg}
+\caption{Kết quả hệ thống RTIC - Hệ thống khi khi quét card}
+\label{fig:rtic_card}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.4]{images/rtic_student.jpg}
+\caption{Kết quả hệ thống RTIC - Hệ thống khi quét thẻ sinh viên}
+\label{fig:rtic_student}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.5]{images/rtic_uart.png}
+\caption{Kết quả hệ thống RTIC - Hệ thống ghi và đọc cổng UART}
+\label{fig:rtic_uart}
+\end{figure}
+
+\clearpage
+Trong các phần thực hiện hệ thống thì phần sử dụng crate RTIC này, tôi gặp nhiều trục trặc về kỹ thuật nhất.
+Các vấn đề trực trặc kỹ thuật này xuất phát từ cả hai crate đó là RTIC, cũng như là HAL chưa đầy đủ của kit Tiva C.
+Một số khó khăn có thể được liệt kê ra như sau:
+\begin{itemize}
+    \item HAL của Tiva C ở thời điểm viết bài chưa hỗ trợ ngắt trực tiếp UART cũng như SSI.
+        Hiện tại hệ thống sử dụng ngắt GPIO để thay thế, vì vậy bị mất đi các chân GPIO sử dụng để ngắt khi thực hiện điều này.
+    \item HAL của Tiva C hiện tại chỉ có một cách tạo biến delay duy nhất đó là sử dụng SysTick, tuy nhiên RTIC lại sử dụng SysTick cho monotonic scheduler.
+        Vì vậy người dùng monotonic scheduler phải thực hiện viết cách tạo delay khác.
+        Ở đây tôi chọn cách sử dụng countdown timer trên kit để tạo delay.
+    \item RTIC sử dụng các phương pháp quản lý tài nguyên hệ thống cũng như switch task tương đối khác so với hệ thống RTOS quen thuộc nên đã gây một số hiểu lầm trong quá trình thực hiện hệ thống.
+\end{itemize}
+
+Tuy nhiên về cơ bản thì việc thực hiện hệ thống sử dụng crate RTIC là tương đối đơn giản và dễ dàng.
+Crate RTIC kết hợp chặt chẽ với hệ thống ownership của Rust ngăn chặn được nhiều lỗi trong hệ thống ngắt nói chung như datarace.
+
+\section{Kết luận chương}
+Tuy hệ sinh thái nhúng của Rust còn nhiều thiếu sót nhưng trong những năm tiếp theo khi Rust nhận được nhiều sự chú ý từ các tập đoàn, công ty chuyên về lập trình nhúng thì trong tương lai các thiếu sót này sẽ dần được bổ sung, hoàn thiện.
+
+Thông qua việc thực hiện năm ví dụ có độ khó từ đơn giản đến tương đối phức tạp ở phần trên, có thể khẳng định rằng Rust hoàn toàn có thể được sử dụng để thực hiện một hệ thống nhúng trong thực tế trong hôm nay một cách tương đối dễ dàng và thuận tiện.
+Các hệ thống này được nhận các lợi ích từ hệ thống ownership system, giúp chúng tránh được nhiều lỗi thường gặp trong hệ thống C ngay trong lúc biên dịch chương trình.
+
+Trong chương tiếp theo, tôi tiến hành đánh giá, nhận xét các kết quả thu được trong cả quá trình nghiên cứu đề tài này.
