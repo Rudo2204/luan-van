@@ -193,4 +193,16 @@ TRƯỜNG ĐẠI HỌC BÁCH KHOA\\
 
 %----- APPENDIX (PHU LUC) -----
 % Detailed schematic, extra information, source code and other shit are put in here
+\appendix
+\chapter*{Phụ lục}
+\addcontentsline{toc}{chapter}{Phụ lục}
+\renewcommand{\thesection}{\Alph{section}}
+\section{Source code của hệ thống phần \ref{lbl:rust_peripheral}}\label{lbl:appendix_rust_peripheral}
+\inputminted[linenos=true, breaklines, breakanywhere, fontsize=\footnotesize]{rust}{code/launchpad_cycle.rs}
+\section{Source code của hệ thống phần \ref{lbl:rust_mfrc522}}\label{lbl:appendix_rust_mfrc522}
+\inputminted[linenos=true, breaklines, breakanywhere, fontsize=\footnotesize]{rust}{code/mfrc522_lcd.rs}
+\section{Source code của hệ thống phần \ref{lbl:rust_chess}}\label{lbl:appendix_rust_chess}
+\inputminted[linenos=true, breaklines, breakanywhere, fontsize=\footnotesize]{rust}{code/chess.rs}
+\section{Source code của hệ thống phần \ref{lbl:rust_rtic}}\label{lbl:appendix_rust_rtic}
+\inputminted[linenos=true, breaklines, breakanywhere, fontsize=\footnotesize]{rust}{code/main.rs}
 \end{document}

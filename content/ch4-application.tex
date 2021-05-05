@@ -336,7 +336,7 @@ pub fn stellaris_main(mut board: stellaris_launchpad::board::Board) {
 \subsection{Sử dụng một vài ngoại vi đơn giản}\label{lbl:rust_peripheral}
 Sau khi đã nắm được cách viết một chương trình cơ bản, tôi tiếp tục thực hiện tương tác với một vài ngoại vi cơ bản của kit.
 Ở ví dụ này, tôi chọn hai ngoại vi đó là UART và bộ Timer trên kit để tạo xung PWM điều khiển LED của kit.
-Nội dung của chương trình người đọc có thể tham khảo ở phần phụ lục. % TODO
+Nội dung của chương trình người đọc có thể tham khảo ở phần phụ lục \ref{lbl:appendix_rust_peripheral} (trang \pageref{lbl:appendix_rust_peripheral}).
 
 Một vài hình về kết quả thực hiện có thể xem ở các hình \ref{fig:cycle_kit}, \ref{fig:cycle_uart_out}, \ref{fig:cycle_uart_read}.
 
@@ -431,7 +431,7 @@ Lưu đồ giải thuật của chương trình được trình bày ở hình \
 \label{fig:rc522_flow}
 \end{figure}
 
-Nội dung của chương trình người đọc có thể tham khảo ở phần phụ lục. % TODO
+Nội dung của chương trình người đọc có thể tham khảo ở phần phụ lục \ref{lbl:appendix_rust_mfrc522} (trang \pageref{lbl:appendix_rust_mfrc522}.
 
 Một vài hình về kết quả thực hiện có thể xem ở các hình \ref{fig:rc522_default}, \ref{fig:rc522_tag}, \ref{fig:rc522_card}, \ref{fig:rc522_student}.
 
@@ -464,18 +464,18 @@ Một vài hình về kết quả thực hiện có thể xem ở các hình \re
 \end{figure}
 
 \clearpage
-\subsection{Sử dụng một crate giải thuật cờ vua no-std trên kit Tiva C}
+\subsection{Sử dụng một crate giải thuật cờ vua no-std trên kit Tiva C}\label{lbl:rust_chess}
 Một trong những điểm mạnh của Rust là các crate no-std có thể được sử dụng trên bất kỳ môi trường nào như đã giới thiệu ở phần trước.
 Vì vậy, ở phần này, tôi thực hiện sử dụng một crate giải thuật cờ vua \mintinline{bash}{chess-engine} \cite{rust_chess_engine} mô phỏng một hệ thống đánh cờ vua blindfolded (không bàn cờ) đơn giản để chứng minh điều này.
-
+Trong phần này, tôi cũng sử dụng thêm một module bàn phím 4x4 để tăng tính tương tác với người dùng.
 Crate thực hiện giải thuật cờ vua này tương đối đơn giản, dựa trên hai giải thuật Minimax \cite{minimax_chess_programming} và Alpha-Beta Pruning \cite{alpha_beta_chess_programming}.
 Người đọc có thể tham khảo về giải thuật này ở phần tài liệu tham khảo.
 
-Trong phần này, tôi cũng sử dụng thêm một module bàn phím 4x4 để tăng tính tương tác với người dùng.
-Nội dung của chương trình người đọc có thể tham khảo ở phần phụ lục. % TODO
-
 Để thực hiện demo cho phần này, tôi thực hiện thiết lập một vị trí đơn giản như hình \ref{chess:start_fen}.
 Ở đây, người chơi (điều khiển quân trắng) sẽ đi nước Qc6, cố tình tạo một thời cơ để cho máy tính (điều khiển quân đen) chơi một tactic 1. Bh2+ Kxh2 2. Qxc6.
+
+Nội dung của chương trình người đọc có thể tham khảo ở phần phụ lục \ref{lbl:appendix_rust_chess} (trang \pageref{lbl:appendix_rust_chess}).
+
 
 \begin{figure}[ht]
 \centering
@@ -544,7 +544,7 @@ Một vài hình về kết quả thực hiện có thể xem ở các hình \re
 \end{figure}
 
 \clearpage
-\subsection{Sử dụng crate RTIC viết hệ thống real time sử dụng ngắt}
+\subsection{Sử dụng crate RTIC viết hệ thống real time sử dụng ngắt}\label{lbl:rust_rtic}
 Một trong những cơ chế quan trọng trong việc viết những phần mềm nhúng nâng cao đó là sử dụng tính năng ngắt của vi điều khiển.
 Trong phần này, tôi thực hiện sử dụng crate RTIC \cite{rtic_website} để viết một hệ thống nhúng real time sử dụng ngắt.
 
@@ -560,7 +560,7 @@ Hệ thống có các tính năng như sau:
     \item Tác vụ UART software: Sau mỗi 2s xuất ra UART các giá trị của hệ thống như \mintinline{bash}{lcd_counter} và số thẻ đã đọc được ở tác vụ MFRC522 (biến \mintinline{bash}{card_counter}).
 \end{itemize}
 
-Nội dung của chương trình người đọc có thể tham khảo ở phần phụ lục. % TODO
+Nội dung của chương trình người đọc có thể tham khảo ở phần phụ lục \ref{lbl:appendix_rust_rtic} (trang \pageref{lbl:appendix_rust_rtic}).
 Một vài hình về kết quả thực hiện có thể xem ở các hình \ref{fig:rtic_init}, \ref{fig:rtic_tag}, \ref{fig:rtic_card}, \ref{fig:rtic_student}, \ref{fig:rtic_uart}.
 
 \begin{figure}[ht]
