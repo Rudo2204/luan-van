@@ -16,7 +16,7 @@ Trước hết, ta cần phải xác định được các thông số cần ph�
 \caption{Các thông số về RCGCGPIO của EK-TM4C123GH6PM}
 \end{figure}
 
-Dựa vào thông số này, nếu ta muốn kích hoạt clock cho GPIOF, và sau đó kích hoạt quyền ghi vào GPIOF ta sẽ viết một đoạn code C như sau:
+Dựa vào thông số này, nếu ta muốn kích hoạt clock cho GPIOF, và sau đó kích hoạt quyền ghi vào GPIOF ta sẽ viết một đoạn code C như ví dụ \ref{code:c_register} sau.
 \begin{listing}[ht]
 \begin{ccode}
 #include "TM4C123GH6PM.h"
@@ -24,12 +24,13 @@ SYSCTL->RCGCGPIO |= 0x20; // kich hoat clock cho GPIOF
 GPIOF->LOCK = 0x4C4F434B; // unlockGPIOCR register
 \end{ccode}
 \caption{Ví dụ ghi trực tiếp vào các register sử dụng C}
+\label{code:c_register}
 \end{listing}
 
 Các thao tác đọc ghi các thanh ghi này là các thao tác được cho là cấp thấp (low-level), thường chỉ các ngôn ngữ cấp thấp như C/C++ mới có thể thực hiện các thao tác này.
 Các ngôn ngữ cấp cao thường không thể thực hiện trực tiếp các thao tác này, làm cho các ngôn ngữ này không thể lập trình nhúng được.
 Rust là một ngôn ngữ cấp thấp,  ta cũng có thể thực hiện các thao tác tương tự như vậy nếu cần thiết.
-Sau đây, tôi đưa ra một ví dụ về sử dụng Rust để thực hiện một thao tác tương tự trên một vi điều khiển STM32F1 để chứng minh điều này.
+Sau đây, tôi đưa ra một ví dụ \ref{code:rust_register} về sử dụng Rust để thực hiện một thao tác tương tự trên một vi điều khiển STM32F1 để chứng minh điều này.
 \begin{listing}[ht]
 \begin{rustcode}
 const GPIO_START: usize = 0x4001_1000;
@@ -42,6 +43,7 @@ unsafe {
 }
 \end{rustcode}
 \caption{Ví dụ ghi trực tiếp vào các register sử dụng Rust}
+\label{code:rust_register}
 \end{listing}
 
 Có thể dễ dàng nhận thấy rằng cách này rất khó viết, khó hiểu, tốn thời gian đọc datasheet và cực kỳ thiếu an toàn.
@@ -51,7 +53,7 @@ Có thể dễ dàng nhận thấy rằng cách này rất khó viết, khó hi�
 Các thư viện thực hiện công việc abstract này trong C/C++ thường được cung cấp sẵn bởi nhà sản xuất.
 Ta chỉ việc tải xuống các thư viện này, liên kết nó với phần mềm là có thể sử dụng được.
 Ví dụ, để điều khiển EK-TM4C123GH6PM ta có thể tải xuống thư viện TivaWare \cite{tivac_tivaware} và sử dụng nó.
-Sau khi được abstract, một chương trình khởi động port GPIO cũng như thiết lập cho nó có thể tương tự như sau:
+Sau khi được abstract, một chương trình khởi động port GPIO cũng như thiết lập cho nó có thể tương tự như ví dụ \ref{code:c_abstract}.
 \begin{listing}[ht]
 \begin{ccode}
 void setup_GPIOs()
@@ -66,6 +68,7 @@ void setup_GPIOs()
 }
 \end{ccode}
 \caption{Ví dụ về sử dụng một thư viện abstract trong C}
+\label{code:c_abstract}
 \end{listing}
 
 Có thể thấy rằng, khi sử dụng các thư viện này ta có thể điều khiển các vi điều khiển một cách tương đối dễ dàng và an toàn.
@@ -87,6 +90,7 @@ Ngoài ra, vì hệ thống ownership của Rust được compiler kiểm tra l�
 Một ví dụ ở đây về lợi ích của hệ thống ownership là ta không thể thiết lập clock cho vi điều khiển nhiều lần.
 
 Khi sử dụng PAC, ta có thể viết mã thực hiện công việc khởi động GPIO một cách dễ dàng hơn.
+Có thể thấy rằng, sử dụng PAC ta có thể viết các mã tương đối cao hơn như C mà vẫn không mất đi hiệu suất (zero-cost abstraction), an toàn hơn, cũng như được hưởng lợi từ hệ thống ownership của Rust.
 \begin{listing}[ht]
 \begin{rustcode}
 startup_gpio();
@@ -97,8 +101,6 @@ dp.GPIOC.crh.modify(|_r, w| {
 \end{rustcode}
 \caption{Ví dụ về sử dụng một PAC trong Rust}
 \end{listing}
-
-Có thể thấy rằng, sử dụng PAC ta có thể viết các mã tương đối cao hơn như C mà vẫn không mất đi hiệu suất (zero-cost abstraction), an toàn hơn, cũng như được hưởng lợi từ hệ thống ownership của Rust.
 
 Để giải quyết vấn đề về platform-specific, Rust đi theo một hướng khác.
 Tuy nhiên, cũng như việc sử dụng các thư viện abstract trong C/C++, sử dụng PAC vẫn là platform-specific vì mỗi vi điều khiển sẽ có một PAC khác nhau.
