@@ -10,7 +10,7 @@ Tuy nhiên cũng vì lý do này mà ngôn ngữ C, lúc được thiết kế, 
 %Chúng ta có thể viết các phần mềm sử dụng C ngắn và bí hiểm nhưng lại có thể tương tác với hệ thống một cách gần như không thể đoán trước được, điều độc đáo về C này còn trở thành một cuộc thi thường niên trên thế giới!
 Các chức năng mới tăng tính an toàn cho ngôn ngữ C như quản lý bộ nhớ an toàn hơn, chống phân mảnh bộ nhớ, thực hiện tác vụ đồng thời (concurrency), v.v.. thực sự khó, hay thậm chí là bất khả thi để có thể được thêm vào ngôn ngữ C hiện tại mà vẫn giữ được tính tương thích ngược với các phần mềm đã được viết trước đó.
 
-Đây cũng có thể là lý do mà trong thời gian gần đây, ngày càng có nhiều ngôn ngữ mới được nghiên cứu và sử dụng, có thể kế đến đó là ngôn ngữ Go của Google, ngôn ngữ Swift của Apple, và ngôn ngữ Rust được tài trợ bởi tập đoàn Mozzila được nghiên cứu và phát triển để giải quyết các vấn đề gặp phải trong quá trình phát triển hệ thống sử dụng ngôn ngữ C. Trong các ngôn ngữ này, ngôn ngữ lập trình Rust ra mắt vào tháng 5 năm 2015, được thiết kế với tiêu chí ``to design and implement a safe, concurrent, practical, static systems language''. Bộ biên dịch Rust phân tích mã nguồn tĩnh (static) và đảm bảo tính thống nhất về kiểu (type), đảm bảo về vấn đề truy cập bộ nhớ. Với nhưng tiêu chí thiết kế này, Rust tập trung trở thành một ngôn ngữ đảm bảo an toàn bộ nhớ nhưng vẫn giữ được hiệu suất mạnh mẽ. Rust dường như là một lựa chọn logic để lập trình các hệ thống nhúng để có thể vừa đảm bảo an toàn bộ nhớ, hiệu suất của hệ thống, thay thế dần ngôn ngữ C trong lĩnh vực này.
+Đây cũng có thể là lý do mà trong thời gian gần đây, ngày càng có nhiều ngôn ngữ mới được nghiên cứu và sử dụng, có thể kế đến đó là ngôn ngữ Go của Google, ngôn ngữ Swift của Apple, và ngôn ngữ Rust được tài trợ bởi tập đoàn Mozzila được nghiên cứu và phát triển để giải quyết các vấn đề gặp phải trong quá trình phát triển hệ thống sử dụng ngôn ngữ C. Trong các ngôn ngữ này, ngôn ngữ lập trình Rust ra mắt vào tháng 5 năm 2015, được thiết kế với tiêu chí ``to design and implement a safe, concurrent, practical, static systems language'' \cite{rust_website}. Bộ biên dịch Rust phân tích mã nguồn tĩnh (static) và đảm bảo tính thống nhất về kiểu (type), đảm bảo về vấn đề truy cập bộ nhớ \cite{phd_safe_type}. Với nhưng tiêu chí thiết kế này, Rust tập trung trở thành một ngôn ngữ đảm bảo an toàn bộ nhớ nhưng vẫn giữ được hiệu suất mạnh mẽ. Rust dường như là một lựa chọn logic để lập trình các hệ thống nhúng để có thể vừa đảm bảo an toàn bộ nhớ, hiệu suất của hệ thống, thay thế dần ngôn ngữ C trong lĩnh vực này.
 
 \section{Mục tiêu và giới hạn đề tài}
 Những ích lợi của một ngôn ngữ lập trình mới như Rust, cũng như những khẳng định mà Rust đưa ra về thiết kệ một ngôn ngữ hệ thống an toàn, đáng tin cậy, năng suất và hiệu quả cao đã tạo động lực cho em tiến hành nghiên cứu về ngôn ngữ này. Cụ thể mục tiêu của em là giới thiệu và đánh giá ngôn ngữ Rust, dựa trên các tiêu chí đưa ra ở chương \ref{ch2-top}, với hy vọng sẽ góp phần nâng cao nhận thức về ngôn ngữ lập trình tương đối mới mẻ này, cũng như tập trung nghiên cứu, phân tích Rust với mong muốn tìm hiểu liệu ngôn ngữ này có thực sự phù hợp cho lĩnh vực lập trình nhúng hay không bằng cách thiết kế và thực thi một hệ thống nhúng thực tế sử dụng Rust.
@@ -24,22 +24,22 @@ Toàn bộ nội dung luận văn được em trình bày thành 5 chương. Cá
 
 \textbf{Chương 1: Tổng quan}
 
-Chương đầu tiên em đưa ra vấn đề về hệ thống nhúng hiện đại, và nêu lên mục tiêu, động cơ và phạm vi thực hiện của luận án. Toàn bộ chương này giúp người đọc có được cái nhìn toàn cảnh về lí do em tiến hành thực hiện nghiên cứu đề tài, vai trò và vị trí của đề trong quá trình phát triển một hệ thống nhúng hiệu quả, an toàn và tin cậy sử dụng một ngôn ngữ lập trình tương đối mới mẻ này.
+Chương đầu tiên em đưa ra vấn đề về hệ thống nhúng hiện đại, và nêu lên mục tiêu, động cơ và phạm vi thực hiện của luận án. Toàn bộ chương này giúp người đọc có được cái nhìn toàn cảnh về lí do em tiến hành thực hiện nghiên cứu đề tài, vai trò và vị trí của đề tài trong quá trình phát triển một hệ thống nhúng hiệu quả, an toàn và tin cậy sử dụng một ngôn ngữ lập trình tương đối mới mẻ này.
 
 \textbf{Chương 2: Cơ sở lý thuyết}
 
-Chương này cung cấp các cơ sở lý thuyết về một ngôn ngữ lập trình, các tiêu chí để đánh giá một ngôn ngữ lập trình, từ đó đi vào phân tích và đánh giá sâu hơn về những tiêu chí này, từ cú pháp của ngôn ngữ Rust, các công cụ đi kèm với ngôn ngữ Rust đến sử dụng ngôn ngữ Rust chung với một hệ thống C có sẵn, v.v..
+Chương này cung cấp các cơ sở lý thuyết về ngôn ngữ lập trình Rust, các tiêu chí để đánh giá một ngôn ngữ lập trình, từ đó đi vào phân tích và đánh giá sâu hơn về Rust dựa trên những tiêu chí này: từ cú pháp của ngôn ngữ Rust, các công cụ đi kèm với ngôn ngữ Rust đến sử dụng ngôn ngữ Rust chung với một hệ thống C có sẵn, v.v..
 
 \textbf{Chương 3: Lập trình hệ thống nhúng trong Rust}
 
-Trong chương này, em thực hiện trình bày các lý thuyết về hệ sinh thái nhúng của Rust, so sánh chúng với hệ sinh thái nhúng của C cũng như đưa ra lý thuyết để thực hiện lập trình một hệ thống nhúng cơ bản trong Rust từ đó có cái nhìn sâu hơn về cách thực hiện một hệ thống nhúng thực tế sử dụng ngôn ngữ Rust.
+Trong chương này, em thực hiện trình bày các lý thuyết về hệ sinh thái nhúng của Rust, so sánh chúng với hệ sinh thái nhúng của C cũng như đưa ra lý thuyết để thực hiện lập trình một hệ thống nhúng cơ bản trong Rust từ đó có cái nhìn sâu hơn về cách thực hiện một hệ thống nhúng thực tế sử dụng Rust.
 
 \textbf{Chương 4: Ứng dụng ngôn ngữ Rust}
 
-Trong chương này, em thực hiện một vài dự án từ đơn giản đến phức tạp trên một vi điều khiển thực tế đi từ những phần mềm đơn giản nhất như nháy LED cho đến ứng dụng thêm một vài thiết bị bên ngoài để từ đó có cái nhìn sâu hơn, cũng như lấy các kết quả, từ đó có thể đánh giá khách quan hơn về các hệ thống này.
+Trong chương này, em thực hiện một vài dự án từ đơn giản đến phức tạp trên một vi điều khiển thực tế đi từ những phần mềm đơn giản nhất như nháy LED cho đến ứng dụng thêm một vài thiết bị bên ngoài đến các giải thuật tương đối phức tạp để từ đó có cái nhìn sâu hơn, cũng như lấy các kết quả từ các dự án này để từ đó có thể đánh giá khách quan hơn về các hệ thống này.
 
 \textbf{Chương 5: Kết luận và hướng phát triển}
 
-Các kết quả, đánh giá, so sánh thực nghiệm của hệ thống được thực hiện trong chương 4 được em trình bày trong chương này, với mục tiêu đưa ra cái nhìn khách quan cũng như chủ quan về Rust nói chung cũng như một hệ thống được thực hiện sử dụng Rust nói riêng.
+Các kết quả, đánh giá, so sánh thực nghiệm của hệ thống được thực hiện trong chương \ref{ch4_application} được em trình bày trong chương này, với mục tiêu đưa ra cái nhìn khách quan cũng như chủ quan về Rust nói chung cũng như một hệ thống được thực hiện sử dụng Rust nói riêng.
 
 Ngoài ra từ toàn bộ kết quả đã thu được trong quá trình thực hiện nghiên cứu luận văn, em đưa ra một vài đề xuất để thúc đẩy quá trình phát triển Rust, và cách đóng góp cho ngôn ngữ Rust trong tương lai.

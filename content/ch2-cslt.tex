@@ -10,7 +10,7 @@ Tuy nhiên dựa trên cấu trúc và thiết kế của một ngôn ngữ lậ
 Cũng chính vì lý do này mà ngôn ngữ Rust khi được thiết kế cũng đã được cân nhắc kĩ lưỡng để giải quyết các vấn đề trong một lĩnh vực nhất định.
 Chúng ta cần hiểu rõ những quyết định đưa ra của các nhà phát triển khi thiết kế một ngôn ngữ để có thể hiểu rõ được cách mã nguồn Rust được thực hiện như thế nào, cấu trúc ra sao, mà từ đó có thể đưa ra những nhận xét về ngôn ngữ Rust nói chung, cũng như có thể so sánh được Rust với các ngôn ngữ lập trình khác (mà trong lĩnh vực lập trình nhúng, thì chủ đạo sẽ là so sánh ngôn ngữ Rust với ngôn ngữ C).
 Trong các chương sau, một số ý tưởng ``mới'' của ngôn ngữ Rust như ownership (quyền sở hữu), mutability (khả năng chỉnh sửa, biến đổi) hay borrowing lifetimes (vay mượn thời gian sống) cũng sẽ được giới thiệu.
-Sau đấy là một số quyết định cốt lõi trong việc thiết kế ngôn ngữ Rust mà các nhà phát triển ở tập đoàn Mozzila đã lựa chọn khi thiết kế ngôn ngữ Rust.
+Sau đấy là một số quyết định cốt lõi trong việc thiết kế ngôn ngữ Rust mà các nhà phát triển ở tập đoàn Mozzila đã lựa chọn khi thiết kế ngôn ngữ Rust \cite{rust_website}
 
 Mục tiêu thiết kế của ngôn ngữ Rust, theo như FAQ của website chính thức của ngôn ngữ Rust được viết như sau:
 \bigskip
@@ -32,12 +32,12 @@ Rust exists as an alternative that provides both efficient code and a comfortabl
 
 Với những mục tiêu thiết kế cốt lõi trên, ngôn ngữ Rust đã được phát triển hoàn thiện và được phát hành vào năm 2015.
 Ngôn ngữ Rust là một ngôn ngữ hệ thống an toàn, mã nguồn khi được dịch ra ngôn ngữ máy assembly có thể dự đoán được.
-Ngôn ngữ Rust không sử dụng garbage collector (bộ thu dọn rác). Bộ nhớ được quản lý thủ công, và bộ compiler cam kết sẽ không xảy ra các lỗi về bộ nhớ như truy cập bộ nhớ sau khi đã giải phóng, giải phóng bộ nhớ nhiều lần dẫn đến thất thoát dữ liệu, v.v..
+Ngôn ngữ Rust không sử dụng garbage collector (bộ thu dọn rác). Bộ nhớ được quản lý thủ công, và bộ compiler cam kết sẽ không xảy ra các lỗi về bộ nhớ như truy cập bộ nhớ sau khi đã giải phóng, giải phóng bộ nhớ nhiều lần dẫn đến thất thoát dữ liệu, v.v.. \cite{phd_safe_type}
 Biên dịch được mã nguồn thành ngôn ngữ máy và không sử dụng garbage collector là một trong những tiêu chí rất quan trọng trong việc thiết kế một ngôn ngữ lập trình hệ thống, đặc biệt là cho việc sử dụng trong lập trình nhúng.
 Để giải thích cho vấn đề này thì có thể hiểu rằng, các ngôn ngữ sử dụng garbage collector khi biên dịch rất khó dự đoán trước được mã máy assembly, vì ngoài phần mã máy được biên dịch từ chương trình chính thì còn các mã máy khác được biên dịch cho việc quản lý bộ nhớ cho chương trình.
-Điều này dẫn đến việc sử dụng các ngôn ngữ này không phù hợp cho việc thiết kế hệ thống nhúng, ví như một hệ điều hành, khi mà nó cần độ chính xác cao để sử lý ngắt và các tác vụ thời gian thực.
+Điều này dẫn đến việc sử dụng các ngôn ngữ này không phù hợp cho việc thiết kế hệ thống nhúng, ví như một hệ điều hành, khi mà nó cần độ chính xác cao để sử lý ngắt và các tác vụ thời gian thực. \cite{rust_embedded_c}
 
-Ngôn ngữ C là ngôn ngữ hệ thống được sử dụng rộng rãi nhất hiện nay. Một trong những ưu điểm lớn nhất của ngôn ngữ C cũng đi từ một trong những mục tiêu thiết ban đầu của ngôn ngữ C đó là thiết kế một assembler có tính portable cao, cũng vì lý do này mà khi lập trình ngôn ngữ C, người lập trình có thể truy cập trực đến đến từng địa chỉ, từng vùng nhớ, v.v.. Tính an toàn không nằm trong những mục tiêu thiết kế ban đầu của ngôn ngữ C, nó được giao lại cho người lập trình quản lý. Tuy rằng, trên lý thuyết điều này không làm ảnh hưởng đến tính an toàn của hệ thống, tuy nhiên con người thường hay mắt những sai lầm, có thể là vô ý hay cố ý, mà từ đó dẫn đến nhiều hệ lụy không mong muốn, có thể gây thiệt hại lớn đến hệ thống, ảnh hưởng đến rất nhiều người khác cũng sử dụng hệ thống đó.
+Ngôn ngữ C là ngôn ngữ hệ thống được sử dụng rộng rãi nhất hiện nay. Một trong những ưu điểm lớn nhất của ngôn ngữ C cũng đi từ một trong những mục tiêu thiết ban đầu của ngôn ngữ C đó là thiết kế một assembler có tính portable cao, cũng vì lý do này mà khi lập trình ngôn ngữ C, người lập trình có thể truy cập trực đến đến từng địa chỉ, từng vùng nhớ, v.v.. Tính an toàn không nằm trong những mục tiêu thiết kế ban đầu của ngôn ngữ C, nó được giao lại cho người lập trình quản lý. Tuy rằng, trên lý thuyết điều này không làm ảnh hưởng đến tính an toàn của hệ thống, tuy nhiên con người thường hay mắt những sai lầm, có thể là vô ý hay cố ý, mà từ đó dẫn đến nhiều hệ lụy không mong muốn, có thể gây thiệt hại lớn đến hệ thống, ảnh hưởng đến rất nhiều người khác cũng sử dụng hệ thống đó. \cite{ms_70}
 
 Ngày nay ta có thể tìm thấy rất nhiều lỗi bảo mật liên quan đến các vấn đề về tính an toàn của một ngôn ngữ như buffer overflow/underflow, double free, race condition, v.v.. Tất cả những lỗi bảo mật này đều có một điểm chung đó là chúng đều liên quan đến vấn đề về bộ nhớ. Vấn đề này, ở cốt lõi, xảy ra vì con người thường bỏ qua những edge case hiếm gặp, đây không phải là một lỗi của ngôn ngữ được sử dụng. Các ngôn ngữ mà thường quản lý và kiểm tra những edge case này thường là các ngôn ngữ cấp cao, sử dụng garbage collector. Chính vì điều này mà ngôn ngữ Rust được tạo ra để giải quyết vấn đề nan giải này, với mục tiêu trở thành một ngôn ngữ vừa an toàn mà lại vừa có thể được gọi là một ngôn ngữ cấp thấp, và vẫn giữ được tốc độ và tuân theo nguyên tắc ``zero overhead''.
 
@@ -122,7 +122,7 @@ Những thuật ngữ ``mới'' được ngôn ngữ Rust đưa ra sử dụng s
 \subsection{Giới thiệu chính thức về Rust}
 Trước khi đi vào phần giới thiệu các chứng năng nổi bật của ngôn ngữ Rust thì trước hết em xin giới thiệu một cách chính thức về ngôn ngữ lập trình này.
 Ngôn ngữ Rust là một ngôn ngữ lập trình mã nguồn mở được phát triển và tài trợ bởi tập đoàn Mozilla.
-Rust là một ngôn ngữ kiểu cố định (static type), đa mô hình (multi-paradigm).
+Rust là một ngôn ngữ kiểu cố định (static type), đa mô hình (multi-paradigm). \cite{ownership_semantics}
 Rust học hỏi từ rất nhiều ngôn ngữ ``đàn anh'' đi trước, một trong số những tính năng này sẽ được giới thiệu trong những phần sau.
 Trong quá trình phát triển, ngôn ngữ Rust tập trung vào ba mục tiêu thiết kế chính là:
 \begin{itemize}
@@ -371,8 +371,8 @@ fn main() {
 \begin{minipage}[ht]{0.5\linewidth}
 \begin{rustcode}
 fn main() {
-    let a = [5, 4, 3, 2, 1];
-    for number in a.iter() {
+    let myvec = [5, 4, 3, 2, 1];
+    for number in myvec {
         println!("Giá trị là {}", number);
     }
 }
@@ -402,7 +402,7 @@ println!("{} and {}", line(2), line(5)); // kết quả hiện ra màn hình là
 \subsection{Quản lý bộ nhớ}
 Về quản lý bộ nhớ, ngôn ngữ Rust sử dụng mô hình RAII (Resource Accquistion Is Initialization) hay còn biết tới một tên khác là SBRM (Scope-Bound Resource Management).
 Khái niệm này có thể hiểu là các tài nguyên sẽ được giải phóng ngược lại với thứ tự nó nhận vào, và được thực hiện một cách tự động khi một hàm hay một method trả về, điều này phải thực hiện ngay cả khi gặp phải lỗi trong quá trình này.
-Điều này giúp đảm bảo không bị rò rỉ tài nguyên hệ thống (resource leak), các tài nguyên này luôn được giữ trong quá trình nhận được tài nguyên này cho đến khi giải phóng. Vì vậy, nếu không có tài nguyên bị rò rỉ thì sẽ không bị rò rỉ bộ nhớ.
+Điều này giúp đảm bảo không bị rò rỉ tài nguyên hệ thống (resource leak), các tài nguyên này luôn được giữ trong quá trình nhận được tài nguyên này cho đến khi giải phóng. Vì vậy, nếu không có tài nguyên bị rò rỉ thì sẽ không bị rò rỉ bộ nhớ \cite{phd_safe_type}.
 
 \subsubsection{Đảm bảo an toàn bộ nhớ}
 Một trong những tính năng mạnh mẽ của ngôn ngữ Rust là đảm bảo an toàn cho bộ nhớ mà vẫn giữ được hiệu suất cao.
@@ -557,7 +557,7 @@ Tuy nhiên như đã thảo luận ở phần trước, con người rất hay b
 Type safety (an toàn kiểu) là một trong những thuộc tính mà một chương trình well defined luôn có.
 Type safety đảm bảo một biến không được hiểu ngầm sai về kiểu của nó, type safety cũng giúp bảo hệ về vấn đề bảo mật bộ nhớ, vì khi chương trình không hiểu ngầm sai về kiểu của một biến thì sẽ không xảy ra hiện tượng copy, chỉnh sửa, v.v.. sai, dẫn đến undefined behavior.
 
-Phần lớn ngôn ngữ có đảm bảo tính an toàn về kiểu, điển hình như Python, Java hay JavaScipt, v.v.. thì hầu hết đều sử dụng garbage collector, dẫn đến vấn đề khó sử dụng trong môi trường lập trình cấp thấp hay trong các môi trường hạn chế về bộ nhớ như vi điều khiển như đã thảo luận ở trên.
+Phần lớn ngôn ngữ có đảm bảo tính an toàn về kiểu, điển hình như Python, Java hay JavaScript, v.v.. thì hầu hết đều sử dụng garbage collector, dẫn đến vấn đề khó sử dụng trong môi trường lập trình cấp thấp hay trong các môi trường hạn chế về bộ nhớ như vi điều khiển như đã thảo luận ở trên.
 
 Ngôn ngữ C và C++ là một trong số ít ngôn ngữ phổ biến hiện hay không đảm bảo tính an toàn về kiểu, điều này lại một lần nữa giao lại cho người lập trình thủ công nhận biết và phát triển hệ thống tránh gặp phải các trường hợp này.
 Tuy phần lớn các vấn đề có thể xảy ra khi một hệ thống được viết bởi ngôn ngữ C, C++ không đảm bảo về tính an toàn, và thường là nằm ngoài mong muốn của người phát triển hệ thống thì cũng có thể người lập trình lại muốn sử dụng tính không an toàn này để điều khiển driver cho phần cứng, viết vào các vùng nhớ hoặc chạy intruction một cách kéo léo để điều khiển hệ thống chạy đúng với mong muốn với người lập trình.
@@ -585,7 +585,7 @@ Tuy nhiên, ở một số trường hợp người lập trình cần loại b�
 Khi đó, họ sẽ sử dụng mã unsafe (hay mã không an toàn).
 Mã unsafe tồn tại vì dẫu bộ compiler có thông minh đến đâu thì việc phân tích mã nguồn ở thời điểm biên dịch cũng có thể đạt đến một mức xác định nào đó, không thể hoàn toàn phân tích mọi trường hợp có thể xảy ra trong một chương trình Rust.
 Có thể hiểu rằng mã unsafe có nghĩa là bộ compiler sẽ bỏ qua, không kiểm tra phần mã trong khối unsafe, mọi vấn đề có thể phát sinh sẽ được giải quyết một cách thủ công bởi người lập trình.
-Mã unsafe, về cấu trúc cũng chỉ là một mã Rust thông thường, nhưng nó cho phép người lập trình có thêm một số ``sức mạnh'' mới, danh sách liệt kê sau là một số thao tác lập trình unsafe hay được sử dụng.
+Mã unsafe, về cấu trúc cũng chỉ là một mã Rust thông thường, nhưng nó cho phép người lập trình có thêm một số ``sức mạnh'' mới, danh sách liệt kê sau là một số thao tác lập trình unsafe hay được sử dụng \cite{rustygecko}.
 \begin{itemize}
 \item Dereference raw pointer
 \item Gọi một hàm unsafe khác
@@ -629,7 +629,7 @@ unsafe {
 
 Ở trên là những cú pháp, cấu trúc một phần mềm Rust cơ bản để thực hiện viết những chương trình sử dụng ngôn ngữ này.
 Ngoài những cú pháp này còn nhiều loại dữ liệu và cú pháp nâng cao khác như \emph{Cell}, \emph{RefCell}, \emph{smart pointer}, v.v.. nhưng hầu hết những cú pháp này không được sử dụng trong đề tài này nên các cú pháp và loại dữ liệu này đã được bỏ qua.
-Người đọc có thể xem thêm về khái niệm này ở các tài liệu tham khảo.
+Người đọc có thể xem thêm về khái niệm này ở các tài liệu tham khảo \cite{rust_action, rust2018book}.
 
 \subsection{Tích hợp mã Rust với mã C}
 Ở phần này, việc tích hợp một ít mã C trong một dự án Rust được giới thiệu một cách ngắn gọn.
@@ -678,13 +678,13 @@ pub extern "C" fn test_function(
 \end{listing}
 
 Người lập trình có thể sử dụng một công cụ có tên gọi là \emph{bindgen} để thực hiện tự động công việc dịch các header tương tự như thế này sang Rust để thuận tiện hơn và tránh gặp các lỗi khi thực hiện dịch.
-Các thao tác sử dụng \emph{bindgen} có thể được tham thảo ở link trong phần tài liệu tham khảo.
+Các thao tác sử dụng \emph{bindgen} có thể được tham thảo ở link trong phần tài liệu tham khảo \cite{rust_action, rust2018book, rust_embedded_c}.
 
 Sau bước dịch mã C sang Rust ở trên, bước tiếp theo là biên dịch mã cho hệ thống.
 Như đã trình bày ở các phần trước thì bộ compiler của Rust không biên dịch trực tiếp mã C/C++ (hay bất cứ các ngôn ngữ nào khác), nên muốn tích hợp mã C trong chương trình Rust ta cần phải biên dịch trước các mã này.
 
 Trong các đề tài nhúng, cách thông dụng nhất để thực hiện điều này là biên dịch mã C/C++ thành các file nén tĩnh (có dạng như \emph{test-library.a}), sau đó ta có thể sử dụng các file này để liên kết lại trong các bước linking cuối cùng.
-Cách thực hiện các bước này người đọc có thể tham khảo trong phần tài liệu tham khảo.
+Cách thực hiện các bước này người đọc có thể tham khảo trong phần tài liệu tham khảo \cite{rust_action, rust2018book, rust_embedded_c}.
 
 \subsection{Quản lý một dự án ngôn ngữ Rust}
 \emph{Cargo} là công cụ được Rust cung cấp để giúp người lập trình quản lý một dự án sử dụng ngôn ngữ này.
@@ -692,7 +692,7 @@ Về cơ bản, nó tự động hóa hoàn toàn quá trình xây dựng, liên
 \emph{Cargo} không phải là một công cụ riêng lẻ mà nó là một tập hợp bao gồm các phần mềm khác thể thực hiện các quá trình nêu trên.
 Có thể nói, sử dụng \emph{cargo} tăng hiệu suất là việc của người lập trình lên rất nhiều so với cách gọi bộ biên dịch \emph{rustc} thủ công.
 Ngoài ra, \emph{cargo} còn đảm nhận vai trò quản lý các thư viện bên thứ ba hay các thư viện khác được sử dụng trong dự án.
-Cấu trúc của một đề tài ngôn ngữ Rust và các chức năng của bộ công cụ mạnh mẽ quản lý dự án đó là \emph{cargo} sẽ được giới thiệu trong phần này.
+Cấu trúc của một đề tài ngôn ngữ Rust và các chức năng của bộ công cụ mạnh mẽ quản lý dự án đó là \emph{cargo} sẽ được giới thiệu trong phần này \cite{rustygecko}.
 
 \subsubsection{Cấu trúc một dự án trong Rust} \label{lbl:basic_rust_proj_structure}
 Mỗi dự án được tạo bởi \emph{cargo} đều có chung một cấu trúc cơ bản.

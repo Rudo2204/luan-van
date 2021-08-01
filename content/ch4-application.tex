@@ -1,4 +1,4 @@
-\chapter{Ứng dụng ngôn ngữ Rust}
+\chapter{Ứng dụng ngôn ngữ Rust}\label{ch4_application}
 \section{Chọn vi xử lý để thực hiện lập trình nhúng trong Rust}
 Trước khi thực hiện lập trình nhúng cho bất kỳ hệ thống nào, ta phải chọn một vi điều khiển phù hợp cho hệ thống đó trước.
 
@@ -172,7 +172,7 @@ Trước khi thực hiện viết chương trình nhúng cho vi điều khiển,
     \item OpenOCD: \mintinline{bash}{openocd} \cite{openocd_website}.
 \end{itemize}
 
-Ở đây, vì kit Tiva C có một BSP là \mintinline{bash}{stellaris-launchpad} \cite{stellaris_launchpad_bsp} nên em sẽ sử dụng crate này để đấy nhanh tiến độ thực hiện lập trình. \label{lbl:tivac_bsp}
+Ở đây, vì kit Tiva C có một BSP là \mintinline{bash}{stellaris-launchpad} \cite{stellaris_launchpad_bsp} nên em sẽ sử dụng crate này để đẩy nhanh tiến độ thực hiện lập trình. \label{lbl:tivac_bsp}
 
 Trước hết, ta tham khảo cấu trúc của crate \mintinline{bash}{stellaris-launchpad} qua ví dụ \ref{lst:stellaris_launchpad_structure}.
 

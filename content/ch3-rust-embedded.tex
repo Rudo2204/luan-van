@@ -86,7 +86,7 @@ Các file SVD này mô tả các chức năng của vi điều khiển, các ngo
 Các nhà phát triển lập trình nhúng của Rust đã thực hiện viết một chương trình là \mintinline{bash}{svd2rust} để thực tạo ra các crates (thư viện của Rust) một cách tự động từ các file SVD này.
 Từ kết quả thu được, cộng thêm công việc sửa lại các artifact từ kết quả nếu có,
 ta thu được các thư viện abstract này một cách tự động.
-Ngoài ra, vì hệ thống ownership của Rust được compiler kiểm tra lúc biên dịch nên khi sử dụng các thư viện này, chúng ta cũng được hưởng lợi từ hệ thống ownership này!
+Ngoài ra, vì hệ thống ownership của Rust được compiler kiểm tra lúc biên dịch nên khi sử dụng các thư viện này, chúng ta cũng được hưởng lợi từ hệ thống ownership này! \cite{frans_overview}
 Một ví dụ ở đây về lợi ích của hệ thống ownership là ta không thể thiết lập clock cho vi điều khiển nhiều lần.
 
 Khi sử dụng PAC, ta có thể viết mã thực hiện công việc khởi động GPIO một cách dễ dàng hơn.
@@ -112,7 +112,7 @@ Compiler không thể biết được ta có thực hiện công việc khởi �
 Để giải quyết vấn đề này, Rust chọn cách là tiếp tục abstract PAC thành Hardware Abstraction Layer (HAL).
 Trong C, ta cũng sử dụng các HAL để tương tác với vi điều khiển, nhưng trong Rust các HAL thường cao hơn các HAL trong C.
 Khi sử dụng HAL của Rust, mã viết ra thường có cảm giác tương đương với mức độ abstraction trong lập trình arduino.
-Ví dụ, khi ta sử dụng HAL \mintinline{bash}{stm32f1xx\_hal} để tương tác với vi điều khiển STM32F1 để khởi động GPIO, mã Rust sẽ được viết như sau:
+Ví dụ, khi ta sử dụng HAL \mintinline{bash}{stm32f1xx_hal} để tương tác với vi điều khiển STM32F1 để khởi động GPIO, mã Rust sẽ được viết như sau:
 \begin{listing}[ht]
 \begin{rustcode}
 let mut rcc = dp.RCC.constrain();
@@ -224,7 +224,7 @@ Ta chỉ việc viết driver một lần duy nhất và toàn bộ tất cả c
 Để xem một ví dụ, ta xem lại ví dụ về driver AHT20 của Rust (ví dụ \ref{code:rust_hal_aht20_setup}).
 Ở đây, em đã thêm phần tái sử dụng trait trong ví dụ mới này.
 Có thể thấy rằng, driver này đã tái sử dụng hai trait từ Embedded HAL đó là \mintinline{bash}{delay} và \mintinline{bash}{i2c}.
-Điều này có nghĩa là bất cứ HAL cho vi điều khiển nào cũng tái sử dụng hai trait này từ Embedded HAL đều có thể sử dụng crate driver này một cách trực tiếp mà không cần thay đổ bất cứ thông số nào.
+Điều này có nghĩa là bất cứ HAL cho vi điều khiển nào cũng tái sử dụng hai trait này từ Embedded HAL đều có thể sử dụng crate driver này một cách trực tiếp mà không cần thay đổi bất cứ thông số nào.
 \begin{listing}[ht]
 \begin{rustcode}
 use embedded_hal::blocking::{delay::DelayMs, i2c::{Write, WriteRead}};
