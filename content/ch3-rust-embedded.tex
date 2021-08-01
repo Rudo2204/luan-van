@@ -8,7 +8,7 @@ Các register trên vi điều khiển thường là memory mapped, điều này
 
 Các datasheet được nhà sản xuất cung cấp này thường rất dài và chứa đựng rất nhiều thông tin về sản phẩm, datasheet của EK-TM4C123GH6PM có độ dài tới 1410 trang! \cite{tivac_datasheet}.
 
-Để minh họa, tôi xin đưa ra một ví dụ cụ thể là điều khiển kích hoạt clock cho GPIO trên kit Tiva C EK-TM4C123GH6PM, sau đó kích hoạt các GPIO này bằng cách ghi trực tiếp vào các register.
+Để minh họa, em xin đưa ra một ví dụ cụ thể là điều khiển kích hoạt clock cho GPIO trên kit Tiva C EK-TM4C123GH6PM, sau đó kích hoạt các GPIO này bằng cách ghi trực tiếp vào các register.
 Trước hết, ta cần phải xác định được các thông số cần phải thay đổi. Ở ví dụ này, các thông số đó được trình bày trong datasheet ở trang 340.
 \begin{figure}[ht]
 \centering
@@ -30,7 +30,7 @@ GPIOF->LOCK = 0x4C4F434B; // unlockGPIOCR register
 Các thao tác đọc ghi các thanh ghi này là các thao tác được cho là cấp thấp (low-level), thường chỉ các ngôn ngữ cấp thấp như C/C++ mới có thể thực hiện các thao tác này.
 Các ngôn ngữ cấp cao thường không thể thực hiện trực tiếp các thao tác này, làm cho các ngôn ngữ này không thể lập trình nhúng được.
 Rust là một ngôn ngữ cấp thấp,  ta cũng có thể thực hiện các thao tác tương tự như vậy nếu cần thiết.
-Sau đây, tôi đưa ra một ví dụ \ref{code:rust_register} về sử dụng Rust để thực hiện một thao tác tương tự trên một vi điều khiển STM32F1 để chứng minh điều này.
+Sau đây, em đưa ra một ví dụ \ref{code:rust_register} về sử dụng Rust để thực hiện một thao tác tương tự trên một vi điều khiển STM32F1 để chứng minh điều này.
 \begin{listing}[ht]
 \begin{rustcode}
 const GPIO_START: usize = 0x4001_1000;
@@ -137,7 +137,7 @@ Ngoài ra, nếu các HAL được viết tốt, ta hoàn toàn có thể dựa 
 
 \subsection{Các thiết bị ngoài}
 Bước tiếp theo để lập trình một hệ thống nhúng là tương tác với các thiết bị bên ngoài.
-Ở đây, tôi sẽ đưa ví dụ về cách sử dụng HAL để tương tác với cảm biến nhiệt độ, độ ẩm AHT20 \cite{aht20_datasheet}.
+Ở đây, em sẽ đưa ví dụ về cách sử dụng HAL để tương tác với cảm biến nhiệt độ, độ ẩm AHT20 \cite{aht20_datasheet}.
 Đây là một HAL thực tế làm driver để điều khiển AHT20 trong Rust được viết bởi các nhà phát triển lập trình nhúng \cite{hal_aht20}.
 
 Ví dụ \ref{code:rust_hal_aht20_setup} sau đây là mã để thiết lập một thiết bị AHT20.
@@ -222,7 +222,7 @@ Ta chỉ việc viết driver một lần duy nhất và toàn bộ tất cả c
 Đây chính là điểm then chốt trong hệ sinh thái lập trình nhúng của Rust.
 
 Để xem một ví dụ, ta xem lại ví dụ về driver AHT20 của Rust (ví dụ \ref{code:rust_hal_aht20_setup}).
-Ở đây, tôi đã thêm phần tái sử dụng trait trong ví dụ mới này.
+Ở đây, em đã thêm phần tái sử dụng trait trong ví dụ mới này.
 Có thể thấy rằng, driver này đã tái sử dụng hai trait từ Embedded HAL đó là \mintinline{bash}{delay} và \mintinline{bash}{i2c}.
 Điều này có nghĩa là bất cứ HAL cho vi điều khiển nào cũng tái sử dụng hai trait này từ Embedded HAL đều có thể sử dụng crate driver này một cách trực tiếp mà không cần thay đổ bất cứ thông số nào.
 \begin{listing}[ht]
@@ -307,4 +307,4 @@ fn main() -> ! {
 
 \bigskip
 Đến đây, ta đã có được một hệ thống hoàn chỉnh, sẵn sàng để áp dụng vào viết các hệ thống nhúng một cách nhanh gọn, an toàn và dễ dàng.
-Ở chương tiếp theo, tôi đi vào thực hiện áp dụng Rust để viết một số hệ thống nhúng và chạy các chương trình này trên một vi điều khiển thực để minh họa cách chúng ta có thể áp dụng Rust để lập trình nhúng như thế nào.
+Ở chương tiếp theo, em đi vào thực hiện áp dụng Rust để viết một số hệ thống nhúng và chạy các chương trình này trên một vi điều khiển thực để minh họa cách chúng ta có thể áp dụng Rust để lập trình nhúng như thế nào.

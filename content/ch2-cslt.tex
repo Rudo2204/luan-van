@@ -69,7 +69,7 @@ Khi gặp phải những vấn đề này thì cách giải quyết tốt nhất
 Vì vậy, vấn đề về cộng đồng sử dụng ngôn ngữ Rust nói chung cũng sẽ được thảo luận qua, cũng như hướng phát triển của ngôn ngữ Rust.
 
 \section{Các khía cạnh đánh giá}\label{lbl:quality}
-Để đánh giá các khía cạnh của một ngôn ngữ lập trình đã nêu trên thì ở phần này tôi đưa ra một số câu hỏi thường hay được đặt ra để thảo luận về các vấn đề này. Những câu hỏi có thể được liên quan đến các vấn đề khác, nhưng sẽ được tập trung chính vào vấn đề đó.
+Để đánh giá các khía cạnh của một ngôn ngữ lập trình đã nêu trên thì ở phần này em đưa ra một số câu hỏi thường hay được đặt ra để thảo luận về các vấn đề này. Những câu hỏi có thể được liên quan đến các vấn đề khác, nhưng sẽ được tập trung chính vào vấn đề đó.
 \subsection{Các tính năng về ngôn ngữ lập trình}
 \begin{itemize}
     \item[--] Ngôn ngữ lập trình Rust có dễ học không, tính logic của ngôn ngữ này như thế nào?
@@ -105,7 +105,7 @@ Vì vậy, vấn đề về cộng đồng sử dụng ngôn ngữ Rust nói chu
 Để đánh giá một chương trình, hệ thống thì có thể được chia thành rất nhiều yếu tố khác nhau.
 Theo như ISO/IEC 25010:2011 thì có một số yếu tố chính như sau: functional sustainability, reliability, performance efficiency, operationality, security, compability, maintainability và transferbility. Các hạng mục này được chia thành 31 hạng mục nhỏ hơn.
 Để đánh giá chính xác một hệ thống theo như chuẩn trên là một vấn đề kỹ thuật khó khăn và vượt ngoài tầm của đề tài này.
-Tuy nhiên để đánh giá chung về chất lượng của hệ thống thì tôi sẽ dưa trên chuẩn trên để từ đó đặt ra một số câu hỏi để từ đó thảo luận về chất lượng của hệ thống này trong các chương sau.
+Tuy nhiên để đánh giá chung về chất lượng của hệ thống thì em sẽ dưa trên chuẩn trên để từ đó đặt ra một số câu hỏi để từ đó thảo luận về chất lượng của hệ thống này trong các chương sau.
 \begin{itemize}
     \item[--] Mã nguồn Rust có dễ duy trì ồn định không?
     \item[--] Hiệu suất của chương trình viết sử dụng Rust so với ngôn ngữ khác, ở đây chủ yếu so sánh với C như thế nào?
@@ -115,12 +115,12 @@ Tuy nhiên để đánh giá chung về chất lượng của hệ thống thì 
 \end{itemize}
 
 \section{Lý thuyết cơ bản về ngôn ngữ Rust}
-Phần này tôi sẽ đưa ra những lý thuyết cơ bản về ngôn ngữ Rust và những đặc điểm nổi bật của nó với mục tiêu giới thiệu sơ qua cho người đọc những lý thuyết chính sẽ được sử dụng để trình bày những phần sau trong đề tài này, cũng như trả lời một số câu hỏi về những khía cạnh sẽ được đánh giá đã nêu ra ở phần trên.
-Tôi giả định trước người đọc đã ít nhiều biết về một số thuật ngữ lập trình được sử dụng phổ biến trong thực tế trong các ngôn ngữ như C/C++ hay Java, đặc biệt là trong lĩnh vực lập trình nhúng.
+Phần này em sẽ đưa ra những lý thuyết cơ bản về ngôn ngữ Rust và những đặc điểm nổi bật của nó với mục tiêu giới thiệu sơ qua cho người đọc những lý thuyết chính sẽ được sử dụng để trình bày những phần sau trong đề tài này, cũng như trả lời một số câu hỏi về những khía cạnh sẽ được đánh giá đã nêu ra ở phần trên.
+Em giả định trước người đọc đã ít nhiều biết về một số thuật ngữ lập trình được sử dụng phổ biến trong thực tế trong các ngôn ngữ như C/C++ hay Java, đặc biệt là trong lĩnh vực lập trình nhúng.
 Những thuật ngữ ``mới'' được ngôn ngữ Rust đưa ra sử dụng sẽ được giới thiệu song song, so sánh với những ``cách làm cũ'' của các ngôn ngữ lập trình khác.
 
 \subsection{Giới thiệu chính thức về Rust}
-Trước khi đi vào phần giới thiệu các chứng năng nổi bật của ngôn ngữ Rust thì trước hết tôi xin giới thiệu một cách chính thức về ngôn ngữ lập trình này.
+Trước khi đi vào phần giới thiệu các chứng năng nổi bật của ngôn ngữ Rust thì trước hết em xin giới thiệu một cách chính thức về ngôn ngữ lập trình này.
 Ngôn ngữ Rust là một ngôn ngữ lập trình mã nguồn mở được phát triển và tài trợ bởi tập đoàn Mozilla.
 Rust là một ngôn ngữ kiểu cố định (static type), đa mô hình (multi-paradigm).
 Rust học hỏi từ rất nhiều ngôn ngữ ``đàn anh'' đi trước, một trong số những tính năng này sẽ được giới thiệu trong những phần sau.
@@ -133,7 +133,7 @@ Trong quá trình phát triển, ngôn ngữ Rust tập trung vào ba mục tiê
 Ngoài ba yêu tố chính trên thì Rust còn có rất nhiều mục tiêu thiết kế khác, tuy nhiên ngôn ngữ này sẽ luôn xoay quanh ba yếu tố trên nếu một trong những mục tiệu thiết kế kia không thể được triển khai đồng thời với ba mục tiêu này.
 
 \subsection{Lý thuyết cơ bản}
-Ở phần này, tôi bắt đầu giới thiệu các tính năng của Rust, đi từ thư viện chuẩn của ngôn ngữ, đến hệ thống kiểu, và những tính năng khác đồng thời cũng là một phần giới thiệu sơ qua về cú pháp, cấu trúc của một phần mềm viết sử dụng ngôn ngữ này.
+Ở phần này, em bắt đầu giới thiệu các tính năng của Rust, đi từ thư viện chuẩn của ngôn ngữ, đến hệ thống kiểu, và những tính năng khác đồng thời cũng là một phần giới thiệu sơ qua về cú pháp, cấu trúc của một phần mềm viết sử dụng ngôn ngữ này.
 Một trong số tính năng nay sẽ có ít nhiều trùng lặp với các ngôn ngữ sử dụng phổ biến trong mảng lập trình nhúng là ngôn ngữ C.
 Tuy nhiên, vì Rust là một ngôn ngữ đa mô hình nên cấu trúc của ngôn ngữ Rust sẽ có nhiều tính năng ``mới'', ít gặp trong các hệ thống nhúng.
 \subsubsection{Thư viện chuẩn của Rust}
@@ -879,7 +879,7 @@ Vì vậy, trong thời gian tới, chắc rằng việc debugging một chươn
 \subsubsection{CI/CD cho chương trình Rust}
 Hiện tại ở thời điểm bài viết thì phần lớn các website hỗ trợ thực hiện CI/CD nổi tiếng như \emph{Travis CI}, \emph{Appveyor}, \emph{Gitlab} và \emph{Github Action} đều có hỗ trợ cho các chương trình Rust.
 
-Tôi cũng đã có nhiều trải nghiệm tốt với các bộ công cụ này với một phần mềm Rust và thực hiện CI trên ba website là \emph{Travis CI}, \emph{Appveyor} và \emph{Github Action}.
+Em cũng đã có nhiều trải nghiệm tốt với các bộ công cụ này với một phần mềm Rust và thực hiện CI trên ba website là \emph{Travis CI}, \emph{Appveyor} và \emph{Github Action}.
 Có thể nói rằng, công việc CI/CD cho một chương trình Rust khá thuận tiện và hiện đại, không hề gặp bất cứ trở ngại nào.
 
 \section{Đối tượng phần cứng}

@@ -2,7 +2,7 @@
 \section{Chọn vi xử lý để thực hiện lập trình nhúng trong Rust}
 Trước khi thực hiện lập trình nhúng cho bất kỳ hệ thống nào, ta phải chọn một vi điều khiển phù hợp cho hệ thống đó trước.
 
-Trước hết, tôi đưa ra một số vi xử lý thông dụng, phù hợp, được sử dụng để giảng dạy về lập trình hệ nhúng ở trường Đại học Bách Khoa TP.HCM, so sánh chúng và từ đó chọn một vi xử lý phù hợp với nhu cầu.
+Trước hết, em đưa ra một số vi xử lý thông dụng, phù hợp, được sử dụng để giảng dạy về lập trình hệ nhúng ở trường Đại học Bách Khoa TP.HCM, so sánh chúng và từ đó chọn một vi xử lý phù hợp với nhu cầu.
 \subsection{Một số vi xử lý thông dụng}
 \subsubsection{MSP-EXP430G2 Evaluation board}
 \begin{figure}[ht]
@@ -143,12 +143,12 @@ Raspberry Pi 3 Model B+ đủ mạnh để có thể chạy hệ điều hành L
 
 \subsection{Lựa chọn vi điều khiển}
 
-Ở đây, để thực hiện ứng dụng Rust cho một hệ thống nhúng thực tế, tôi đưa ra một số yêu cầu để thử nghiệm ngôn ngữ này.
+Ở đây, để thực hiện ứng dụng Rust cho một hệ thống nhúng thực tế, em đưa ra một số yêu cầu để thử nghiệm ngôn ngữ này.
 
 \begin{itemize}
     \item Vi điều khiển này có đầy đủ các chức năng của một vi điều khiển thông dụng, để ta có thể dễ dàng thử nghiệm toàn bộ những ngoại vi cơ bản.
     \item Vi điều khiển này được hỗ trợ tương đối tốt, cả trong C lẫn Rust để ta có thể dễ dàng so sánh kết quả trong quá trình thiết kế hệ thống nhúng.
-    \item Vì Rust là một ngôn ngữ cấp thấp, tôi muốn thử nghiệm tính toán nặng trên vi điều khiển để kiểm tra về tốc độ của Rust trong một hệ thống thực tế.
+    \item Vì Rust là một ngôn ngữ cấp thấp, em muốn thử nghiệm tính toán nặng trên vi điều khiển để kiểm tra về tốc độ của Rust trong một hệ thống thực tế.
     \item Giá thành tương đối rẻ.
         Trong lập trình nhúng, thiết kế các hệ thống với những giới hạn nhất định về phần cứng cũng như về giá thành của hệ thống là một công việc mà người thiết kế hệ thống thường xuyên gặp phải.
         Vì vậy, Rust phải hỗ trợ những vi điều khiển giá rẻ, không được giới hạn bởi các vi điều khiển cao cấp.
@@ -156,7 +156,7 @@ Raspberry Pi 3 Model B+ đủ mạnh để có thể chạy hệ điều hành L
 
 Dựa trên các yêu cầu này, có thể thấy có hai lựa chọn về vi xử lý để thực hiện những yêu cầu này là kit Tiva C và kit STM32 Discovery.
 
-Ở đây, tôi quyết định chọn kit Tiva C làm đối tượng để nghiên cứu trong đề tài này vì giá thành của nó rẻ hơn so với kit STM32 Discovery.
+Ở đây, em quyết định chọn kit Tiva C làm đối tượng để nghiên cứu trong đề tài này vì giá thành của nó rẻ hơn so với kit STM32 Discovery.
 
 \section{Viết phần mềm nhúng cho vi điều khiển trong Rust}
 Trước khi thực hiện viết chương trình nhúng cho vi điều khiển, ta cần chuẩn bị một số công cụ để thực hiện điều này.
@@ -172,7 +172,7 @@ Trước khi thực hiện viết chương trình nhúng cho vi điều khiển,
     \item OpenOCD: \mintinline{bash}{openocd} \cite{openocd_website}.
 \end{itemize}
 
-Ở đây, vì kit Tiva C có một BSP là \mintinline{bash}{stellaris-launchpad} \cite{stellaris_launchpad_bsp} nên tôi sẽ sử dụng crate này để đấy nhanh tiến độ thực hiện lập trình. \label{lbl:tivac_bsp}
+Ở đây, vì kit Tiva C có một BSP là \mintinline{bash}{stellaris-launchpad} \cite{stellaris_launchpad_bsp} nên em sẽ sử dụng crate này để đấy nhanh tiến độ thực hiện lập trình. \label{lbl:tivac_bsp}
 
 Trước hết, ta tham khảo cấu trúc của crate \mintinline{bash}{stellaris-launchpad} qua ví dụ \ref{lst:stellaris_launchpad_structure}.
 
@@ -193,7 +193,7 @@ Trước hết, ta tham khảo cấu trúc của crate \mintinline{bash}{stellar
 \end{listing}
 
 Ta thấy nó tương tự với cấu trúc một dự án Rust cơ bản (xem trang \pageref{lbl:basic_rust_proj_structure}), nhưng có thêm một số file khác.
-Tôi đi tiến hành phân tích về công dụng của các file này.
+Em đi tiến hành phân tích về công dụng của các file này.
 
 \textbf{.gdbinit}
 
@@ -231,13 +231,13 @@ Chuyển thành dạng binary sử dụng lệnh \mintinline{bash}{arm-none-eabi
 
 Và cuối cùng là flash file binary lên kit bằng lệnh \mintinline{bash}{lm4flash dst.bin}
 
-Tôi tiến hành viết một số chương trình có độ khó từ đơn giản đến phức tạp để thử nghiệm Rust trên Tiva C.
+Em tiến hành viết một số chương trình có độ khó từ đơn giản đến phức tạp để thử nghiệm Rust trên Tiva C.
 
 \subsection{Chương trình nháy LED}\label{lbl:rust_blinky}
 Chương trình nháy LED được xem là chương trình đơn giản nhất trong một hệ thống nhúng.
-Tôi tiến hành thực hiện viết một chương trình nháy LED để làm quen với cách làm việc với một đề tài hệ thống nhúng trong Rust.
+Em tiến hành thực hiện viết một chương trình nháy LED để làm quen với cách làm việc với một đề tài hệ thống nhúng trong Rust.
 
-Để thực hiện một chương trình nháy LED, tôi trước tin thực hiện trực tiếp thông qua HAL của kit Tiva C \cite{tm4c_hal}.
+Để thực hiện một chương trình nháy LED, em trước tin thực hiện trực tiếp thông qua HAL của kit Tiva C \cite{tm4c_hal}.
 Chương trình có nội dung như trong ví dụ \ref{code:tivac_hal_blinky} sau.
 
 \begin{listing}[ht]
@@ -278,7 +278,7 @@ fn main() -> ! {
 \label{code:tivac_hal_blinky}
 \end{listing}
 
-Tôi phân tích một vài điểm chưa được giải thích ở trong các phần trước từ ví dụ này.
+Em phân tích một vài điểm chưa được giải thích ở trong các phần trước từ ví dụ này.
 
 \begin{itemize}
     \item Đầu tiên là hai thuộc tính \mintinline{rust}{#[no_std]} và \mintinline{rust}{#[no_main]} được đặt ở đầu chương trình.
@@ -334,8 +334,8 @@ pub fn stellaris_main(mut board: stellaris_launchpad::board::Board) {
 Ở đây, khi sử dụng BSP ta thấy việc nháy LED còn đơn giản hơn nữa vì BSP đã thực hiện các việc như khởi động kit, thiết lập clock, các ngoại vi cơ bản (như các LED trên kit) cho chúng ta và trả về một biến mutable là \mintinline{bash}{board} để ta mượn và sử dụng nó.
 
 \subsection{Sử dụng một vài ngoại vi đơn giản}\label{lbl:rust_peripheral}
-Sau khi đã nắm được cách viết một chương trình cơ bản, tôi tiếp tục thực hiện tương tác với một vài ngoại vi cơ bản của kit.
-Ở ví dụ này, tôi chọn hai ngoại vi đó là UART và bộ Timer trên kit để tạo xung PWM điều khiển LED của kit.
+Sau khi đã nắm được cách viết một chương trình cơ bản, em tiếp tục thực hiện tương tác với một vài ngoại vi cơ bản của kit.
+Ở ví dụ này, em chọn hai ngoại vi đó là UART và bộ Timer trên kit để tạo xung PWM điều khiển LED của kit.
 Nội dung của chương trình người đọc có thể tham khảo ở phần phụ lục \ref{lbl:appendix_rust_peripheral} (trang \pageref{lbl:appendix_rust_peripheral}).
 
 Một vài hình về kết quả thực hiện có thể xem ở các hình \ref{fig:cycle_kit}, \ref{fig:cycle_uart_out}, \ref{fig:cycle_uart_read}.
@@ -363,10 +363,10 @@ Một vài hình về kết quả thực hiện có thể xem ở các hình \re
 
 \clearpage
 \subsection{Tương tác với một vài thiết bị ngoài}\label{lbl:rust_mfrc522}
-Sau khi đã làm quen với kit và các ngoại vi trên kit, bước tiếp theo tôi thực hiện tương tác với một số thiết bị ngoài.
-Ở đây, tôi chọn 2 thiết bị là LCD 1602 \cite{lcd_datasheet} và module MFRC522 \cite{mfrc522_datasheet} thực hiện mô phỏng một hệ thống khóa cửa đơn giản.
+Sau khi đã làm quen với kit và các ngoại vi trên kit, bước tiếp theo em thực hiện tương tác với một số thiết bị ngoài.
+Ở đây, em chọn 2 thiết bị là LCD 1602 \cite{lcd_datasheet} và module MFRC522 \cite{mfrc522_datasheet} thực hiện mô phỏng một hệ thống khóa cửa đơn giản.
 
-Trước khi thực hiện hệ thống, tôi thực hiện gia công một mạch in đơn giản để thuận tiện hơn cho việc thực hiện hệ thống.
+Trước khi thực hiện hệ thống, em thực hiện gia công một mạch in đơn giản để thuận tiện hơn cho việc thực hiện hệ thống.
 Schematic của hệ thống được trình bày ở hình \ref{fig:schematic}.
 Kết quả thực hiện PCB và kết quả của hệ thống có thể xem ở các hình \ref{fig:pcb_routing}, \ref{fig:pcb_out}, \ref{fig:system}.
 
@@ -466,12 +466,12 @@ Một vài hình về kết quả thực hiện có thể xem ở các hình \re
 \clearpage
 \subsection{Sử dụng một crate giải thuật cờ vua no-std trên kit Tiva C}\label{lbl:rust_chess}
 Một trong những điểm mạnh của Rust là các crate no-std có thể được sử dụng trên bất kỳ môi trường nào như đã giới thiệu ở phần trước.
-Vì vậy, ở phần này, tôi thực hiện sử dụng một crate giải thuật cờ vua \mintinline{bash}{chess-engine} \cite{rust_chess_engine} mô phỏng một hệ thống đánh cờ vua blindfolded (không bàn cờ) đơn giản để chứng minh điều này.
-Trong phần này, tôi cũng sử dụng thêm một module bàn phím 4x4 để tăng tính tương tác với người dùng.
+Vì vậy, ở phần này, em thực hiện sử dụng một crate giải thuật cờ vua \mintinline{bash}{chess-engine} \cite{rust_chess_engine} mô phỏng một hệ thống đánh cờ vua blindfolded (không bàn cờ) đơn giản để chứng minh điều này.
+Trong phần này, em cũng sử dụng thêm một module bàn phím 4x4 để tăng tính tương tác với người dùng.
 Crate thực hiện giải thuật cờ vua này tương đối đơn giản, dựa trên hai giải thuật Minimax \cite{minimax_chess_programming} và Alpha-Beta Pruning \cite{alpha_beta_chess_programming}.
 Người đọc có thể tham khảo về giải thuật này ở phần tài liệu tham khảo.
 
-Để thực hiện demo cho phần này, tôi thực hiện thiết lập một vị trí đơn giản như hình \ref{chess:start_fen}.
+Để thực hiện demo cho phần này, em thực hiện thiết lập một vị trí đơn giản như hình \ref{chess:start_fen}.
 Ở đây, người chơi (điều khiển quân trắng) sẽ đi nước Qc6, cố tình tạo một thời cơ để cho máy tính (điều khiển quân đen) chơi một tactic 1. Bh2+ Kxh2 2. Qxc6.
 
 Nội dung của chương trình người đọc có thể tham khảo ở phần phụ lục \ref{lbl:appendix_rust_chess} (trang \pageref{lbl:appendix_rust_chess}).
@@ -546,7 +546,7 @@ Một vài hình về kết quả thực hiện có thể xem ở các hình \re
 \clearpage
 \subsection{Sử dụng crate RTIC viết hệ thống real time sử dụng ngắt}\label{lbl:rust_rtic}
 Một trong những cơ chế quan trọng trong việc viết những phần mềm nhúng nâng cao đó là sử dụng tính năng ngắt của vi điều khiển.
-Trong phần này, tôi thực hiện sử dụng crate RTIC \cite{rtic_website} để viết một hệ thống nhúng real time sử dụng ngắt.
+Trong phần này, em thực hiện sử dụng crate RTIC \cite{rtic_website} để viết một hệ thống nhúng real time sử dụng ngắt.
 
 Hệ thống real time này là một hệ thống đơn giản, kết hợp các kiến thức đã thực hiện ở các phần \ref{lbl:rust_blinky} (trang \pageref{lbl:rust_blinky}), \ref{lbl:rust_peripheral} (trang \pageref{lbl:rust_peripheral}), \ref{lbl:rust_mfrc522} (trang \pageref{lbl:rust_mfrc522}) trước và kết hợp thêm một vài ví dụ nhỏ để mô tả chức năng scheduler của RTIC.
 
@@ -599,7 +599,7 @@ Một vài hình về kết quả thực hiện có thể xem ở các hình \re
 \end{figure}
 
 \clearpage
-Trong các phần thực hiện hệ thống thì phần sử dụng crate RTIC này, tôi gặp nhiều trục trặc về kỹ thuật nhất.
+Trong các phần thực hiện hệ thống thì phần sử dụng crate RTIC này, em gặp nhiều trục trặc về kỹ thuật nhất.
 Các vấn đề trực trặc kỹ thuật này xuất phát từ cả hai crate đó là RTIC, cũng như là HAL chưa đầy đủ của kit Tiva C.
 Một số khó khăn có thể được liệt kê ra như sau:
 \begin{itemize}
@@ -607,7 +607,7 @@ Một số khó khăn có thể được liệt kê ra như sau:
         Hiện tại hệ thống sử dụng ngắt GPIO để thay thế, vì vậy bị mất đi các chân GPIO sử dụng để ngắt khi thực hiện điều này.
     \item HAL của Tiva C hiện tại chỉ có một cách tạo biến delay duy nhất đó là sử dụng SysTick, tuy nhiên RTIC lại sử dụng SysTick cho monotonic scheduler.
         Vì vậy người dùng monotonic scheduler phải thực hiện viết cách tạo delay khác.
-        Ở đây tôi chọn cách sử dụng countdown timer trên kit để tạo delay.
+        Ở đây em chọn cách sử dụng countdown timer trên kit để tạo delay.
     \item RTIC sử dụng các phương pháp quản lý tài nguyên hệ thống cũng như switch task tương đối khác so với hệ thống RTOS quen thuộc nên đã gây một số hiểu lầm trong quá trình thực hiện hệ thống.
 \end{itemize}
 
