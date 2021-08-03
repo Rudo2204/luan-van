@@ -531,8 +531,9 @@ Trong những vấn đề có thể xảy ra như đã liệt kê trên thì hi�
 Một người tấn công hệ thống có thể thiết kế data nhận vào hệ thống để có thể điều khiển chương trình chạy theo cách họ muốn.
 
 Một chương trình không thể xảy ra undefined behavior ở bất kì tình huống nào được gọi là ``well defined''.
-Để chương trình không xả ra undefined behavior thì trong ngôn ngữ C/C++ người lập trình phải nắm rõ các edge cases có thể xảy ra undefined behavior, từ đó mà viết mã nguồn để tránh các trường hợp này.
-Tuy nhiên như đã thảo luận ở phần trước, con người rất hay bỏ qua các trường hợp edge case hiếm gặp.
+Để chương trình không xảy ra undefined behavior thì trong ngôn ngữ C/C++ người lập trình phải nắm rõ các edge cases có thể xảy ra undefined behavior, từ đó mà viết mã nguồn để tránh các trường hợp này.
+Điều này là một gánh nặng tương đối lớn mà người lập trình phải nắm và hiểu rõ để có thể thực hiện phát triển các hệ thống có độ tin cậy cao.
+
 Để giải quyết vấn đề này, ngôn ngữ Rust được thiết kế với yêu cầu an toàn nên toàn bộ chương viết sử dụng ngôn ngữ Rust luôn luôn là một chương trình well defined, trừ khi người lập trình sử dụng từ khóa \emph{unsafe}, vấn đề này sẽ được trình bày ở các phần sau.
 
 %Undefined behavior có một ưu điểm giúp mã nguồn có thể được tối ưu hóa một cách dễ dàng hơn.
@@ -554,7 +555,7 @@ Tuy nhiên như đã thảo luận ở phần trước, con người rất hay b
 %}
 
 \subsubsection{An toàn kiểu}
-Type safety (an toàn kiểu) là một trong những thuộc tính mà một chương trình well defined luôn có.
+Type safety (an toàn kiểu) là một trong những thuộc tính mà một chương trình well defined luôn có \cite{phd_safe_type}.
 Type safety đảm bảo một biến không được hiểu ngầm sai về kiểu của nó, type safety cũng giúp bảo hệ về vấn đề bảo mật bộ nhớ, vì khi chương trình không hiểu ngầm sai về kiểu của một biến thì sẽ không xảy ra hiện tượng copy, chỉnh sửa, v.v.. sai, dẫn đến undefined behavior.
 
 Phần lớn ngôn ngữ có đảm bảo tính an toàn về kiểu, điển hình như Python, Java hay JavaScript, v.v.. thì hầu hết đều sử dụng garbage collector, dẫn đến vấn đề khó sử dụng trong môi trường lập trình cấp thấp hay trong các môi trường hạn chế về bộ nhớ như vi điều khiển như đã thảo luận ở trên.
@@ -606,7 +607,7 @@ Sử dụng các hàm hay trait unsafe & Bộ compiler Rust không thể đảm 
 \caption{Các loại mã unsafe thông dụng của Rust}
 \label{tbl:rust_unsafe}
 \end{longtable}
-Như đã phân tích trên, mặc dù các khối unsafe là một công cụ mạnh, cho phép người lập trình có thêm một công cụ mạnh mẽ và tạm thời bỏ qua sự kiểm tra nghiêm ngặc của bộ compiler của Rust để thực hiện được những thao tác lập trình nâng cao hơn.
+Như đã phân tích trên, mặc dù các khối unsafe là một công cụ mạnh, cho phép người lập trình có thêm một công cụ mạnh mẽ và tạm thời bỏ qua sự kiểm tra nghiêm ngặt của bộ compiler của Rust để thực hiện được những thao tác lập trình nâng cao hơn.
 Tuy nhiên, nếu người lập trình không cẩn thận thì có thể dẫn đến nhiều hệ lụy không mong muốn.
 Để mô tả cho một thao tác unsafe, người đọc có thể xem thêm ở ví dụ \ref{code:rust_unsafe_basic} sau.
 Một số thao tác unsafe khác sẽ được giới thiệu trong phần tích hợp mã nguồn Rust và mã nguồn C ở phần sau.
@@ -870,7 +871,7 @@ Ta có thể sử dụng GDB để thực hiện công việc debugging trực t
 
 Mọi công cụ để thực hiện việc debugging như tạo breakpoints, step into, step over, v.v.. của GDB đều hoạt động như bình thường mà không cần phải hiệu chỉnh gì.
 Một số tính năng khác cũng được bộ công cụ này hỗ trợ như từ GDB ta có thể gọi hàm Rust trực tiếp (tuy còn nhiều giới hạn về các hàm sử dụng generics), hay khi chương trình bị lỗi và crash (có thể do sử dụng mã unsafe) thì crash log cũng được viết ra terminal một cách bình thường.
-Và cộng thêm việc sử dụng \emph{rust-gdb} cùng với tính năng pretty-printing làm cho việc debug một chương trình Rust không gặp quá nhiều khó khăn, thậm chí là có phần suông sẻ nếu người dùng có nhiều kinh nghiệm sử dụng bộ công cụ này.
+Và cộng thêm việc sử dụng \emph{rust-gdb} cùng với tính năng pretty-printing làm cho việc debug một chương trình Rust không gặp quá nhiều khó khăn, thậm chí là có phần suôn sẻ nếu người dùng có nhiều kinh nghiệm sử dụng bộ công cụ này.
 
 Tuy không thể chối cãi rằng bộ công cụ hỗ trợ việc debugging của Rust so với các bộ công cụ hỗ trợ các ngôn ngữ lập trình khác như C/C++ thì còn rất non nớt, tuy nhiên với tính năng đảm bảo an toàn của Rust đi từ thiết kế ngôn ngữ, và các lỗi thường gặp có thể dẫn đến lỗi ở các ngôn ngữ khác đều được bộ compiler phân tính và báo lỗi lúc biên dịch mã nguồn thì phần lớn công việc debugging một chương trình Rust là công đoạn tìm lỗi logic trong chương trình chứ ít khi là các lỗi về các edge cases bị bỏ qua ở các ngôn ngữ khác.
 
@@ -883,14 +884,15 @@ Em cũng đã có nhiều trải nghiệm tốt với các bộ công cụ này 
 Có thể nói rằng, công việc CI/CD cho một chương trình Rust khá thuận tiện và hiện đại, không hề gặp bất cứ trở ngại nào.
 
 \section{Đối tượng phần cứng}
-\section{Bậc hỗ trợ chính thức của Rust}
+\subsection{Bậc hỗ trợ chính thức của Rust}
 Rust có thể biên dịch trên rất nhiều đối tượng phần cứng khác nhau.
 Các đối tượng này được chia thành các bậc tùy theo mức độ được hỗ trợ chính thức từ các nhà phát triển ngôn ngữ này.
 Các đối tượng bậc 1 là ``đảm bảo có thể biên dịch và chạy'', các đối tượng bậc 2 là ``đảm bảo có thể biên dịch được'' và các đối tượng bậc 3 -- là bậc hỗ trợ thấp nhất -- là bậc hỗ trợ không có bất kì sự đảm bảo nào.
 
 Các đối tượng bậc 1 thường là các hệ thống phần cứng dùng cho desktop: Windows (GNU, MSVC ABI), Linux và MacOS trên x84 hay x86\_64.
-Các đối tượng này được nhà phát triển ngôn ngữ Rust cung cấp sẵn cho binary của các tool trong Cargo, được hỗ trợ biên dịch, testing tự động và đầy đủ trên các dịch vụ CI/CD và là đối tượng có tài liệu đầy đủ và hoàn chỉnh nhất, và các tài liệu này được viết và duy trì bởi các thành viên chính thức của Mozzila.
-Người đọc có thể tham khảo các đối tượng được hỗ trợ cấp 1 ở bảng \ref{tbl:tier_1_support}
+Các đối tượng này được nhà phát triển ngôn ngữ Rust cung cấp sẵn cho binary của các tool trong Cargo, được hỗ trợ biên dịch, testing tự động và đầy đủ trên các dịch vụ CI/CD và là đối tượng có tài liệu đầy đủ và hoàn chỉnh nhất.
+Các tài liệu này được viết và duy trì bởi các thành viên chính thức của của ngôn ngữ này.
+Người đọc có thể tham khảo các đối tượng được hỗ trợ cấp 1 ở bảng \ref{tbl:tier_1_support}.
 
 \begin{longtable}{lcccr}
 \textbf{Đối tượng} & \textbf{std} & \textbf{rustc} & \textbf{cargo} & \textbf{Ghi chú}\\
