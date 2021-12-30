@@ -1,6 +1,6 @@
 # Luận Văn Tốt Nghiệp (Bachelor Thesis)
 
-**Github Actions**: ![Build status](https://github.com/Rudo2204/luan-van/workflows/Build%20document/badge.svg?branch=master)
+**Github Actions**: ![Build status](https://github.com/Rudo2204/luan-van/workflows/Build/badge.svg?branch=master)
 
 Luận văn tốt nghiệp về Phân tích và ứng dụng ngôn ngữ lập trình Rust cho hệ thống nhúng, thực hiện tại trường ĐH Bách Khoa TP. Hồ Chí Minh.
 
